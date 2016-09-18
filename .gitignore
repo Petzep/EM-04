@@ -10,6 +10,15 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+#VisualGBD
+CodeDB/
+VisualGDBCache/
+*.old
+*.VC
+*.opendb
+gcc_[Dd]ebug.h
+gcc_[Rr]elease.h
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -250,3 +259,4 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+

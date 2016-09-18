@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<EmbeddedProjectSample xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>LEDBlink</Name>
+  <Description>This is a very basic sample project - a classical blinking LED example.</Description>
+  <ConfigurableProperties>
+    <PropertyGroups>
+      <PropertyGroup>
+        <Properties>
+          <PropertyEntry xsi:type="Enumerated">
+            <Name>LED Port Group</Name>
+            <UniqueID>com.sysprogs.examples.ledblink.LEDPORT</UniqueID>
+            <OmitPrefixIfEmpty>false</OmitPrefixIfEmpty>
+            <Description>Specifies the port group where the LED is connected</Description>
+            <SuggestionList>
+              <Suggestion>
+                <UserFriendlyName>GPIO0</UserFriendlyName>
+                <InternalValue>0</InternalValue>
+              </Suggestion>
+              <Suggestion>
+                <UserFriendlyName>GPIO1</UserFriendlyName>
+                <InternalValue>1</InternalValue>
+              </Suggestion>
+              <Suggestion>
+                <UserFriendlyName>GPIO2</UserFriendlyName>
+                <InternalValue>2</InternalValue>
+              </Suggestion>
+            </SuggestionList>
+            <DefaultEntryIndex>0</DefaultEntryIndex>
+            <AllowFreeEntry>false</AllowFreeEntry>
+          </PropertyEntry>
+          <PropertyEntry xsi:type="Integral">
+            <Name>LED Port Number</Name>
+            <UniqueID>com.sysprogs.examples.ledblink.LEDBIT</UniqueID>
+            <OmitPrefixIfEmpty>false</OmitPrefixIfEmpty>
+            <Description>Specifies the port number of the LED port</Description>
+            <DefaultValue>7</DefaultValue>
+            <MinValue>0</MinValue>
+            <MaxValue>31</MaxValue>
+            <Increment>1</Increment>
+          </PropertyEntry>
+          <PropertyEntry xsi:type="Integral">
+            <Name>Delay milliseconds</Name>
+            <UniqueID>com.sysprogs.examples.ledblink.DELAYMSEC</UniqueID>
+            <OmitPrefixIfEmpty>false</OmitPrefixIfEmpty>
+            <Description>Specifies the delay (in milliseconds) between LED toggling events</Description>
+            <DefaultValue>500</DefaultValue>
+            <MinValue>-2147483648</MinValue>
+            <MaxValue>2147483647</MaxValue>
+            <Increment>1</Increment>
+          </PropertyEntry>
+        </Properties>
+        <CollapsedByDefault>false</CollapsedByDefault>
+      </PropertyGroup>
+    </PropertyGroups>
+  </ConfigurableProperties>
+  <MCUFilterRegex>LPC(8|4|1[13578]).*</MCUFilterRegex>
+  <DoNotUpgradeCToCpp>false</DoNotUpgradeCToCpp>
+</EmbeddedProjectSample>
