@@ -62,13 +62,11 @@ bool ready	= false;
 
 CCAN_MSG_OBJ_T msg_obj;
 
-void SysTick_Handler(void)
-{
+void SysTick_Handler(void) {
 	SysTickCnt++;
 }
 
-void Delay(unsigned long tick)
-{
+void Delay(unsigned long tick) {
 	unsigned long systickcnt;
 
 	systickcnt = SysTickCnt;
@@ -161,8 +159,7 @@ void CAN_init() {
 /*	CAN receive callback */
 /*	Function is executed by the Callback handler after
  a CAN message has been received */
-void CAN_rx(uint8_t msg_obj_num)
-{
+void CAN_rx(uint8_t msg_obj_num){
 	// Disable interupts while receiving
 	NVIC_DisableIRQ(CAN_IRQn);
 	/* Determine which CAN message has been received */
@@ -276,15 +273,6 @@ void setPort(int port, bool onoff){
 	if(port == 5) Chip_GPIO_WritePortBit(LPC_GPIO,0,5,onoff);
 }
 
-	/*
-	connector schematic chip
-	1			BJT1		2,7
-	2			BJT2		2,8
-	3			BJT3		2,1
-	4			BJT4		0,3
-	//5			BJT5		0,4
-	//6			BJT6		0,5
-	*/
 
 int main(void){
 
@@ -313,13 +301,15 @@ int main(void){
 		ready = false;
 		LPC_CCAN_API->can_transmit(&msg_obj);
 
-		if(ledOn == 1){
+		if(ledOn)
+		{
 			ledOn = false;
 			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3
 			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
 			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led ?
 		}
-		else {
+		else 
+		{
 			ledOn = true;
 			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led3
 			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led2
@@ -328,3 +318,14 @@ int main(void){
 	}
 	return 0;
 }
+
+
+/*
+connector schematic chip
+1			BJT1		2,7
+2			BJT2		2,8
+3			BJT3		2,1
+4			BJT4		0,3
+//5			BJT5		0,4
+//6			BJT6		0,5
+*/

@@ -115,10 +115,6 @@ void CAN_error(uint32_t error_info) {
 		CAN_init();
 	}
 	else {
-		//int i = 0;
-		//while(1){
-		//	i++;
-		//}
 		CAN_init();
 	}
 	return;
@@ -149,30 +145,6 @@ int main(void) {
 
 	bool ledOn =			false;
 
-	/*
-	connector schematic chip
-	1			d6		0,5
-	2			d7		0,3
-	3			d8		2,8
-	4			d9		0,2
-	5			d10		2,6
-	12			d1		0,4
-	13			d2		2,1
-	14			d3		2,7
-	15			d4		1,8
-	16			d5		2,0
-
-	int p1 = getPin(0,5);
-	int p2 = getPin(0,3); // --> right indicator
-	int p3 = getPin(2,8); // --> middle
-	int p4 = getPin(0,2); // --> left middle
-	int p5 = getPin(2,6);
-	int p12 = getPin(0,4);
-	int p13 = getPin(2,1); // --> right middle
-	int p14 = getPin(2,7); // --> left indicator
-	int p15 = getPin(1,8); //
-	int p16 = getPin(2,0); //
-	*/
 
 	for (;;) //infinite loop
 	{		
@@ -287,8 +259,9 @@ int main(void) {
 		//////////////////////////////
 		////////////TIMERS////////////
 		//////////////////////////////
-		
-		//leftblink
+		//
+		//Left Blink
+		//
 		if (!(SysTickCnt % 5000))
 		{
 			msg_obj.msgobj = 0;
@@ -332,7 +305,9 @@ int main(void) {
 			LPC_CCAN_API->can_transmit(&msg_obj);
 		}
 
-		//leftblink
+		//
+		//Right Blink
+		//
 		if (!(SysTickCnt % 5000))
 		{
 			msg_obj.msgobj = 0;
@@ -363,6 +338,7 @@ int main(void) {
 
 			}
 		}
+		
 		if (!(SysTickCnt % 1000) && blinkRightState)
 		{
 			msg_obj.msgobj = 0;
@@ -377,7 +353,9 @@ int main(void) {
 			LPC_CCAN_API->can_transmit(&msg_obj);
 		}
 
+		//
 		//heartbeat
+		//
 		if (!(SysTickCnt % 1000))
 		{
 			Delay(100);
@@ -389,22 +367,47 @@ int main(void) {
 			ready = false;
 			LPC_CCAN_API->can_transmit(&msg_obj);
 
-
 			if(ledOn)
 			{
 				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0,7,1);	//led3
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2,2,0);	//led2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2,10,0);	//led?
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 1);	//led 3
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);	//led 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);	//led ?
 			}
 			else 
 			{
 				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0,7,0);	//led3
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2,2,1);	//led2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2,10,1);	//led?
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);	//led 3
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 1);	//led 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);	//led ?
 			}
 		}
 	}
 	return 0;
 }
+
+
+/*
+connector schematic chip
+1			d6		0,5
+2			d7		0,3
+3			d8		2,8
+4			d9		0,2
+5			d10		2,6
+12			d1		0,4
+13			d2		2,1
+14			d3		2,7
+15			d4		1,8
+16			d5		2,0
+
+int p1 = getPin(0,5);
+int p2 = getPin(0,3); // --> right indicator
+int p3 = getPin(2,8); // --> middle
+int p4 = getPin(0,2); // --> left middle
+int p5 = getPin(2,6);
+int p12 = getPin(0,4);
+int p13 = getPin(2,1); // --> right middle
+int p14 = getPin(2,7); // --> left indicator
+int p15 = getPin(1,8); //
+int p16 = getPin(2,0); //
+*/
