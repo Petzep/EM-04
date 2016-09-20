@@ -283,37 +283,38 @@ int main(void){
 	
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 4 | 1 << 5);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 7 | 1 << 8);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 5 | 1 << 7);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 5);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
 	
 	bool ledOn = true;
-	setPort(0,true);
 
-	if (!(SysTickCnt % 10000))
+	for (;;)
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);		//led3
-
-		msg_obj.msgobj = 0;
-		msg_obj.mode_id = (0x100 + DEVICE_NR) | CAN_MSGOBJ_STD;
-		msg_obj.mask = 0x0;
-		msg_obj.dlc = 1;
-		msg_obj.data[0] = DEVICE_NR;
-		ready = false;
-		LPC_CCAN_API->can_transmit(&msg_obj);
-
-		if(ledOn)
+		if (!(SysTickCnt % 1000))
 		{
-			ledOn = false;
-			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led ?
-		}
-		else 
-		{
-			ledOn = true;
-			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led3
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led2
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led3
+			msg_obj.msgobj = 0;
+			msg_obj.mode_id = (0x100 + DEVICE_NR) | CAN_MSGOBJ_STD;
+			msg_obj.mask = 0x0;
+			msg_obj.dlc = 1;
+			msg_obj.data[0] = DEVICE_NR;
+			ready = false;
+			LPC_CCAN_API->can_transmit(&msg_obj);
+
+			if (ledOn)
+			{
+				ledOn = false;
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led ?
+			}
+			else 
+			{
+				ledOn = true;
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led ?
+			}
 		}
 	}
 	return 0;

@@ -130,7 +130,7 @@ int main(void) {
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 2 | 1 << 3);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 1 | 1 << 7 | 1 << 8);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 2 | 1 << 10);
 	
@@ -370,14 +370,14 @@ int main(void) {
 			if(ledOn)
 			{
 				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 1);	//led 3
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 1);	//led 3 (blue)
 				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);	//led 2
 				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);	//led ?
 			}
 			else 
 			{
 				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);	//led 3
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);	//led 3 (blue)
 				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 1);	//led 2
 				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);	//led ?
 			}
