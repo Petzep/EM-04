@@ -61,6 +61,32 @@ void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 
+void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg)
+{
+	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
+	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
+	pClk = Chip_Clock_GetMainClockRate();
+
+	clk_per_bit = pClk / baud_rate;
+
+	for (div = 0; div <= 15; div++) {
+		for (quanta = 1; quanta <= 32; quanta++) {
+			for (segs = 3; segs <= 17; segs++) {
+				if (clk_per_bit == (segs * quanta * (div + 1))) {
+					segs -= 3;
+					seg1 = segs / 2;
+					seg2 = segs - seg1;
+					can_sjw = seg1 > 3 ? 3 : seg1;
+					can_api_timing_cfg[0] = div;
+					can_api_timing_cfg[1] =
+						((quanta - 1) & 0x3F) | (can_sjw & 0x03) << 6 | (seg1 & 0x0F) << 8 | (seg2 & 0x07) << 12;
+					return;
+				}
+			}
+		}
+	}
+}
+
 /* Callback function prototypes */
 void CAN_rx(uint8_t msg_obj_num);
 void CAN_tx(uint8_t msg_obj_num);
@@ -73,11 +99,10 @@ void CAN_init() {
 	NULL, };
 	
 	/* Initialize CAN Controller */
-	uint32_t CanApiClkInitTable[2] = {
-		0x00000000UL,	// CANCLKDIV
-		0x00004DC5UL	// CAN_BTR
-	};
-LPC_CCAN_API->init_can(&CanApiClkInitTable[0], TRUE);
+	uint32_t CanApiClkInitTable[2];
+	baudrateCalculate(500000, CanApiClkInitTable); //500kbits
+
+	LPC_CCAN_API->init_can(&CanApiClkInitTable[0], TRUE);
 	/* Configure the CAN callback functions */
 	LPC_CCAN_API->config_calb(&callbacks);
 	
@@ -144,6 +169,7 @@ int main(void) {
 	bool wiperOn =			false;
 
 	bool ledOn =			false;
+	unsigned long lastSystickcnt = 0;
 
 
 	for (;;) //infinite loop
@@ -356,9 +382,10 @@ int main(void) {
 		//
 		//heartbeat
 		//
-		if (!(SysTickCnt % 1000))
+		if ((SysTickCnt - lastSystickcnt) >= 1000)
 		{
-			Delay(100);
+			lastSystickcnt = SysTickCnt;
+			
 			msg_obj.msgobj = 0;
 			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
@@ -370,16 +397,16 @@ int main(void) {
 			if(ledOn)
 			{
 				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 1);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);	//led 2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);	//led ?
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 			else 
 			{
 				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 1);	//led 2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);	//led ?
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
 			}
 		}
 	}

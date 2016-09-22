@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEVICE_NR			0x003
+#define DEVICE_NR			0x005
 #if DEVICE_NR == 0x002 || DEVICE_NR == 0x003
 	#define FRONT_ADDRESS 		0x002
 #endif
@@ -84,6 +84,32 @@ void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 
+void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg)
+{
+	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
+	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
+	pClk = Chip_Clock_GetMainClockRate();
+
+	clk_per_bit = pClk / baud_rate;
+
+	for (div = 0; div <= 15; div++) {
+		for (quanta = 1; quanta <= 32; quanta++) {
+			for (segs = 3; segs <= 17; segs++) {
+				if (clk_per_bit == (segs * quanta * (div + 1))) {
+					segs -= 3;
+					seg1 = segs / 2;
+					seg2 = segs - seg1;
+					can_sjw = seg1 > 3 ? 3 : seg1;
+					can_api_timing_cfg[0] = div;
+					can_api_timing_cfg[1] =
+						((quanta - 1) & 0x3F) | (can_sjw & 0x03) << 6 | (seg1 & 0x0F) << 8 | (seg2 & 0x07) << 12;
+					return;
+				}
+			}
+		}
+	}
+}
+
 /* Callback function prototypes */
 void CAN_rx(uint8_t msg_obj_num);
 void CAN_tx(uint8_t msg_obj_num);
@@ -99,10 +125,9 @@ void CAN_init() {
 	NULL, };
 	
 	/* Initialize CAN Controller */
-	uint32_t CanApiClkInitTable[2] = {
-		0x00000000UL,	// CANCLKDIV
-		0x00004DC5UL	// CAN_BTR
-	};
+	uint32_t CanApiClkInitTable[2];
+	baudrateCalculate(500000, CanApiClkInitTable); //500kbits
+
 	LPC_CCAN_API->init_can(&CanApiClkInitTable[0], TRUE);
 	/* Configure the CAN callback functions */
 	LPC_CCAN_API->config_calb(&callbacks);
@@ -153,6 +178,11 @@ void CAN_init() {
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 #endif
 
+	//all devices
+	msg_obj.msgobj = 6;
+	msg_obj.mode_id = 0x336;
+	msg_obj.mask = 0x000;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
 }
 
@@ -161,13 +191,13 @@ void CAN_init() {
  a CAN message has been received */
 void CAN_rx(uint8_t msg_obj_num){
 	// Disable interupts while receiving
-	NVIC_DisableIRQ(CAN_IRQn);
+	//NVIC_DisableIRQ(CAN_IRQn);
 	/* Determine which CAN message has been received */
 	msg_obj.msgobj = msg_obj_num;
 
 	/* Now load up the msg_obj structure with the CAN message */
 	if (msg_obj.msgobj == 1 || msg_obj.msgobj == 2 || msg_obj.msgobj == 3
-			|| msg_obj.msgobj == 4 || msg_obj.msgobj == 5)
+			|| msg_obj.msgobj == 4 || msg_obj.msgobj == 5 || msg_obj.msgobj == 6)
 	{
 		LPC_CCAN_API->can_receive(&msg_obj);
 
@@ -235,8 +265,42 @@ void CAN_rx(uint8_t msg_obj_num){
 			setPort(4, msg_obj.data[4]);
 			setPort(5, msg_obj.data[5]);
 		}
+		
+		if (msg_obj.msgobj == 6) //Test message, gives audio and visual feedback (^_^)
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true); //led3
+			setPort(1, true);
+			setPort(2, true);
+			setPort(3, true);
+
+			Delay(500);
+			
+			setPort(1, false);
+			setPort(2, false);
+			setPort(3, false);
+			
+			Delay(500);
+			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 1
+			
+			for (int i = 0; i < 5; i++)
+			{
+				
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 1
+				Delay(200);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 1
+				Delay(200);
+			}
+			
+			
+		}
 	}
-	NVIC_EnableIRQ(CAN_IRQn);
+	//NVIC_EnableIRQ(CAN_IRQn);
 }
 
 
@@ -288,11 +352,14 @@ int main(void){
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
 	
 	bool ledOn = true;
+	unsigned long lastSystickcnt = 0;
 
 	for (;;)
 	{
-		if (!(SysTickCnt % 1000))
+		if ((SysTickCnt - lastSystickcnt) >= 1000)
 		{
+			lastSystickcnt = SysTickCnt;
+			
 			msg_obj.msgobj = 0;
 			msg_obj.mode_id = (0x100 + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
@@ -305,15 +372,15 @@ int main(void){
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led ?
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 			else 
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led ?
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
 			}
 		}
 	}
@@ -330,3 +397,8 @@ connector schematic chip
 //5			BJT5		0,4
 //6			BJT6		0,5
 */
+
+// led 1 (green) x,x
+// led 2 (red) 2,10
+// led 3 (yellow) 2,2
+// led 4 (blue) 0,7
