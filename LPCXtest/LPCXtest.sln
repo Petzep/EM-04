@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testinator", "Testinator\Testinator.vcxproj", "{1C248CF3-C55C-4643-A256-C199AE7CDB10}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAN_OUT_AS_IN", "CAN_OUT_AS_IN\CAN_OUT_AS_IN.vcxproj", "{D9C24C82-975D-43D6-98C7-CB5452567EE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -45,6 +47,12 @@ Global
 		{1C248CF3-C55C-4643-A256-C199AE7CDB10}.Release|x64.ActiveCfg = Release|Win32
 		{1C248CF3-C55C-4643-A256-C199AE7CDB10}.Release|x86.ActiveCfg = Release|Win32
 		{1C248CF3-C55C-4643-A256-C199AE7CDB10}.Release|x86.Build.0 = Release|Win32
+		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Debug|x64.ActiveCfg = Debug|Win32
+		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Debug|x86.ActiveCfg = Debug|Win32
+		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Debug|x86.Build.0 = Debug|Win32
+		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x64.ActiveCfg = Release|Win32
+		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x86.ActiveCfg = Release|Win32
+		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,35 +14,24 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEVICE_NR			0x005
-#if DEVICE_NR == 0x002 || DEVICE_NR == 0x003
-	#define FRONT_ADDRESS 		0x002
-#endif
-#if DEVICE_NR == 0x004 || DEVICE_NR == 0x005
-	#define REAR_ADDRESS		0x003
-#endif
-#if DEVICE_NR == 0x002 || DEVICE_NR == 0x004
-	#define LEFT_ADDRESS		0x004
-#endif
-#if DEVICE_NR == 0x003 || DEVICE_NR == 0x005
-	#define RIGHT_ADDRESS		0x005
-#endif
-#define ALL_ADDRESS				0x006
-#if DEVICE_NR == 0x002 || DEVICE_NR == 0x003 || DEVICE_NR == 0x004 || DEVICE_NR == 0x005
-	#define DIM_ADDRESS			0x007 //Light Controll Devices
-#endif
-#define BROADCAST_ADDRESS	0x101
+#define DEVICE_NR			0x010
 
+#define ALL_ADDRESS			0x000
+#define DIM_ADDRESS			0x008
+#define FRONT_DEVICES		0x000
+#define LEFT_DEVICES		0x001
+#define REAR_DEVICES		0x002
+#define RIGHT_DEVICES		0x003
+#define BROADCAST_ADDRESS	0x030
 
-#if DEVICE_NR == 0x002
-	#define PERSONAL_ADDRESS	0x012
-#elif DEVICE_NR == 0x003
-	#define PERSONAL_ADDRESS	0x013
-#elif DEVICE_NR == 0x004
-	#define PERSONAL_ADDRESS	0x014
-#elif DEVICE_NR == 0x005
-	#define PERSONAL_ADDRESS	0x015
-#endif
+#define ALL_MESSAGE			1
+#define FRONT_MESSAGE		2
+#define REAR_MESSAGE		3
+#define LEFT_MESSAGE		4
+#define RIGHT_MESSAGE		5
+#define PERSNOAL_MESSAGE	6
+#define DIM_MESSAGE			7
+
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -57,8 +46,6 @@ volatile unsigned long SysTickCnt;
 const uint32_t ExtRateIn	= 0;
 const uint32_t OscRateIn	= 12000000;
 const uint32_t RTCOscRateIn	= 32768;
-
-bool ready	= false;
 
 CCAN_MSG_OBJ_T msg_obj;
 
@@ -84,8 +71,7 @@ void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 
-void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg)
-{
+void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg){
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
 	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
 	pClk = Chip_Clock_GetMainClockRate();
@@ -132,58 +118,43 @@ void CAN_init() {
 	/* Configure the CAN callback functions */
 	LPC_CCAN_API->config_calb(&callbacks);
 
-
-#ifdef FRONT_ADDRESS
-	msg_obj.msgobj = 1;
-	msg_obj.mode_id = FRONT_ADDRESS;
-	msg_obj.mask = 0xFFF;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-#endif
-#ifdef REAR_ADDRESS
-	msg_obj.msgobj = 1;
-	msg_obj.mode_id = REAR_ADDRESS;
-	msg_obj.mask = 0xFFF;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-#endif
-#ifdef LEFT_ADDRESS
-	msg_obj.msgobj = 2;
-	msg_obj.mode_id = LEFT_ADDRESS;
-	msg_obj.mask = 0xFFF;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-#endif
-#ifdef RIGHT_ADDRESS
-	msg_obj.msgobj = 2;
-	msg_obj.mode_id = RIGHT_ADDRESS;
-	msg_obj.mask = 0xFFF;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-#endif
-
-	//all devices
-	msg_obj.msgobj = 3;
+	msg_obj.msgobj = ALL_MESSAGE;
 	msg_obj.mode_id = ALL_ADDRESS;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	//all devices
-	msg_obj.msgobj = 4;
-	msg_obj.mode_id = PERSONAL_ADDRESS;
-	msg_obj.mask = 0x018;
+	msg_obj.msgobj = FRONT_MESSAGE;
+	msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
+	msg_obj.mask = (DEVICE_NR & 0x001) ? 0x000 : 0xFFE; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = REAR_MESSAGE;
+	msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS;
+	msg_obj.mask = (DEVICE_NR & 0x001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-#ifdef DIM_ADDRESS
-	msg_obj.msgobj = 5;
-	msg_obj.mode_id = DIM_ADDRESS;
+	msg_obj.msgobj = LEFT_MESSAGE;
+	msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
+	msg_obj.mask = (DEVICE_NR & 0x002) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = RIGHT_MESSAGE;
+	msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
+	msg_obj.mask = (DEVICE_NR & 0x002) ? 0xFFD : 0x000; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = PERSNOAL_MESSAGE;
+	msg_obj.mode_id = DEVICE_NR;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-#endif
 
-	//all devices
-	msg_obj.msgobj = 6;
-	msg_obj.mode_id = 0x336;
-	msg_obj.mask = 0x000;
+	msg_obj.msgobj = DIM_MESSAGE;
+	msg_obj.mode_id = DIM_ADDRESS;
+	msg_obj.mask = 0xFF8;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-
+	
+	/* Enable the CAN Interrupt */
+	NVIC_EnableIRQ(CAN_IRQn);
 }
 
 /*	CAN receive callback */
@@ -196,111 +167,64 @@ void CAN_rx(uint8_t msg_obj_num){
 	msg_obj.msgobj = msg_obj_num;
 
 	/* Now load up the msg_obj structure with the CAN message */
-	if (msg_obj.msgobj == 1 || msg_obj.msgobj == 2 || msg_obj.msgobj == 3
-			|| msg_obj.msgobj == 4 || msg_obj.msgobj == 5 || msg_obj.msgobj == 6)
+	LPC_CCAN_API->can_receive(&msg_obj);
+
+	if (msg_obj_num == FRONT_MESSAGE)
 	{
-		LPC_CCAN_API->can_receive(&msg_obj);
-
-#ifdef FRONT_ADDRESS
-		//both front devices
-		if (msg_obj.msgobj == 1)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-			setPort(2, msg_obj.data[2]);
-		}
-#endif
-#ifdef REAR_ADDRESS
-		//both rear devices
-		if (msg_obj.msgobj == 1)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-			setPort(2, msg_obj.data[2]);
-		}
-#endif
-#ifdef LEFT_ADDRESS
-		//both left devices
-		if (msg_obj.msgobj == 2)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-			setPort(1, msg_obj.data[1]);
-		}
-#endif
-#ifdef RIGHT_ADDRESS
-		//both right devices
-		if (msg_obj.msgobj == 2)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-			setPort(1, msg_obj.data[1]);
-		}
-#endif
-
-#ifdef DIM_ADDRESS
-		if (msg_obj.msgobj == 5)
-		{
-			setPort(2, msg_obj.data[2]);
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-		}
-#endif
-
-		//all devices
-		if (msg_obj.msgobj == 3)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-			//setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
-		}
-
-		//all devices
-		if (msg_obj.msgobj == 4)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO,0,7,true); //led3
-			setPort(0, 1);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
-		}
-		
-		if (msg_obj.msgobj == 6) //Test message, gives audio and visual feedback (^_^)
-		{
-			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true); //led3
-			setPort(1, true);
-			setPort(2, true);
-			setPort(3, true);
-
-			Delay(500);
-			
-			setPort(1, false);
-			setPort(2, false);
-			setPort(3, false);
-			
-			Delay(500);
-			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 1
-			
-			for (int i = 0; i < 5; i++)
-			{
-				
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 1
-				Delay(200);
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 2
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 1
-				Delay(200);
-			}
-			
-			
-		}
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+		setPort(2, msg_obj.data[0]);
 	}
-	//NVIC_EnableIRQ(CAN_IRQn);
+
+	if (msg_obj_num == REAR_MESSAGE)
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+		setPort(2, msg_obj.data[0]);
+	}
+
+	//both left devices
+	if (msg_obj_num == LEFT_MESSAGE)
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+		setPort(2, msg_obj.data[0]);
+	}
+
+	//both right devices
+	if (msg_obj_num == RIGHT_MESSAGE)
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+		setPort(2, msg_obj.data[0]);
+	}
+
+	if (msg_obj_num == DIM_MESSAGE)
+	{
+		setPort(2, msg_obj.data[0]);
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+	}
+
+	//all devices
+	if (msg_obj_num == PERSNOAL_MESSAGE)
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+		setPort(0, msg_obj.data[0]);
+		setPort(1, msg_obj.data[1]);
+		setPort(2, msg_obj.data[2]);
+		setPort(3, msg_obj.data[3]);
+		setPort(4, msg_obj.data[4]);
+		setPort(5, msg_obj.data[5]);
+	}
+
+	//all devices
+	if (msg_obj_num == ALL_MESSAGE)
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
+		setPort(0, 1);
+		setPort(1, msg_obj.data[1]);
+		setPort(2, msg_obj.data[2]);
+		setPort(3, msg_obj.data[3]);
+		setPort(4, msg_obj.data[4]);
+		setPort(5, msg_obj.data[5]);
+	}
+	NVIC_EnableIRQ(CAN_IRQn);
 }
 
 
@@ -308,24 +232,14 @@ void CAN_rx(uint8_t msg_obj_num){
 /*	Function is executed by the Callback handler after
  a CAN message has been transmitted */
 void CAN_tx(uint8_t msg_obj_num){
-	ready = true;
-	return;
+
 }
 
 /*	CAN error callback */
 /*	Function is executed by the Callback handler after
  an error has occured on the CAN bus */
 void CAN_error(uint32_t error_info){
-	if (error_info & CAN_ERROR_PASS) {
-		CAN_init();
-
-	} else if (error_info & CAN_ERROR_BOFF) {
-		CAN_init();
-	}
-	else {
-		CAN_init();
-	}
-	return;
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true); //led 2 (red)
 }
 
 void setPort(int port, bool onoff){
@@ -365,22 +279,19 @@ int main(void){
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
-			ready = false;
 			LPC_CCAN_API->can_transmit(&msg_obj);
 
 			if (ledOn)
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 			else 
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 		}
 	}
@@ -398,7 +309,7 @@ connector schematic chip
 //6			BJT6		0,5
 */
 
-// led 1 (green) x,x
+// led 1 (green) power light
 // led 2 (red) 2,10
 // led 3 (yellow) 2,2
 // led 4 (blue) 0,7

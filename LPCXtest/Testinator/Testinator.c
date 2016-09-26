@@ -12,11 +12,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEVICE_NR			0x001
-#define LEFT_DEVICES		0x004
-#define RIGHT_DEVICES		0x005
-#define ALL_ADDRESS			0x006
-#define DIM_ADDRESS			0x007
+#define DEVICE_NR			0x010
+
+#define ALL_ADDRESS			0x000
+#define DIM_ADDRESS			0x008
+#define FRONT_DEVICES		0x000
+#define LEFT_DEVICES		0x001
+#define REAR_DEVICES		0x002
+#define RIGHT_DEVICES		0x003
 #define BROADCAST_ADDRESS	0x101
 
 #ifndef LPC_GPIO
@@ -28,12 +31,10 @@ extern "C"
 #endif
 	
 volatile unsigned long SysTickCnt;
-
+uint8_t test = FRONT_DEVICES;
 const uint32_t ExtRateIn	= 0;
 const uint32_t OscRateIn	= 12000000;
 const uint32_t RTCOscRateIn	= 32768;
-
-bool ready	= false;
 
 CCAN_MSG_OBJ_T msg_obj;
 
@@ -59,8 +60,7 @@ void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 
-void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg)
-{
+void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg){
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
 	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
 	pClk = Chip_Clock_GetMainClockRate();
