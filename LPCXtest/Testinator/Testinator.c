@@ -9,8 +9,6 @@
  */
 
 #include <chip.h>
-#include <stdio.h>
-#include <string.h>
 
 #define DEVICE_NR			0x010
 

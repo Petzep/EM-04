@@ -2,3 +2,8 @@ TODO:
 
 - Make lights from CAN_IN and CAN_OUT give out which error is given
 - Watchdog implenmentation
+
+
+TEST:
+- Test 0b1010 binary literal
+- Test disable interupt in can_rx()

@@ -10,8 +10,6 @@
  */
 
 #include <chip.h>
-#include <stdio.h>
-#include <string.h>
 
 #define DEVICE_NR			0x010
 
@@ -23,13 +21,17 @@
 #define RIGHT_DEVICES		0x003
 #define BROADCAST_ADDRESS	0x030
 
-#define ALL_MESSAGE			1
-#define FRONT_MESSAGE		2
-#define REAR_MESSAGE		3
-#define LEFT_MESSAGE		4
-#define RIGHT_MESSAGE		5
-#define PERSNOAL_MESSAGE	6
-#define DIM_MESSAGE			7
+enum CAN_MESSAGE
+{
+	ALL_MESSAGE,
+	FRONT_MESSAGE,
+	REAR_MESSAGE,
+	LEFT_MESSAGE,
+	RIGHT_MESSAGE,
+	PERSNOAL_MESSAGE,
+	DIM_MESSAGE,
+	TOTAL_MESSAGE,
+};
 
 
 #ifndef LPC_GPIO
@@ -48,8 +50,24 @@ const uint32_t RTCOscRateIn	= 32768;
 
 CCAN_MSG_OBJ_T msg_obj;
 
+/**
+ * @brief	Handle interrupt from SysTick timer
+ * @return	Nothing
+ */
 void SysTick_Handler(void) {
 	SysTickCnt++;
+}
+
+/**
+ * @brief	Handle interrupt from 32-bit timer
+ * @return	Nothing
+ */
+void TIMER32_0_IRQHandler(void)
+{
+	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+	}
 }
 
 void Delay(unsigned long tick) {
@@ -116,7 +134,7 @@ void CAN_init() {
 		NULL,
 	};
 	
-		/* Initialize CAN Controller */
+	/* Initialize CAN Controller */
 	uint32_t CanApiClkInitTable[2];
 	baudrateCalculate(500000, CanApiClkInitTable); //500kbits
 
@@ -131,22 +149,22 @@ void CAN_init() {
 
 	msg_obj.msgobj = FRONT_MESSAGE;
 	msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0x001) ? 0x000 : 0xFFE; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+	msg_obj.mask = (DEVICE_NR & 0b0001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES  (BINARY TEST) (if this works, we love GCC)....Joke C++'14 also supports it!
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
 	msg_obj.msgobj = REAR_MESSAGE;
 	msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0x001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+	msg_obj.mask = (DEVICE_NR & 0b0001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES  (BINARY TEST)
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
 	msg_obj.msgobj = LEFT_MESSAGE;
 	msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0x002) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+	msg_obj.mask = (DEVICE_NR & 0b0010) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES  (BINARY TEST) 
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
 	msg_obj.msgobj = RIGHT_MESSAGE;
 	msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0x002) ? 0xFFD : 0x000; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+	msg_obj.mask = (DEVICE_NR & 0b0010) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES  (BINARY TEST)
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
 	msg_obj.msgobj = PERSNOAL_MESSAGE;
@@ -174,61 +192,59 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 	/* Now load up the msg_obj structure with the CAN message */
 	LPC_CCAN_API->can_receive(&msg_obj);
-
-	if (msg_obj_num == FRONT_MESSAGE)
+	if (msg_obj_num < TOTAL_MESSAGE)
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		//Message "Inbox" for all the FRONT_MESSAGES {...}
+		if (msg_obj_num == FRONT_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	if (msg_obj_num == REAR_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		if (msg_obj_num == REAR_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	//both left devices
-	if (msg_obj_num == LEFT_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		if (msg_obj_num == LEFT_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	//both right devices
-	if (msg_obj_num == RIGHT_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		if (msg_obj_num == RIGHT_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	if (msg_obj_num == DIM_MESSAGE)
-	{
-		setPort(2, msg_obj.data[0]);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-	}
+		if (msg_obj_num == DIM_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	//all devices
-	if (msg_obj_num == PERSNOAL_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-		setPort(0, msg_obj.data[0]);
-		setPort(1, msg_obj.data[1]);
-		setPort(2, msg_obj.data[2]);
-		setPort(3, msg_obj.data[3]);
-		setPort(4, msg_obj.data[4]);
-		setPort(5, msg_obj.data[5]);
-	}
+		if (msg_obj_num == PERSNOAL_MESSAGE)
+		{
+			setPort(0, msg_obj.data[0]);
+			setPort(1, msg_obj.data[1]);
+			setPort(2, msg_obj.data[2]);
+			setPort(3, msg_obj.data[3]);
+			setPort(4, msg_obj.data[4]);
+			setPort(5, msg_obj.data[5]);
+		}
 
-	//all devices
-	if (msg_obj_num == ALL_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 4 (yellow)
-		setPort(0, 1);
-		setPort(1, msg_obj.data[1]);
-		setPort(2, msg_obj.data[2]);
-		setPort(3, msg_obj.data[3]);
-		setPort(4, msg_obj.data[4]);
-		setPort(5, msg_obj.data[5]);
+		if (msg_obj_num == ALL_MESSAGE)
+		{
+			
+			setPort(0, msg_obj.data[0	]);
+			setPort(1, msg_obj.data[1]);
+			setPort(2, msg_obj.data[2]);
+			setPort(3, msg_obj.data[3]);
+			setPort(4, msg_obj.data[4]);
+			setPort(5, msg_obj.data[5]);
+		}
+		
+		// Turn on the yellow led and Enable timer interrupt
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, msg_obj.data[0]); //led 4 (yellow)
+		NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+		NVIC_EnableIRQ(TIMER_32_0_IRQn);
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -263,7 +279,18 @@ int main(void) {
 	CAN_init();
 	
 	SystemCoreClockUpdate();
+	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
+	
+	//Enable timer 1 clock 
+	Chip_TIMER_Init(LPC_TIMER32_0);
+	
+	//Timer setup for match and interrupt at 1/2 seconds (500ms)
+	Chip_TIMER_Reset(LPC_TIMER32_0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock/2));
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
@@ -418,19 +445,19 @@ int main(void) {
 		
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
-		Delay(200);
+		Delay(300);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
-		Delay(200);
+		Delay(300);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
-		Delay(200);
+		Delay(300);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
-		Delay(200);
+		Delay(300);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
-		Delay(200);
+		Delay(300);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		

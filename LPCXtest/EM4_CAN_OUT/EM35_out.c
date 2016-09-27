@@ -11,8 +11,6 @@
  */
 
 #include <chip.h>
-#include <stdio.h>
-#include <string.h>
 
 #define DEVICE_NR			0x010
 
@@ -24,13 +22,17 @@
 #define RIGHT_DEVICES		0x003
 #define BROADCAST_ADDRESS	0x030
 
-#define ALL_MESSAGE			1
-#define FRONT_MESSAGE		2
-#define REAR_MESSAGE		3
-#define LEFT_MESSAGE		4
-#define RIGHT_MESSAGE		5
-#define PERSNOAL_MESSAGE	6
-#define DIM_MESSAGE			7
+enum CAN_MESSAGE
+{
+	ALL_MESSAGE,
+	FRONT_MESSAGE,
+	REAR_MESSAGE,
+	LEFT_MESSAGE,
+	RIGHT_MESSAGE,
+	PERSNOAL_MESSAGE,
+	DIM_MESSAGE,
+	TOTAL_MESSAGE,
+};
 
 
 #ifndef LPC_GPIO
@@ -49,8 +51,24 @@ const uint32_t RTCOscRateIn	= 32768;
 
 CCAN_MSG_OBJ_T msg_obj;
 
+/**
+ * @brief	Handle interrupt from SysTick timer
+ * @return	Nothing
+ */
 void SysTick_Handler(void) {
 	SysTickCnt++;
+}
+
+/**
+ * @brief	Handle interrupt from 32-bit timer
+ * @return	Nothing
+ */
+void TIMER32_0_IRQHandler(void)
+{
+	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+	}
 }
 
 void Delay(unsigned long tick) {
@@ -70,6 +88,7 @@ void Delay(unsigned long tick) {
 void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
+
 
 void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg){
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
@@ -160,7 +179,7 @@ void CAN_init() {
 /*	CAN receive callback */
 /*	Function is executed by the Callback handler after
  a CAN message has been received */
-void CAN_rx(uint8_t msg_obj_num){
+void CAN_rx(uint8_t msg_obj_num) {
 	// Disable interupts while receiving
 	//NVIC_DisableIRQ(CAN_IRQn);
 	/* Determine which CAN message has been received */
@@ -168,65 +187,62 @@ void CAN_rx(uint8_t msg_obj_num){
 
 	/* Now load up the msg_obj structure with the CAN message */
 	LPC_CCAN_API->can_receive(&msg_obj);
-
-	if (msg_obj_num == FRONT_MESSAGE)
+	if (msg_obj_num < TOTAL_MESSAGE)
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		//Message "Inbox" for all the FRONT_MESSAGES {...}
+		if (msg_obj_num == FRONT_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	if (msg_obj_num == REAR_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		if (msg_obj_num == REAR_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	//both left devices
-	if (msg_obj_num == LEFT_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		if (msg_obj_num == LEFT_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	//both right devices
-	if (msg_obj_num == RIGHT_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-		setPort(2, msg_obj.data[0]);
-	}
+		if (msg_obj_num == RIGHT_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	if (msg_obj_num == DIM_MESSAGE)
-	{
-		setPort(2, msg_obj.data[0]);
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-	}
+		if (msg_obj_num == DIM_MESSAGE)
+		{
+			setPort(2, msg_obj.data[0]);
+		}
 
-	//all devices
-	if (msg_obj_num == PERSNOAL_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-		setPort(0, msg_obj.data[0]);
-		setPort(1, msg_obj.data[1]);
-		setPort(2, msg_obj.data[2]);
-		setPort(3, msg_obj.data[3]);
-		setPort(4, msg_obj.data[4]);
-		setPort(5, msg_obj.data[5]);
-	}
+		if (msg_obj_num == PERSNOAL_MESSAGE)
+		{
+			setPort(0, msg_obj.data[0]);
+			setPort(1, msg_obj.data[1]);
+			setPort(2, msg_obj.data[2]);
+			setPort(3, msg_obj.data[3]);
+			setPort(4, msg_obj.data[4]);
+			setPort(5, msg_obj.data[5]);
+		}
 
-	//all devices
-	if (msg_obj_num == ALL_MESSAGE)
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO,2,2,true); //led 4 (yellow)
-		setPort(0, 1);
-		setPort(1, msg_obj.data[1]);
-		setPort(2, msg_obj.data[2]);
-		setPort(3, msg_obj.data[3]);
-		setPort(4, msg_obj.data[4]);
-		setPort(5, msg_obj.data[5]);
+		if (msg_obj_num == ALL_MESSAGE)
+		{
+			
+			setPort(0, msg_obj.data[0]);
+			setPort(1, msg_obj.data[1]);
+			setPort(2, msg_obj.data[2]);
+			setPort(3, msg_obj.data[3]);
+			setPort(4, msg_obj.data[4]);
+			setPort(5, msg_obj.data[5]);
+		}
+		
+		// Turn on the yellow led and Enable timer interrupt
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, msg_obj.data[0]); //led 4 (yellow)
+		NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+		NVIC_EnableIRQ(TIMER_32_0_IRQn);
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
 }
-
 
 /*	CAN transmit callback */
 /*	Function is executed by the Callback handler after
@@ -290,8 +306,6 @@ int main(void){
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 		}
 	}
