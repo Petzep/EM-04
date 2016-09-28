@@ -11,17 +11,26 @@
 
 #include <chip.h>
 
-#define DEVICE_NR			0x010
+#define DEVICE_NR			0x020
 
 #define ALL_ADDRESS			0x000
 #define DIM_ADDRESS			0x008
 #define FRONT_DEVICES		0x000
-#define LEFT_DEVICES		0x001
-#define REAR_DEVICES		0x002
+#define REAR_DEVICES		0x001
+#define LEFT_DEVICES		0x002
 #define RIGHT_DEVICES		0x003
 #define BROADCAST_ADDRESS	0x030
 
-enum CAN_MESSAGE
+#define	ALL_MESSAGE			1
+#define FRONT_MESSAGE		2
+#define	REAR_MESSAGE		3
+#define	LEFT_MESSAGE		4
+#define	RIGHT_MESSAGE		5
+#define	PERSNOAL_MESSAGE	6
+#define	DIM_MESSAGE			7
+#define	TOTAL_MESSAGE		8
+
+/*enum CAN_MESSAGE
 {
 	ALL_MESSAGE,
 	FRONT_MESSAGE,
@@ -31,7 +40,7 @@ enum CAN_MESSAGE
 	PERSNOAL_MESSAGE,
 	DIM_MESSAGE,
 	TOTAL_MESSAGE,
-};
+};*/
 
 
 #ifndef LPC_GPIO
@@ -88,6 +97,7 @@ void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 
+
 void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg) {
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
 	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
@@ -134,7 +144,7 @@ void CAN_init() {
 		NULL,
 	};
 	
-	/* Initialize CAN Controller */
+		/* Initialize CAN Controller */
 	uint32_t CanApiClkInitTable[2];
 	baudrateCalculate(500000, CanApiClkInitTable); //500kbits
 
@@ -147,35 +157,47 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = FRONT_MESSAGE;
-	msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES  (BINARY TEST) (if this works, we love GCC)....Joke C++'14 also supports it!
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	if (DEVICE_NR & 0b0010)
+	{
+		msg_obj.msgobj = FRONT_MESSAGE;
+		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS; //0000 0000 101x
+		msg_obj.mask = 0xFFE; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 
-	msg_obj.msgobj = REAR_MESSAGE;
-	msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES  (BINARY TEST)
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	if (!(DEVICE_NR & 0b0010))
+	{
+		msg_obj.msgobj = REAR_MESSAGE;
+		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; //0000 0000 100x
+		msg_obj.mask = 0xFFE; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 
-	msg_obj.msgobj = LEFT_MESSAGE;
-	msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0010) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES  (BINARY TEST) 
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-
-	msg_obj.msgobj = RIGHT_MESSAGE;
-	msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0010) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES  (BINARY TEST)
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	if (!(DEVICE_NR & 0b0001))
+	{
+		msg_obj.msgobj = LEFT_MESSAGE;
+		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS; //0000 0000 10x0
+		msg_obj.mask = 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
+	
+	if (DEVICE_NR & 0b0001)
+	{
+		msg_obj.msgobj = RIGHT_MESSAGE;
+		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS; //0000 0000 10x1
+		msg_obj.mask = 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 
 	msg_obj.msgobj = PERSNOAL_MESSAGE;
 	msg_obj.mode_id = DEVICE_NR;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = DIM_MESSAGE;
-	msg_obj.mode_id = DIM_ADDRESS;
-	msg_obj.mask = 0xFF8;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	//msg_obj.msgobj = DIM_MESSAGE;
+	//msg_obj.mode_id = DIM_ADDRESS;
+	//msg_obj.mask = 0xFFF;
+	//->config_rxmsgobj(&msg_obj);
 	
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
@@ -192,7 +214,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 	/* Now load up the msg_obj structure with the CAN message */
 	LPC_CCAN_API->can_receive(&msg_obj);
-	if (msg_obj_num < TOTAL_MESSAGE)
+	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
 		if (msg_obj_num == FRONT_MESSAGE)
