@@ -169,7 +169,7 @@ void CAN_init() {
 
 	msg_obj.msgobj = DIM_MESSAGE;
 	msg_obj.mode_id = DIM_ADDRESS;
-	msg_obj.mask = 0xFF8;
+	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	
 	/* Enable the CAN Interrupt */
@@ -212,7 +212,8 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		if (msg_obj_num == DIM_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			//Toggle DIM_lights (Head and rear)
+			setPort(3, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -291,7 +292,7 @@ int main(void){
 			lastSystickcnt = SysTickCnt;
 			
 			msg_obj.msgobj = 0;
-			msg_obj.mode_id = (0x100 + DEVICE_NR) | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;

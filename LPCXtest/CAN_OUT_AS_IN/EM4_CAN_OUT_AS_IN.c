@@ -313,12 +313,12 @@ int main(void) {
 		msg_obj.mode_id = ALL_ADDRESS |  CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0UL;
 		msg_obj.dlc = 6;
-		msg_obj.data[0] = 0x01;
-		msg_obj.data[1] = 0x01;
-		msg_obj.data[2] = 0x01;
-		msg_obj.data[3] = 0x01;
-		msg_obj.data[4] = 0x01;
-		msg_obj.data[5] = 0x01;
+		msg_obj.data[0] = true;
+		msg_obj.data[1] = true;
+		msg_obj.data[2] = true;
+		msg_obj.data[3] = true;
+		msg_obj.data[4] = true;
+		msg_obj.data[5] = true;
 		LPC_CCAN_API->can_transmit(&msg_obj);
 		
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
@@ -331,12 +331,12 @@ int main(void) {
 		msg_obj.mode_id = ALL_ADDRESS |  CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0UL;
 		msg_obj.dlc = 6;
-		msg_obj.data[0] = 0x00;
-		msg_obj.data[1] = 0x00;
-		msg_obj.data[2] = 0x00;
-		msg_obj.data[3] = 0x00;
-		msg_obj.data[4] = 0x00;
-		msg_obj.data[5] = 0x00;
+		msg_obj.data[0] = false;
+		msg_obj.data[1] = false;
+		msg_obj.data[2] = false;
+		msg_obj.data[3] = false;
+		msg_obj.data[4] = false;
+		msg_obj.data[5] = false;
 		LPC_CCAN_API->can_transmit(&msg_obj);
 		
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
