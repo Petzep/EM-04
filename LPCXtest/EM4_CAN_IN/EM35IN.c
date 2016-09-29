@@ -63,8 +63,7 @@ void SysTick_Handler(void) {
  * @brief	Handle interrupt from 32-bit timer
  * @return	Nothing
  */
-void TIMER32_0_IRQHandler(void)
-{
+void TIMER32_0_IRQHandler(void){
 	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
@@ -148,25 +147,37 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = FRONT_MESSAGE;
-	msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES  (BINARY TEST) (if this works, we love GCC)....Joke C++'14 also supports it!
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	if (DEVICE_NR & 0b0010) //Select only the front bit
+	{
+		msg_obj.msgobj = FRONT_MESSAGE;
+		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 
-	msg_obj.msgobj = REAR_MESSAGE;
-	msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0001) ? 0xFFE : 0x000; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES  (BINARY TEST)
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	if (!(DEVICE_NR & 0b0010)) //Select only the rear bit (=not front bit)
+	{
+		msg_obj.msgobj = REAR_MESSAGE;
+		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; 
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 
-	msg_obj.msgobj = LEFT_MESSAGE;
-	msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0010) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES  (BINARY TEST) 
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-
-	msg_obj.msgobj = RIGHT_MESSAGE;
-	msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
-	msg_obj.mask = (DEVICE_NR & 0b0010) ? 0x000 : 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES  (BINARY TEST)
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	if (!(DEVICE_NR & 0b0001))  //Select only the right bit (=not right bit)
+	{
+		msg_obj.msgobj = LEFT_MESSAGE;
+		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
+	
+	if (DEVICE_NR & 0b0001) //Select only the right bit
+	{
+		msg_obj.msgobj = RIGHT_MESSAGE;
+		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 
 	msg_obj.msgobj = PERSNOAL_MESSAGE;
 	msg_obj.mode_id = DEVICE_NR;
@@ -175,7 +186,7 @@ void CAN_init() {
 
 	msg_obj.msgobj = DIM_MESSAGE;
 	msg_obj.mode_id = DIM_ADDRESS;
-	msg_obj.mask = 0xFF8;
+	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	
 	/* Enable the CAN Interrupt */
@@ -193,7 +204,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 	/* Now load up the msg_obj structure with the CAN message */
 	LPC_CCAN_API->can_receive(&msg_obj);
-	if (msg_obj_num < TOTAL_MESSAGE)
+	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
 		if (msg_obj_num == FRONT_MESSAGE)
@@ -218,7 +229,8 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		if (msg_obj_num == DIM_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			//Toggle DIM_lights (Head and rear)
+			setPort(3, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -251,11 +263,15 @@ void CAN_rx(uint8_t msg_obj_num) {
 }
 
 
+
 /*	CAN transmit callback */
 /*	Function is executed by the Callback handler after
  a CAN message has been transmitted */
-void CAN_tx(uint8_t msg_obj_num) {
-
+void CAN_tx(uint8_t msg_obj_num){
+	// Turn on the yellow led and Enable timer interrupt
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, msg_obj.data[0]); //led 4 (yellow)
+	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_0_IRQn);
 }
 
 /*	CAN error callback */

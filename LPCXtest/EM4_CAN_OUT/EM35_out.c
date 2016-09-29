@@ -12,14 +12,14 @@
 
 #include <chip.h>
 
-#define DEVICE_NR			0x010
+#define DEVICE_NR			0x012
 
 #define ALL_ADDRESS			0x000
 #define DIM_ADDRESS			0x008
-#define FRONT_DEVICES		0x000	//0011
-#define REAR_DEVICES		0x001	//0000
-#define LEFT_DEVICES		0x002	//0010
-#define RIGHT_DEVICES		0x003	//0001
+#define FRONT_DEVICES		0x000
+#define REAR_DEVICES		0x001
+#define LEFT_DEVICES		0x002
+#define RIGHT_DEVICES		0x003
 #define BROADCAST_ADDRESS	0x030
 
 #define	ALL_MESSAGE			1
@@ -33,7 +33,7 @@
 
 /*enum CAN_MESSAGE
 {
-	ALL_MESSAGE,
+	ALL_MESSAGE = 1,
 	FRONT_MESSAGE,
 	REAR_MESSAGE,
 	LEFT_MESSAGE,
@@ -72,8 +72,7 @@ void SysTick_Handler(void) {
  * @brief	Handle interrupt from 32-bit timer
  * @return	Nothing
  */
-void TIMER32_0_IRQHandler(void)
-{
+void TIMER32_0_IRQHandler(void){
 	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
@@ -151,35 +150,35 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	if (DEVICE_NR & 0b0010)
+	if (DEVICE_NR & 0b0010) //Select only the front bit
 	{
 		msg_obj.msgobj = FRONT_MESSAGE;
-		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS; //0000 0000 101x
-		msg_obj.mask = 0xFFF; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
+		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
-	if (!(DEVICE_NR & 0b0010))
+	if (!(DEVICE_NR & 0b0010)) //Select only the rear bit (=not front bit)
 	{
 		msg_obj.msgobj = REAR_MESSAGE;
-		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; //0000 0000 100x
-		msg_obj.mask = 0xFFF; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; 
+		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
-	if (!(DEVICE_NR & 0b0001))
+	if (!(DEVICE_NR & 0b0001))  //Select only the right bit (=not right bit)
 	{
 		msg_obj.msgobj = LEFT_MESSAGE;
-		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS; //0000 0000 10x0
-		msg_obj.mask = 0xFFF; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
+		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 	
-	if (DEVICE_NR & 0b0001)
+	if (DEVICE_NR & 0b0001) //Select only the right bit
 	{
 		msg_obj.msgobj = RIGHT_MESSAGE;
-		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS; //0000 0000 10x1
-		msg_obj.mask = 0xFFF; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
+		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
@@ -188,10 +187,10 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	//msg_obj.msgobj = DIM_MESSAGE;
-	//msg_obj.mode_id = DIM_ADDRESS;
-	//msg_obj.mask = 0xFFF;
-	//->config_rxmsgobj(&msg_obj);
+	msg_obj.msgobj = DIM_MESSAGE;
+	msg_obj.mode_id = DIM_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API -> config_rxmsgobj(&msg_obj);
 	
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
