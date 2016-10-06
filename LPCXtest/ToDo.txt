@@ -5,5 +5,5 @@ TODO:
 
 
 TEST:
-- Test 0b1010 binary literal
+- Test 0b1010 binary literal DONE
 - Test disable interupt in can_rx()
