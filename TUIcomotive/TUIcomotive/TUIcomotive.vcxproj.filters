@@ -56,13 +56,13 @@
     <ClCompile Include="GeneratedFiles\qrc_TUIcomotive.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_addDialog.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_AddDialog.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_addDialog.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_AddDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="addDialog.cpp">
+    <ClCompile Include="AddDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,10 +76,10 @@
     <CustomBuild Include="TUIcomotive.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="addDialog.h">
+    <CustomBuild Include="AddDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="addDialog.ui">
+    <CustomBuild Include="AddDialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -87,7 +87,7 @@
     <ClInclude Include="GeneratedFiles\ui_TUIcomotive.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_addDialog.h">
+    <ClInclude Include="GeneratedFiles\ui_AddDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

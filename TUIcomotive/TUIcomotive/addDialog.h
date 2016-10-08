@@ -1,13 +1,13 @@
 #pragma once
 
-#include <QWidget>
-#include "ui_addDialog.h"
+#include <QDialog>
+#include "ui_AddDialog.h"
 
-class addDialog : public QWidget, public Ui::addDialog
+class AddDialog : public QDialog, public Ui::AddDialog
 {
 	Q_OBJECT
 
 public:
-	addDialog(QWidget *parent = Q_NULLPTR);
-	~addDialog();
+	AddDialog(QWidget *parent = Q_NULLPTR);
+	~AddDialog();
 };

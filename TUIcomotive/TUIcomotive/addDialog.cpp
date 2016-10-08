@@ -1,11 +1,11 @@
-#include "addDialog.h"
+#include "AddDialog.h"
 
-addDialog::addDialog(QWidget *parent)
-	: QWidget(parent)
+AddDialog::AddDialog(QWidget *parent)
+	: QDialog(parent)
 {
 	setupUi(this);
 }
 
-addDialog::~addDialog()
+AddDialog::~AddDialog()
 {
 }
