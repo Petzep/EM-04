@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_TUIcomotive.h"
+#include "AddDialog.h"
 
 class TUIcomotive : public QMainWindow
 {
@@ -12,4 +13,9 @@ public:
 
 private:
     Ui::TUIcomotiveClass ui;
+
+public slots:
+	void on_addButton_clicked(void);
+	void on_bangaList_currentItemChanged(void);
+	void on_deleteButton_clicked(void);
 };

@@ -32,7 +32,7 @@ class Ui_TUIcomotiveClass
 {
 public:
     QWidget *centralWidget;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QLabel *label;
     QListWidget *bangaList;
@@ -51,23 +51,23 @@ public:
         if (TUIcomotiveClass->objectName().isEmpty())
             TUIcomotiveClass->setObjectName(QStringLiteral("TUIcomotiveClass"));
         TUIcomotiveClass->resize(390, 306);
-        TUIcomotiveClass->setAcceptDrops(true);
+        TUIcomotiveClass->setAcceptDrops(false);
         centralWidget = new QWidget(TUIcomotiveClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(20, 10, 341, 232));
-        gridLayout = new QGridLayout(widget);
+        layoutWidget = new QWidget(centralWidget);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 10, 341, 232));
+        gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QStringLiteral("label"));
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
-        bangaList = new QListWidget(widget);
+        bangaList = new QListWidget(layoutWidget);
         bangaList->setObjectName(QStringLiteral("bangaList"));
 
         gridLayout->addWidget(bangaList, 1, 0, 1, 2);
@@ -75,12 +75,12 @@ public:
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        addButton = new QPushButton(widget);
+        addButton = new QPushButton(layoutWidget);
         addButton->setObjectName(QStringLiteral("addButton"));
 
         verticalLayout_2->addWidget(addButton);
 
-        deleteButton = new QPushButton(widget);
+        deleteButton = new QPushButton(layoutWidget);
         deleteButton->setObjectName(QStringLiteral("deleteButton"));
 
         verticalLayout_2->addWidget(deleteButton);
@@ -92,12 +92,12 @@ public:
 
         gridLayout->addLayout(verticalLayout_2, 1, 2, 1, 1);
 
-        nameLabel = new QLabel(widget);
+        nameLabel = new QLabel(layoutWidget);
         nameLabel->setObjectName(QStringLiteral("nameLabel"));
 
         gridLayout->addWidget(nameLabel, 2, 0, 1, 1);
 
-        emailLabel = new QLabel(widget);
+        emailLabel = new QLabel(layoutWidget);
         emailLabel->setObjectName(QStringLiteral("emailLabel"));
 
         gridLayout->addWidget(emailLabel, 2, 1, 1, 1);
