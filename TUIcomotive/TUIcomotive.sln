@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qpie", "qpie\qpie.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtPieMenu", "QtPieMenu\QtPieMenu.vcxproj", "{E5634250-406E-4152-95A6-75533F0910EF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomClock", "CustomClock\CustomClock.vcxproj", "{97374901-64E3-48DE-ACA9-8B43BE4D46C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{E5634250-406E-4152-95A6-75533F0910EF}.Debug|x64.Build.0 = Debug|x64
 		{E5634250-406E-4152-95A6-75533F0910EF}.Release|x64.ActiveCfg = Release|x64
 		{E5634250-406E-4152-95A6-75533F0910EF}.Release|x64.Build.0 = Release|x64
+		{97374901-64E3-48DE-ACA9-8B43BE4D46C9}.Debug|x64.ActiveCfg = Debug|x64
+		{97374901-64E3-48DE-ACA9-8B43BE4D46C9}.Debug|x64.Build.0 = Debug|x64
+		{97374901-64E3-48DE-ACA9-8B43BE4D46C9}.Release|x64.ActiveCfg = Release|x64
+		{97374901-64E3-48DE-ACA9-8B43BE4D46C9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

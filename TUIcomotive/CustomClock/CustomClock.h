@@ -5,24 +5,24 @@
 #include <QTime>
 #include <Qpainter>
 
-class QtPieMenu : public QWidget
+class CustomClock : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
-	Q_PROPERTY(bool ToggleSecondHand READ secondHand WRITE setSecondHand)
-	Q_PROPERTY(QColor colorSecondHand READ colorSecondHand WRITE setColorSecondHand)
-	Q_PROPERTY(QColor colorMinuteHand READ colorMinuteHand WRITE setColorMinuteHand)
-	Q_PROPERTY(QColor colorHourHand READ colorHourHand WRITE setColorHourHand)
+		Q_PROPERTY(bool ToggleSecondHand READ secondHand WRITE setSecondHand)
+		Q_PROPERTY(QColor colorSecondHand READ colorSecondHand WRITE setColorSecondHand)
+		Q_PROPERTY(QColor colorMinuteHand READ colorMinuteHand WRITE setColorMinuteHand)
+		Q_PROPERTY(QColor colorHourHand READ colorHourHand WRITE setColorHourHand)
 
 
 public:
-    QtPieMenu(QWidget *parent = Q_NULLPTR);
+	CustomClock(QWidget *parent = Q_NULLPTR);
 	bool secondHand() const;
 	QColor colorSecondHand() const;
 	QColor colorMinuteHand() const;
 	QColor colorHourHand() const;
 
-public slots:
+	public slots:
 	void toggleSecondHand();
 	void setSecondHand(bool toggle);
 	void setColorSecondHand(const QColor& color);

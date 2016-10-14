@@ -1,6 +1,6 @@
-#include "QtPieMenu.h"
+#include "CustomClock.h"
 
-QtPieMenu::QtPieMenu(QWidget *parent)
+CustomClock::CustomClock(QWidget *parent)
 	: QWidget(parent)
 {
 	QTimer *timer = new QTimer(this);
@@ -15,7 +15,7 @@ QtPieMenu::QtPieMenu(QWidget *parent)
 	m_colorHourHand = { 255, 255, 124 };
 }
 
-void QtPieMenu::paintEvent(QPaintEvent *)
+void CustomClock::paintEvent(QPaintEvent *)
 {
 	static const QPoint hourHand[3] = {
 		QPoint(7, 8),
@@ -61,8 +61,8 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.setPen(hourColor);
 
 	for (int i = 0; i < 12; ++i) {
-		if((i % 3) != 0 )
-		painter.drawLine(88, 0, 96, 0);
+		if ((i % 3) != 0)
+			painter.drawLine(88, 0, 96, 0);
 		painter.rotate(30.0);
 	}
 
@@ -77,7 +77,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.setPen(minuteColor);
 
 	for (int j = 0; j < 60; ++j) {
-		if (((j % 5) != 0 ) || ((j % 5) != 0 )) 
+		if (((j % 5) != 0) || ((j % 5) != 0))
 			painter.drawLine(92, 0, 96, 0);
 		painter.rotate(6.0);
 	}
@@ -97,56 +97,56 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.setBrush(secondColor);
 	painter.save();
 
-	for (int k = 0; k < 4; ++k) { 
+	for (int k = 0; k < 4; ++k) {
 		painter.drawConvexPolygon(quarter, 3);
 		painter.rotate(90.0);
 	}
 	painter.restore();
 }
 
-bool QtPieMenu::secondHand() const
+bool CustomClock::secondHand() const
 {
 	return m_SecondHand;
 }
 
-QColor QtPieMenu::colorSecondHand() const
+QColor CustomClock::colorSecondHand() const
 {
 	return m_colorSecondHand;
 }
 
-QColor QtPieMenu::colorMinuteHand() const
+QColor CustomClock::colorMinuteHand() const
 {
 	return m_colorMinuteHand;
 }
 
-QColor QtPieMenu::colorHourHand() const
+QColor CustomClock::colorHourHand() const
 {
 	return m_colorHourHand;
 }
 
-void QtPieMenu::toggleSecondHand()
+void CustomClock::toggleSecondHand()
 {
 	m_SecondHand = !m_SecondHand;
 	update();
 }
 
-void QtPieMenu::setSecondHand(bool toggle)
+void CustomClock::setSecondHand(bool toggle)
 {
 	m_SecondHand = toggle;
 	update();
 }
 
-void QtPieMenu::setColorSecondHand(const QColor& color)
+void CustomClock::setColorSecondHand(const QColor& color)
 {
 	m_colorSecondHand = color;
 }
 
-void QtPieMenu::setColorMinuteHand(const QColor& color)
+void CustomClock::setColorMinuteHand(const QColor& color)
 {
 	m_colorMinuteHand = color;
 }
 
-void QtPieMenu::setColorHourHand(const QColor& color)
+void CustomClock::setColorHourHand(const QColor& color)
 {
 	m_colorHourHand = color;
 }

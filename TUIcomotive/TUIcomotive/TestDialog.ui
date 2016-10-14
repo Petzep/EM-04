@@ -36,7 +36,14 @@
     </rect>
    </property>
    <property name="ToggleSecondHand" stdset="0">
-    <bool>false</bool>
+    <bool>true</bool>
+   </property>
+   <property name="colorSecondHand">
+    <color>
+     <red>45</red>
+     <green>130</green>
+     <blue>0</blue>
+    </color>
    </property>
   </widget>
   <widget class="QCheckBox" name="checkBox">
@@ -62,5 +69,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>qtPieMenu</receiver>
+   <slot>setSecondHand(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>126</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>484</x>
+     <y>160</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>qtPieMenu</receiver>
+   <slot>toggleSecondHand()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>409</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
