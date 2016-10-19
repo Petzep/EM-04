@@ -3,44 +3,27 @@
 QtPieMenu::QtPieMenu(QWidget *parent)
 	: QWidget(parent)
 {
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-	timer->start(1000);
-
-	setWindowTitle(tr("Analog Clock"));
-	resize(200, 200);
-	m_SecondHand = true;
-	m_colorSecondHand = { 75, 0, 130 };
-	m_colorMinuteHand = { 255, 0, 0, 191 };
-	m_colorHourHand = { 255, 255, 124 };
+	setWindowTitle(tr("QtPieMenu"));
+	resize(500, 500);
+	m_ItemNumbers = 5;
+	m_GradientRadius = 1.0; //unused
+	m_SelectionInnerColor = Qt::red;
+	m_SelectionOuterColor = Qt::blue;
+	m_SelectionRadius = 1.0;
 }
 
 void QtPieMenu::paintEvent(QPaintEvent *)
 {
-	static const QPoint hourHand[3] = {
-		QPoint(7, 8),
-		QPoint(-7, 8),
-		QPoint(0, -40)
-	};
-	static const QPoint minuteHand[3] = {
-		QPoint(7, 8),
-		QPoint(-7, 8),
-		QPoint(0, -70)
-	};
-	static const QPoint secondHand[3] = {
-		QPoint(2, 8),
-		QPoint(-2, 8),
-		QPoint(0, -70)
-	};
-	static const QPoint quarter[3] = {
-		QPoint(96, 3),
-		QPoint(96, -3),
-		QPoint(90, 0)
-	};
+	QPolygon itemShape;
+	itemShape << QPoint(5, -5)
+		<< QPoint(-5, -5)
+		<< QPoint(-5, 5)
+		<< QPoint(5, 5);
 
-	QColor secondColor = m_colorSecondHand;
-	QColor minuteColor = m_colorMinuteHand;
-	QColor hourColor = m_colorHourHand;
+	QTransform selectionTrans;
+	selectionTrans = selectionTrans.scale(1.0+(m_SelectionRadius*0.1), 1.0 + (m_SelectionRadius*0.1));
+	QPolygon selectionBounding = itemShape.boundingRect();
+	QPolygonF selectionShape = selectionTrans.map(selectionBounding);
 
 	int side = qMin(width(), height());
 	QTime time = QTime::currentTime();
@@ -50,103 +33,92 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.translate(width() / 2, height() / 2);
 	painter.scale(side / 200.0, side / 200.0);
 
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(hourColor);
+	/*selectionShape.translate(QPoint(-1, (-100 + 9)));
+	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from top-left to bottom-right
+	//selectionShape.translate(QPointF(-m_SelectionRadius*0.1, (-100+m_SelectionRadius-(0.1*m_SelectionRadius))));
+	*/
 
-	painter.save();
-	painter.rotate(30.0 * ((time.hour() + time.minute() / 60.0)));
-	painter.drawConvexPolygon(hourHand, 3);
+	selectionShape.translate(QPoint(-1, (-100 + 9)));
+	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from top-left to bottom-right
+	gradient.setColorAt(0, m_SelectionInnerColor);
+	gradient.setColorAt(1, m_SelectionOuterColor);
+	painter.rotate((360.0 / m_ItemNumbers)*m_Selection);
+	painter.fillRect(selectionShape.boundingRect(), gradient);
 	painter.restore();
 
-	painter.setPen(hourColor);
-
-	for (int i = 0; i < 12; ++i) {
-		if((i % 3) != 0 )
-		painter.drawLine(88, 0, 96, 0);
-		painter.rotate(30.0);
-	}
-
 	painter.setPen(Qt::NoPen);
-	painter.setBrush(minuteColor);
-
-	painter.save();
-	painter.rotate(6.0 * (time.minute() + time.second() / 60.0));
-	painter.drawConvexPolygon(minuteHand, 3);
-	painter.restore();
-
-	painter.setPen(minuteColor);
-
-	for (int j = 0; j < 60; ++j) {
-		if (((j % 5) != 0 ) || ((j % 5) != 0 )) 
-			painter.drawLine(92, 0, 96, 0);
-		painter.rotate(6.0);
-	}
-
-	if (m_SecondHand)
-	{
-		painter.setPen(Qt::NoPen);
-		painter.setBrush(secondColor);
-
-		painter.save();
-		painter.rotate(6.0 * (time.second()));
-		painter.drawConvexPolygon(secondHand, 3);
-		painter.restore();
-	}
-
-	painter.setPen(Qt::NoPen);
-	painter.setBrush(secondColor);
+	painter.setBrush(QColor(0,0,0));
 	painter.save();
 
-	for (int k = 0; k < 4; ++k) { 
-		painter.drawConvexPolygon(quarter, 3);
-		painter.rotate(90.0);
+	itemShape.translate(QPoint(0, -90));
+	for (int i = 0; i < m_ItemNumbers; ++i) {	
+		painter.drawConvexPolygon(itemShape);
+		painter.rotate(360.0/m_ItemNumbers);
 	}
-	painter.restore();
 }
 
-bool QtPieMenu::secondHand() const
+int QtPieMenu::itemNumbers() const
 {
-	return m_SecondHand;
+	return m_ItemNumbers;
 }
 
-QColor QtPieMenu::colorSecondHand() const
+double QtPieMenu::selectionRadius() const
 {
-	return m_colorSecondHand;
+	return m_SelectionRadius;
 }
 
-QColor QtPieMenu::colorMinuteHand() const
+double QtPieMenu::gradientRadius() const
 {
-	return m_colorMinuteHand;
+	return m_GradientRadius;
 }
 
-QColor QtPieMenu::colorHourHand() const
+QColor QtPieMenu::selectionInnerColor() const
 {
-	return m_colorHourHand;
+	return m_SelectionInnerColor;
 }
 
-void QtPieMenu::toggleSecondHand()
+QColor QtPieMenu::selectionOuterColor() const
 {
-	m_SecondHand = !m_SecondHand;
+	return m_SelectionOuterColor;
+}
+
+int QtPieMenu::selection() const
+{
+	return m_Selection;
+}
+
+void QtPieMenu::setItemNumbers(int number)
+{
+	m_ItemNumbers = number;
 	update();
 }
 
-void QtPieMenu::setSecondHand(bool toggle)
+void QtPieMenu::setSelectionRadius(double radius)
 {
-	m_SecondHand = toggle;
+	m_SelectionRadius = radius;
 	update();
 }
 
-void QtPieMenu::setColorSecondHand(const QColor& color)
+void QtPieMenu::setGradientRadius(double radius)
 {
-	m_colorSecondHand = color;
+	m_GradientRadius = radius;
+	update();
 }
 
-void QtPieMenu::setColorMinuteHand(const QColor& color)
+void QtPieMenu::setSelectionInnerColor(const QColor & color)
 {
-	m_colorMinuteHand = color;
+	m_SelectionInnerColor = color;
+	update();
 }
 
-void QtPieMenu::setColorHourHand(const QColor& color)
+void QtPieMenu::setSelectionOuterColor(const QColor & color)
 {
-	m_colorHourHand = color;
+	m_SelectionOuterColor = color;
+	update();
+}
+
+void QtPieMenu::setSelection(int selection)
+{
+	m_Selection = selection;
+	update();
 }

@@ -9,32 +9,38 @@ class QtPieMenu : public QWidget
 {
     Q_OBJECT
 
-	Q_PROPERTY(bool ToggleSecondHand READ secondHand WRITE setSecondHand)
-	Q_PROPERTY(QColor colorSecondHand READ colorSecondHand WRITE setColorSecondHand)
-	Q_PROPERTY(QColor colorMinuteHand READ colorMinuteHand WRITE setColorMinuteHand)
-	Q_PROPERTY(QColor colorHourHand READ colorHourHand WRITE setColorHourHand)
-
+	Q_PROPERTY(int itemNumbers READ itemNumbers WRITE setItemNumbers)
+	Q_PROPERTY(double selectionRadius READ selectionRadius WRITE setSelectionRadius)
+	Q_PROPERTY(double gradientRadius READ gradientRadius WRITE setGradientRadius)
+	Q_PROPERTY(QColor selectionInnerColor READ selectionInnerColor WRITE setSelectionInnerColor)
+	Q_PROPERTY(QColor selectionOuterColor READ selectionOuterColor WRITE setSelectionOuterColor)
+	Q_PROPERTY(int selection READ selection WRITE setSelection)
 
 public:
     QtPieMenu(QWidget *parent = Q_NULLPTR);
-	bool secondHand() const;
-	QColor colorSecondHand() const;
-	QColor colorMinuteHand() const;
-	QColor colorHourHand() const;
+	int itemNumbers() const;
+	double selectionRadius() const;
+	double gradientRadius() const;
+	QColor selectionInnerColor() const;
+	QColor selectionOuterColor() const;
+	int selection() const;
 
 public slots:
-	void toggleSecondHand();
-	void setSecondHand(bool toggle);
-	void setColorSecondHand(const QColor& color);
-	void setColorMinuteHand(const QColor& color);
-	void setColorHourHand(const QColor& color);
+	void setItemNumbers(int number);
+	void setSelectionRadius(double radius);
+	void setGradientRadius(double radius);
+	void setSelectionInnerColor(const QColor& color);
+	void setSelectionOuterColor(const QColor& color);
+	void setSelection(int selection);
 
 protected:
 	void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-	bool m_SecondHand;
-	QColor m_colorSecondHand;
-	QColor m_colorMinuteHand;
-	QColor m_colorHourHand;
+	int m_ItemNumbers;
+	double m_SelectionRadius;
+	double m_GradientRadius;
+	QColor m_SelectionInnerColor;
+	QColor m_SelectionOuterColor;
+	int m_Selection;
 };
