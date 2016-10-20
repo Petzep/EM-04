@@ -38,8 +38,26 @@
    <property name="itemNumbers">
     <number>20</number>
    </property>
-   <property name="selectionRadius">
-    <double>5.000000000000000</double>
+   <property name="selectionColor">
+    <color>
+     <red>144</red>
+     <green>0</green>
+     <blue>0</blue>
+    </color>
+   </property>
+   <property name="selectionInnerColor">
+    <color>
+     <red>255</red>
+     <green>255</green>
+     <blue>255</blue>
+    </color>
+   </property>
+   <property name="selectionOuterColor">
+    <color>
+     <red>0</red>
+     <green>255</green>
+     <blue>0</blue>
+    </color>
    </property>
    <property name="ToggleSecondHand" stdset="0">
     <bool>true</bool>
@@ -104,6 +122,19 @@
     <number>10</number>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_2">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>190</y>
+     <width>121</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>DANIEL ARROW!!!!!</string>
+   </property>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -165,6 +196,22 @@
     <hint type="destinationlabel">
      <x>517</x>
      <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_2</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>qtPieMenu</receiver>
+   <slot>setDanielArrow(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>120</x>
+     <y>201</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>494</x>
+     <y>226</y>
     </hint>
    </hints>
   </connection>

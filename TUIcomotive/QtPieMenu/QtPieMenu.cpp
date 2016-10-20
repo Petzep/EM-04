@@ -6,27 +6,37 @@ QtPieMenu::QtPieMenu(QWidget *parent)
 	setWindowTitle(tr("QtPieMenu"));
 	resize(500, 500);
 	m_ItemNumbers = 5;
-	m_GradientRadius = 1.0; //unused
-	m_SelectionInnerColor = Qt::red;
-	m_SelectionOuterColor = Qt::blue;
-	m_SelectionRadius = 1.0;
+	m_SelectionRadius = 5.0;
+	m_GradientRadius = 2.0;
+	m_MenuColor = Qt::black;
+	m_SelectionInnerColor = Qt::white;
+	m_SelectionOuterColor = Qt::green;
+	m_SelectionColor = QColor(144,0,0);
+	m_DanielArrow = false;
 }
 
 void QtPieMenu::paintEvent(QPaintEvent *)
 {
 	QPolygon itemShape;
-	itemShape << QPoint(5, -5)
-		<< QPoint(-5, -5)
-		<< QPoint(-5, 5)
-		<< QPoint(5, 5);
+	itemShape << QPoint(m_SelectionRadius, -m_SelectionRadius)
+		<< QPoint(-m_SelectionRadius, -m_SelectionRadius)
+		<< QPoint(-m_SelectionRadius, m_SelectionRadius)
+		<< QPoint(m_SelectionRadius, m_SelectionRadius);
 
-	QTransform selectionTrans;
-	selectionTrans = selectionTrans.scale(1.0+(m_SelectionRadius*0.1), 1.0 + (m_SelectionRadius*0.1));
-	QPolygon selectionBounding = itemShape.boundingRect();
-	QPolygonF selectionShape = selectionTrans.map(selectionBounding);
+	QPolygon danielShape;
+	danielShape << QPoint(0, -15)
+		<< QPoint(20, -5)
+		<< QPoint(10, -5)
+		<< QPoint(10, 15)
+		<< QPoint(-10, 15)
+		<< QPoint(-10, -5)
+		<< QPoint(-20, -5);
+
+	QRectF selectionBoundingrect = itemShape.boundingRect();
+	selectionBoundingrect.adjust(-m_GradientRadius, -m_GradientRadius, m_GradientRadius, m_GradientRadius);
+	QPolygonF selectionShape = selectionBoundingrect;
 
 	int side = qMin(width(), height());
-	QTime time = QTime::currentTime();
 
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
@@ -38,7 +48,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	//selectionShape.translate(QPointF(-m_SelectionRadius*0.1, (-100+m_SelectionRadius-(0.1*m_SelectionRadius))));
 	*/
 
-	selectionShape.translate(QPoint(-1, (-100 + 9)));
+	selectionShape.translate(QPointF(-0.5, (qreal)-100 + itemShape.boundingRect().width()-0.5));
 	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from top-left to bottom-right
 	gradient.setColorAt(0, m_SelectionInnerColor);
 	gradient.setColorAt(1, m_SelectionOuterColor);
@@ -47,14 +57,25 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.restore();
 
 	painter.setPen(Qt::NoPen);
-	painter.setBrush(QColor(0,0,0));
+	painter.setBrush(m_MenuColor);
 	painter.save();
 
-	itemShape.translate(QPoint(0, -90));
+	itemShape.translate(QPoint(0, (qreal)-100 + itemShape.boundingRect().width()));
 	for (int i = 0; i < m_ItemNumbers; ++i) {	
 		painter.drawConvexPolygon(itemShape);
 		painter.rotate(360.0/m_ItemNumbers);
 	}
+	painter.restore();
+	painter.setBrush(m_SelectionColor);
+	painter.drawConvexPolygon(itemShape);
+
+	if (m_DanielArrow)
+	{
+		painter.setBrush(QColor(Qt::green));
+		painter.drawConvexPolygon(itemShape);
+		painter.drawConvexPolygon(danielShape);
+	}
+
 }
 
 int QtPieMenu::itemNumbers() const
@@ -72,6 +93,16 @@ double QtPieMenu::gradientRadius() const
 	return m_GradientRadius;
 }
 
+QColor QtPieMenu::selectionColor() const
+{
+	return m_SelectionColor;
+}
+
+QColor QtPieMenu::menuColor() const
+{
+	return m_MenuColor;
+}
+
 QColor QtPieMenu::selectionInnerColor() const
 {
 	return m_SelectionInnerColor;
@@ -85,6 +116,11 @@ QColor QtPieMenu::selectionOuterColor() const
 int QtPieMenu::selection() const
 {
 	return m_Selection;
+}
+
+bool QtPieMenu::danielArrow() const
+{
+	return m_DanielArrow;
 }
 
 void QtPieMenu::setItemNumbers(int number)
@@ -105,15 +141,33 @@ void QtPieMenu::setGradientRadius(double radius)
 	update();
 }
 
+void QtPieMenu::setSelectionOuterColor(const QColor & color)
+{
+	m_SelectionOuterColor = color;
+	update();
+}
+
+void QtPieMenu::setDanielArrow(bool toggle)
+{
+	m_DanielArrow = toggle;
+	update();
+}
+
 void QtPieMenu::setSelectionInnerColor(const QColor & color)
 {
 	m_SelectionInnerColor = color;
 	update();
 }
 
-void QtPieMenu::setSelectionOuterColor(const QColor & color)
+void QtPieMenu::setSelectionColor(const QColor & color)
 {
-	m_SelectionOuterColor = color;
+	m_SelectionColor = color;
+	update();
+}
+
+void QtPieMenu::setMenuColor(const QColor & color)
+{
+	m_MenuColor = color;
 	update();
 }
 
