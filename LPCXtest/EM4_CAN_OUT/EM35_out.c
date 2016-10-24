@@ -292,9 +292,20 @@ void setPort(int port, bool onoff){
 int main(void){
 
 	CAN_init();
-	
+
 	SystemCoreClockUpdate();
+	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
+
+	//Enable timer 1 clock 
+	Chip_TIMER_Init(LPC_TIMER32_0);
+
+	//Timer setup for match and interrupt at 1/2 seconds (500ms)
+	Chip_TIMER_Reset(LPC_TIMER32_0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 2));
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);

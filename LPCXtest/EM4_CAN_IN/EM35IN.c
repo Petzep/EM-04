@@ -17,23 +17,20 @@
 #define ALL_ADDRESS			0x000
 #define DIM_ADDRESS			0x008
 #define FRONT_DEVICES		0x000
-#define LEFT_DEVICES		0x001
-#define REAR_DEVICES		0x002
+#define REAR_DEVICES		0x001
+#define LEFT_DEVICES		0x002
 #define RIGHT_DEVICES		0x003
 #define WHIPER_ADDRESS		0x012
-#define BROADCAST_ADDRESS	0x800
+#define BROADCAST_ADDRESS	0x030
 
-enum CAN_MESSAGE
-{
-	ALL_MESSAGE,
-	FRONT_MESSAGE,
-	REAR_MESSAGE,
-	LEFT_MESSAGE,
-	RIGHT_MESSAGE,
-	PERSNOAL_MESSAGE,
-	DIM_MESSAGE,
-	TOTAL_MESSAGE,
-};
+#define	ALL_MESSAGE			1
+#define FRONT_MESSAGE		2
+#define	REAR_MESSAGE		3
+#define	LEFT_MESSAGE		4
+#define	RIGHT_MESSAGE		5
+#define	PERSNOAL_MESSAGE	6
+#define	DIM_MESSAGE			7
+#define	TOTAL_MESSAGE		8
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -44,6 +41,7 @@ extern "C"
 #endif
 	
 volatile unsigned long SysTickCnt;
+volatile unsigned long lastClick;
 
 const uint32_t ExtRateIn	= 0;
 const uint32_t OscRateIn	= 12000000;
@@ -66,6 +64,17 @@ void SysTick_Handler(void) {
 void TIMER32_0_IRQHandler(void){
 	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+	}
+}
+
+/**
+* @brief	Handle interrupt from 32-bit timer
+* @return	Nothing
+*/
+void TIMER32_1_IRQHandler(void) {
+	if (Chip_TIMER_MatchPending(LPC_TIMER32_1, 1)) {
+		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 1);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
 	}
 }
@@ -295,8 +304,27 @@ int main(void) {
 	CAN_init();
 	
 	SystemCoreClockUpdate();
+	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
+
+	//Enable timer 1 and 2 clock 
+	Chip_TIMER_Init(LPC_TIMER32_0);
+	Chip_TIMER_Init(LPC_TIMER32_1);
+
+	//Timer setup for match and interrupt at 1/4 seconds (250ms)
+	Chip_TIMER_Reset(LPC_TIMER32_0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 4));
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
+	//Timer setup for match and interrupt at 1/1 seconds (1000ms)
+	Chip_TIMER_Reset(LPC_TIMER32_1);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 1);
+	Chip_TIMER_SetMatch(LPC_TIMER32_1, 1, (SystemCoreClock / 1));
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_1, 1);
+	Chip_TIMER_Enable(LPC_TIMER32_1);
+
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 2 | 1 << 3);
@@ -324,7 +352,7 @@ int main(void) {
 		bool alarm = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
 		bool lights = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
 		bool wiper = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
-
+		bool click = false;
 
 		//////////////////////////////
 		////////BUTTON HANDLER////////
@@ -407,8 +435,10 @@ int main(void) {
 		//
 		//Left Blink
 		//
-		if (!(SysTickCnt % 1000))
+
+		if ((SysTickCnt - lastClick) >= 1000)
 		{
+			click = true;
 			msg_obj.msgobj = 0; 
 			msg_obj.mode_id = LEFT_DEVICES | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
@@ -420,12 +450,12 @@ int main(void) {
 					blinkLeftState = true;
 					msg_obj.data[0] = true;
 					LPC_CCAN_API->can_transmit(&msg_obj);
-				}				
+				}
 			}
 			else if(blinkLeftState)
 			{
 				blinkLeftState = false;
-				msg_obj.data[1] = false;
+				msg_obj.data[0] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
 		}
@@ -447,8 +477,9 @@ int main(void) {
 		//
 		//Right Blink
 		//
-		if (!(SysTickCnt % 1000))
+		if ((SysTickCnt - lastClick) >= 1000)
 		{
+			click = true;
 			msg_obj.msgobj = 0; 
 			msg_obj.mode_id = RIGHT_DEVICES | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
@@ -509,6 +540,8 @@ int main(void) {
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
 			}
 		}
+		if(click)
+			lastClick = SysTickCnt;
 	}
 	return 0;
 }
