@@ -39,6 +39,7 @@ public:
     QVBoxLayout *verticalLayout_2;
     QPushButton *addButton;
     QPushButton *deleteButton;
+    QPushButton *testButton;
     QSpacerItem *verticalSpacer;
     QLabel *nameLabel;
     QLabel *emailLabel;
@@ -85,6 +86,11 @@ public:
 
         verticalLayout_2->addWidget(deleteButton);
 
+        testButton = new QPushButton(layoutWidget);
+        testButton->setObjectName(QStringLiteral("testButton"));
+
+        verticalLayout_2->addWidget(testButton);
+
         verticalSpacer = new QSpacerItem(20, 128, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_2->addItem(verticalSpacer);
@@ -125,6 +131,7 @@ public:
         label->setText(QApplication::translate("TUIcomotiveClass", "Banga list", 0));
         addButton->setText(QApplication::translate("TUIcomotiveClass", "skADDje", 0));
         deleteButton->setText(QApplication::translate("TUIcomotiveClass", "sletXIT", 0));
+        testButton->setText(QApplication::translate("TUIcomotiveClass", "UI Test", 0));
         nameLabel->setText(QApplication::translate("TUIcomotiveClass", "<No item selected>", 0));
         emailLabel->setText(QString());
     } // retranslateUi
