@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <VisualGDBProjectSettings2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConfigurationName>NewLinuxConfiguration</ConfigurationName>
+  <ConfigurationName>RaspberryPi</ConfigurationName>
   <Project xsi:type="com.visualgdb.project.linux">
     <CustomSourceDirectories>
       <Directories />
       <PathStyle>MinGWUnixSlash</PathStyle>
     </CustomSourceDirectories>
     <BuildHost>
-      <HostName>192.168.2.100</HostName>
+      <HostName>192.168.2.114</HostName>
       <Transport>SSH</Transport>
       <UserName>infot</UserName>
     </BuildHost>
     <MainSourceTransferCommand>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <RemoteHost>
-        <HostName>192.168.2.100</HostName>
+        <HostName>192.168.2.114</HostName>
         <Transport>SSH</Transport>
         <UserName>infot</UserName>
       </RemoteHost>
@@ -23,13 +23,12 @@
       <FileMasks>
         <string>*.cpp</string>
         <string>*.h</string>
-        <string>*.c</string>
-        <string>*.cc</string>
-        <string>*.cxx</string>
-        <string>*.mak</string>
-        <string>Makefile</string>
-        <string>*.txt</string>
-        <string>*.cmake</string>
+        <string>*.pro</string>
+        <string>*.ui</string>
+        <string>*.qrc</string>
+        <string>*.qml</string>
+        <string>qmldir</string>
+        <string>*.js</string>
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>
@@ -41,9 +40,9 @@
     <SkipDeploymentTests>false</SkipDeploymentTests>
     <MainSourceDirectoryForLocalBuilds>$(ProjectDir)</MainSourceDirectoryForLocalBuilds>
   </Project>
-  <Build xsi:type="com.visualgdb.build.make">
-    <MakeFilePathRelativeToSourceDir>Makefile</MakeFilePathRelativeToSourceDir>
-    <MakeConfigurationName>NewLinuxConfiguration</MakeConfigurationName>
+  <Build xsi:type="com.visualgdb.build.qmake">
+    <MakeFilePathRelativeToSourceDir>TUIcomotive.pro</MakeFilePathRelativeToSourceDir>
+    <MakeConfigurationName>RaspberryPi</MakeConfigurationName>
     <Toolchain>
       <Name>Default GCC toolchain on 192.168.2.100</Name>
       <UniqueID>com.sysprogs.toolchain.default-gcc</UniqueID>
@@ -88,6 +87,20 @@
         </Records>
       </Environment>
     </MakeCommandTemplate>
+    <QMakeCommand>
+      <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
+      <Command>qtchooser</Command>
+      <Arguments>-run-tool=qmake -qt=qt5 TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
+      <WorkingDirectory>$(BuildDir)</WorkingDirectory>
+      <Environment>
+        <Records />
+      </Environment>
+    </QMakeCommand>
+    <UpdateSourcesInQmakeFile>true</UpdateSourcesInQmakeFile>
+    <GeneratedFilesFolder>GeneratedFiles</GeneratedFilesFolder>
+    <QtSettings>
+      <QtVersion>Qt5</QtVersion>
+    </QtSettings>
   </Build>
   <Debug xsi:type="com.visualgdb.debug.remote">
     <AdditionalStartupCommands />
@@ -159,6 +172,7 @@
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
+  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
     <ExtraSettings>

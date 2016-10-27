@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "ui_TUIcomotive.h"
 #include "AddDialog.h"
 #include "TestDialog.h"
+#include "ui_TUIcomotive.h"
 
 class TUIcomotive : public QMainWindow
 {
