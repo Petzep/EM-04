@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include "AddDialog.h"
+#include "TestDialog.h"
 #include "ui_TUIcomotive.h"
 
 class TUIcomotive : public QMainWindow
@@ -12,4 +14,10 @@ public:
 
 private:
     Ui::TUIcomotiveClass ui;
+
+public slots:
+	void on_addButton_clicked(void);
+	void on_bangaList_currentItemChanged(void);
+	void on_deleteButton_clicked(void);
+	void on_testButton_clicked(void);
 };

@@ -24,20 +24,21 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
-    <Filter Include="Generated Files\Debug">
-      <UniqueIdentifier>{11be697e-d68e-49ef-b3f1-d1daa4b47002}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="Generated Files\Release">
-      <UniqueIdentifier>{23169e0b-fa22-45a1-8899-7c58bfcf6f29}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
     <Filter Include="Form Files">
       <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
       <Extensions>ui</Extensions>
       <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="CustomPlugin">
+      <UniqueIdentifier>{d162e517-c627-42dc-9eca-86c66918cdcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Make files">
+      <UniqueIdentifier>{60f60bd6-2d09-4348-8579-08e67df6bc5b}</UniqueIdentifier>
+      <Extensions>*.mak</Extensions>
+    </Filter>
+    <Filter Include="QMake Project files">
+      <UniqueIdentifier>{70754a64-5440-4eb7-a10b-476078625007}</UniqueIdentifier>
+      <Extensions>pro</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,14 +48,20 @@
     <ClCompile Include="TUIcomotive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_TUIcomotive.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_TUIcomotive.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_TUIcomotive.cpp">
       <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomClock.cpp">
+      <Filter>CustomPlugin</Filter>
+    </ClCompile>
+    <ClCompile Include="QtPieMenu.cpp">
+      <Filter>CustomPlugin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,10 +74,44 @@
     <CustomBuild Include="TUIcomotive.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="AddDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AddDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TestDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TestDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CustomClock.h">
+      <Filter>CustomPlugin</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QtPieMenu.h">
+      <Filter>CustomPlugin</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_TUIcomotive.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_AddDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_TestDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="newlinuxconfiguration.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="TUIcomotive.pro" />
+    <None Include="newpi.pro">
+      <Filter>QMake Project files</Filter>
+    </None>
   </ItemGroup>
 </Project>
