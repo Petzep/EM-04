@@ -28,54 +28,26 @@ class Ui_AddDialog
 {
 public:
     QWidget *layoutWidget;
+    QGridLayout *gridLayout_2;
+    QSpacerItem *verticalSpacer;
+    QSpacerItem *horizontalSpacer;
+    QPushButton *okButton;
+    QWidget *layoutWidget_2;
     QGridLayout *gridLayout;
     QLabel *nameText;
     QLineEdit *nameEdit;
     QLabel *emailText;
     QLineEdit *emailEdit;
-    QWidget *layoutWidget1;
-    QGridLayout *gridLayout_2;
-    QSpacerItem *verticalSpacer;
-    QSpacerItem *horizontalSpacer;
-    QPushButton *okButton;
 
     void setupUi(QDialog *AddDialog)
     {
         if (AddDialog->objectName().isEmpty())
             AddDialog->setObjectName(QStringLiteral("AddDialog"));
-        AddDialog->resize(332, 119);
+        AddDialog->resize(330, 114);
         layoutWidget = new QWidget(AddDialog);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 10, 311, 48));
-        gridLayout = new QGridLayout(layoutWidget);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        gridLayout->setContentsMargins(0, 0, 0, 0);
-        nameText = new QLabel(layoutWidget);
-        nameText->setObjectName(QStringLiteral("nameText"));
-
-        gridLayout->addWidget(nameText, 0, 0, 1, 1);
-
-        nameEdit = new QLineEdit(layoutWidget);
-        nameEdit->setObjectName(QStringLiteral("nameEdit"));
-
-        gridLayout->addWidget(nameEdit, 0, 1, 1, 1);
-
-        emailText = new QLabel(layoutWidget);
-        emailText->setObjectName(QStringLiteral("emailText"));
-
-        gridLayout->addWidget(emailText, 1, 0, 1, 1);
-
-        emailEdit = new QLineEdit(layoutWidget);
-        emailEdit->setObjectName(QStringLiteral("emailEdit"));
-
-        gridLayout->addWidget(emailEdit, 1, 1, 1, 1);
-
-        layoutWidget1 = new QWidget(AddDialog);
-        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(10, 60, 311, 44));
-        gridLayout_2 = new QGridLayout(layoutWidget1);
+        layoutWidget->setGeometry(QRect(10, 60, 311, 44));
+        gridLayout_2 = new QGridLayout(layoutWidget);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
@@ -88,10 +60,38 @@ public:
 
         gridLayout_2->addItem(horizontalSpacer, 1, 0, 1, 1);
 
-        okButton = new QPushButton(layoutWidget1);
+        okButton = new QPushButton(layoutWidget);
         okButton->setObjectName(QStringLiteral("okButton"));
 
         gridLayout_2->addWidget(okButton, 1, 1, 1, 1);
+
+        layoutWidget_2 = new QWidget(AddDialog);
+        layoutWidget_2->setObjectName(QStringLiteral("layoutWidget_2"));
+        layoutWidget_2->setGeometry(QRect(10, 10, 311, 48));
+        gridLayout = new QGridLayout(layoutWidget_2);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        nameText = new QLabel(layoutWidget_2);
+        nameText->setObjectName(QStringLiteral("nameText"));
+
+        gridLayout->addWidget(nameText, 0, 0, 1, 1);
+
+        nameEdit = new QLineEdit(layoutWidget_2);
+        nameEdit->setObjectName(QStringLiteral("nameEdit"));
+
+        gridLayout->addWidget(nameEdit, 0, 1, 1, 1);
+
+        emailText = new QLabel(layoutWidget_2);
+        emailText->setObjectName(QStringLiteral("emailText"));
+
+        gridLayout->addWidget(emailText, 1, 0, 1, 1);
+
+        emailEdit = new QLineEdit(layoutWidget_2);
+        emailEdit->setObjectName(QStringLiteral("emailEdit"));
+
+        gridLayout->addWidget(emailEdit, 1, 1, 1, 1);
 
 
         retranslateUi(AddDialog);
@@ -103,9 +103,9 @@ public:
     void retranslateUi(QDialog *AddDialog)
     {
         AddDialog->setWindowTitle(QApplication::translate("AddDialog", "AddDialog", 0));
+        okButton->setText(QApplication::translate("AddDialog", "OK", 0));
         nameText->setText(QApplication::translate("AddDialog", "Name:", 0));
         emailText->setText(QApplication::translate("AddDialog", "E-mail:", 0));
-        okButton->setText(QApplication::translate("AddDialog", "OK", 0));
     } // retranslateUi
 
 };
