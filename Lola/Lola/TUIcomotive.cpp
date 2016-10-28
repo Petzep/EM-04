@@ -28,6 +28,12 @@ void TUIcomotive::on_testButton_clicked(void)
 	dialog.exec();
 }
 
+void TUIcomotive::on_menuButton_clicked(void)
+{
+	MenuDialog dialog(this);
+	dialog.exec();
+}
+
 void TUIcomotive::on_bangaList_currentItemChanged()
 {
 	QListWidgetItem *curItem = ui.bangaList->currentItem();
