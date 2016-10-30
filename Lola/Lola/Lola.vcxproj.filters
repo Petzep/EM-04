@@ -104,6 +104,15 @@
     <ClCompile Include="MenuDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StackSlide.cpp">
+      <Filter>Custom Plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_StackSlide.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_StackSlide.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TUIcomotive.h">
@@ -138,6 +147,9 @@
     </CustomBuild>
     <CustomBuild Include="MenuDialog.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="StackSlide.h">
+      <Filter>Custom Plugins</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

@@ -91,6 +91,8 @@
   <ItemGroup>
     <ClCompile Include="AddDialog.cpp" />
     <ClCompile Include="CustomClock.cpp" />
+    <ClCompile Include="GeneratedFiles\NewPi\moc_CustomClock.cpp" />
+    <ClCompile Include="GeneratedFiles\NewPi\moc_QtPieMenu.cpp" />
     <ClCompile Include="GeneratedFiles\qrc_TUIcomotive.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeader>
@@ -131,20 +133,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="QtPieMenu.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Command>
-    </CustomBuild>
+    <CustomBuild Include="QtPieMenu.h" />
     <CustomBuild Include="TestDialog.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </Message>
@@ -173,20 +162,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </Command>
     </CustomBuild>
-    <CustomBuild Include="CustomClock.h">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Command>
-    </CustomBuild>
+    <CustomBuild Include="CustomClock.h" />
     <ClInclude Include="GeneratedFiles\ui_AddDialog.h" />
     <ClInclude Include="GeneratedFiles\ui_TestDialog.h" />
     <ClInclude Include="GeneratedFiles\ui_TUIcomotive.h" />
