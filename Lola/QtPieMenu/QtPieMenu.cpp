@@ -49,12 +49,11 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	*/
 
 	selectionShape.translate(QPointF(-0.5, (qreal)-100 + itemShape.boundingRect().width() - 0.5));
-	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from top-left to bottom-right
+	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from center to edge
 	gradient.setColorAt(0, m_SelectionInnerColor);
 	gradient.setColorAt(1, m_SelectionOuterColor);
 	painter.rotate((360.0 / m_ItemNumbers)*m_Selection);
 	painter.fillRect(selectionShape.boundingRect(), gradient);
-	painter.restore();
 
 	painter.setPen(Qt::NoPen);
 	painter.setBrush(m_MenuColor);
