@@ -42,6 +42,10 @@
     <Filter Include="Custom Plugins">
       <UniqueIdentifier>{85501529-846f-417b-8e60-76c3009d0672}</UniqueIdentifier>
     </Filter>
+    <Filter Include="QMake Project files">
+      <UniqueIdentifier>{baccaa2f-7176-433b-ac1a-0771644aad61}</UniqueIdentifier>
+      <Extensions>pro</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -165,5 +169,11 @@
     <ClInclude Include="GeneratedFiles\ui_MenuDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TUIcomotive.pro" />
+    <None Include="raspberrypi.pro">
+      <Filter>QMake Project files</Filter>
+    </None>
   </ItemGroup>
 </Project>
