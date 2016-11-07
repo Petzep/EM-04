@@ -110,8 +110,10 @@
       <AdditionalDependencies>qtmain.lib;Qt5Designer.lib;Qt5AxContainer.lib;Qt5AxBase.lib;Qt5Bluetooth.lib;Qt5Concurrent.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Help.lib;Qt5Location.lib;Qt5Multimedia.lib;Qt5MultimediaWidgets.lib;Qt5Network.lib;Qt5Nfc.lib;Qt5OpenGL.lib;opengl32.lib;glu32.lib;Qt5Positioning.lib;Qt5PrintSupport.lib;Qt5Qml.lib;Qt5Quick.lib;Qt5QuickWidgets.lib;Qt5Script.lib;Qt5ScriptTools.lib;Qt5Sensors.lib;Qt5SerialPort.lib;Qt5Sql.lib;Qt5Svg.lib;Qt5Test.lib;Qt5UiTools.lib;Qt5WebChannel.lib;Qt5WebSockets.lib;Qt5Widgets.lib;Qt5WinExtras.lib;Qt5Xml.lib;Qt5XmlPatterns.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Message>Copy .dll to QtDesigner for use</Message>
-      <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(QTDIR)\plugins\designer\$(TargetName).dll"</Command>
+      <Message>Copy .dll to QtDesigner and .h, .cpp to TUIcomotive</Message>
+      <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(QTDIR)\plugins\designer\$(TargetName).dll"
+copy /Y "$(ProjectDir)$(TargetName).h" "$(SolutionDir)$(SolutionName)\"
+copy /Y "$(ProjectDir)$(TargetName).cpp" "$(SolutionDir)$(SolutionName)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

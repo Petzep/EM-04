@@ -1,7 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
-#include <qpainter.h>
+#include <Qtimer>
+#include <Qpainter>
 
 class QtPieMenu : public QWidget
 {

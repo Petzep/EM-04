@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
-#include <Qtimer>
+#include <qtimer.h>
 #include <QTime>
-#include <Qpainter>
+#include <qpainter.h>
 
 class CustomClock : public QWidget
 {
