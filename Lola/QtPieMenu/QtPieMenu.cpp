@@ -6,6 +6,7 @@ QtPieMenu::QtPieMenu(QWidget *parent)
 	setWindowTitle(tr("QtPieMenu"));
 	resize(500, 500);
 	m_ItemNumbers = 5;
+	m_Selection = 0;
 	m_SelectionRadius = 5.0;
 	m_GradientRadius = 2.0;
 	m_MenuColor = Qt::black;
@@ -13,6 +14,7 @@ QtPieMenu::QtPieMenu(QWidget *parent)
 	m_SelectionOuterColor = Qt::green;
 	m_SelectionColor = QColor(144, 0, 0);
 	m_DanielArrow = false;
+	loadIcons();
 }
 
 void QtPieMenu::paintEvent(QPaintEvent *)
@@ -61,12 +63,16 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 
 	itemShape.translate(QPoint(0, (qreal)-100 + itemShape.boundingRect().width()));
 	for (int i = 0; i < m_ItemNumbers; ++i) {
-		painter.drawConvexPolygon(itemShape);
+		if (m_Icons.at((i + m_Selection) % m_ItemNumbers))
+			//m_Icons.at((i + m_Selection) % m_ItemNumbers)->paint(&painter, selectionShape.toPolygon().boundingRect());
+			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(128, 128)));
+		else
+			painter.drawConvexPolygon(itemShape);
 		painter.rotate(360.0 / m_ItemNumbers);
 	}
 	painter.restore();
 	painter.setBrush(m_SelectionColor);
-	painter.drawConvexPolygon(itemShape);
+	//painter.drawConvexPolygon(itemShape);
 
 	if (m_DanielArrow)
 	{
@@ -74,7 +80,30 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 		painter.drawConvexPolygon(itemShape);
 		painter.drawConvexPolygon(danielShape);
 	}
+}
 
+void QtPieMenu::loadIcons()
+{
+	for (int i = 0; i < m_ItemNumbers; i++)
+	{
+		QString filename = tr("Icons/icon (%1).png").arg(i+1);
+		QIcon* icon = new QIcon(filename);
+		if (icon->pixmap(QSize(10, 10)).isNull()) //small trick to test if the icon has loaded
+		{
+			delete icon;
+			icon = nullptr;
+		}
+		m_Icons.push_back(icon);
+	}
+}
+
+void QtPieMenu::reloadIcons()
+{
+	for(QIcon* icon : m_Icons)
+		delete icon;
+	
+	m_Icons.clear();
+	loadIcons();
 }
 
 int QtPieMenu::itemNumbers() const
@@ -125,12 +154,14 @@ bool QtPieMenu::danielArrow() const
 void QtPieMenu::setItemNumbers(int number)
 {
 	m_ItemNumbers = number;
+	reloadIcons();
 	update();
 }
 
 void QtPieMenu::setSelectionRadius(double radius)
 {
 	m_SelectionRadius = radius;
+	reloadIcons();
 	update();
 }
 
@@ -175,3 +206,22 @@ void QtPieMenu::setSelection(int selection)
 	m_Selection = selection;
 	update();
 }
+
+/* 
+QIcon("icons/drag.png")
+
+QIcon::State state = QIcon::Off;
+QIcon::Mode mode = QIcon::Normal;
+if (guessModeStateAct->isChecked())
+{
+	if (imageName.contains(QLatin1String("_act"), Qt::CaseInsensitive))
+		mode = QIcon::Active;	
+	else if (imageName.contains(QLatin1String("_dis"), Qt::CaseInsensitive))
+		mode = QIcon::Disabled;
+	else if (imageName.contains(QLatin1String("_sel"), Qt::CaseInsensitive))
+		mode = QIcon::Selected;
+
+	if (imageName.contains(QLatin1String("_on"), Qt::CaseInsensitive))
+		state = QIcon::On;
+}
+*/

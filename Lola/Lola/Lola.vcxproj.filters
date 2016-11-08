@@ -125,9 +125,6 @@
     <CustomBuild Include="TUIcomotive.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="TUIcomotive.qrc">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="TestDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -154,6 +151,9 @@
     </CustomBuild>
     <CustomBuild Include="StackSlide.h">
       <Filter>Custom Plugins</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TUIcomotive.qrc">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

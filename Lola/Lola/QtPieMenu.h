@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QWidget>
 #include <qpainter.h>
+#include <qicon.h>
 
 class QtPieMenu : public QWidget
 {
@@ -28,6 +29,8 @@ public:
 	QColor selectionOuterColor() const;
 	int selection() const;
 	bool danielArrow() const;
+	void loadIcons();
+	void reloadIcons();
 
 	public slots:
 	void setItemNumbers(int number);
@@ -53,4 +56,5 @@ private:
 	QColor m_SelectionOuterColor;
 	QColor m_SelectionColor;
 	QColor m_MenuColor;
+	QVector<QIcon*> m_Icons;
 };
