@@ -42,6 +42,10 @@ public:
 	void setSelectionInnerColor(const QColor& color);
 	void setSelectionOuterColor(const QColor& color);
 	void setDanielArrow(bool toggle);
+	void select();
+
+	signals:
+	void itemSelect(int item);
 
 protected:
 	void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;

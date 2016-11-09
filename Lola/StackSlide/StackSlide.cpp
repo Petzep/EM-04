@@ -97,6 +97,11 @@ void StackSlide::slideInIdx(int idx, t_direction direction)
 	// widget() is a function inherited from QStackedWidget
 }
 
+void StackSlide::slideHome()
+{
+	slideInIdx(m_menuPage);
+}
+
 void StackSlide::animationDoneSlot(void)
 {
 	// when ready, call the QStackedWidget slot setCurrentIndex(int)

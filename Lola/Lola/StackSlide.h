@@ -45,6 +45,7 @@ public:
 	void slideInNext();
 	void slideInPrev();
 	void slideInIdx(int idx, enum t_direction direction = AUTOMATIC);
+	void slideHome();
 
 signals:
 	// this is used for internal purposes in the class engine

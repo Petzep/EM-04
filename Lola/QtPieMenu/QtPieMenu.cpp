@@ -183,6 +183,11 @@ void QtPieMenu::setDanielArrow(bool toggle)
 	update();
 }
 
+void QtPieMenu::select()
+{
+	emit itemSelect(m_Selection);
+}
+
 void QtPieMenu::setSelectionInnerColor(const QColor & color)
 {
 	m_SelectionInnerColor = color;

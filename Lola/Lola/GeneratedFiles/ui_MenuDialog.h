@@ -15,12 +15,13 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
-#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include "CustomClock.h"
 #include "QtPieMenu.h"
 #include "StackSlide.h"
 
@@ -29,11 +30,6 @@ QT_BEGIN_NAMESPACE
 class Ui_MenuDialog
 {
 public:
-    QTabWidget *tabWidget;
-    QWidget *tab;
-    CustomClock *customClock;
-    QWidget *tab_2;
-    QtPieMenu *qtPieMenu;
     QSlider *horizontalSlider;
     StackSlide *stackSlide;
     QWidget *page;
@@ -52,7 +48,6 @@ public:
     QPushButton *pushButton_6;
     QWidget *midPage;
     QtPieMenu *qtPieMenu_2;
-    QDial *dial;
     QWidget *rightPage;
     QPushButton *pushButton_12;
     QPushButton *pushButton_9;
@@ -67,27 +62,21 @@ public:
     QPushButton *pushButton_23;
     QPushButton *pushButton_20;
     QPushButton *pushButton_21;
+    QGroupBox *controllerBox;
+    QDial *dial;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *homeButton;
+    QPushButton *okButton;
+    QPushButton *backButton;
+    QWidget *widget1;
+    QVBoxLayout *verticalLayout;
 
     void setupUi(QDialog *MenuDialog)
     {
         if (MenuDialog->objectName().isEmpty())
             MenuDialog->setObjectName(QStringLiteral("MenuDialog"));
         MenuDialog->resize(704, 368);
-        tabWidget = new QTabWidget(MenuDialog);
-        tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 0, 341, 351));
-        tab = new QWidget();
-        tab->setObjectName(QStringLiteral("tab"));
-        customClock = new CustomClock(tab);
-        customClock->setObjectName(QStringLiteral("customClock"));
-        customClock->setGeometry(QRect(100, 80, 100, 100));
-        tabWidget->addTab(tab, QString());
-        tab_2 = new QWidget();
-        tab_2->setObjectName(QStringLiteral("tab_2"));
-        qtPieMenu = new QtPieMenu(tab_2);
-        qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
-        qtPieMenu->setGeometry(QRect(90, 70, 100, 100));
-        tabWidget->addTab(tab_2, QString());
         horizontalSlider = new QSlider(MenuDialog);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
         horizontalSlider->setGeometry(QRect(420, 340, 160, 22));
@@ -151,14 +140,6 @@ public:
         qtPieMenu_2 = new QtPieMenu(midPage);
         qtPieMenu_2->setObjectName(QStringLiteral("qtPieMenu_2"));
         qtPieMenu_2->setGeometry(QRect(30, 30, 251, 261));
-        dial = new QDial(midPage);
-        dial->setObjectName(QStringLiteral("dial"));
-        dial->setGeometry(QRect(120, 140, 50, 64));
-        dial->setMaximum(5);
-        dial->setValue(3);
-        dial->setSliderPosition(3);
-        dial->setTracking(true);
-        dial->setWrapping(true);
         stackSlide->addWidget(midPage);
         rightPage = new QWidget();
         rightPage->setObjectName(QStringLiteral("rightPage"));
@@ -202,6 +183,54 @@ public:
         pushButton_21->setObjectName(QStringLiteral("pushButton_21"));
         pushButton_21->setGeometry(QRect(140, 60, 75, 23));
         stackSlide->addWidget(page_2);
+        controllerBox = new QGroupBox(MenuDialog);
+        controllerBox->setObjectName(QStringLiteral("controllerBox"));
+        controllerBox->setGeometry(QRect(60, 100, 251, 141));
+        dial = new QDial(controllerBox);
+        dial->setObjectName(QStringLiteral("dial"));
+        dial->setGeometry(QRect(90, 20, 61, 61));
+        dial->setMaximum(5);
+        dial->setValue(3);
+        dial->setSliderPosition(3);
+        dial->setTracking(true);
+        dial->setWrapping(true);
+        widget = new QWidget(controllerBox);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(0, 100, 239, 25));
+        horizontalLayout = new QHBoxLayout(widget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        homeButton = new QPushButton(widget);
+        homeButton->setObjectName(QStringLiteral("homeButton"));
+
+        horizontalLayout->addWidget(homeButton);
+
+        okButton = new QPushButton(widget);
+        okButton->setObjectName(QStringLiteral("okButton"));
+
+        horizontalLayout->addWidget(okButton);
+
+        backButton = new QPushButton(widget);
+        backButton->setObjectName(QStringLiteral("backButton"));
+
+        horizontalLayout->addWidget(backButton);
+
+        widget1 = new QWidget(MenuDialog);
+        widget1->setObjectName(QStringLiteral("widget1"));
+        widget1->setGeometry(QRect(0, 0, 2, 2));
+        verticalLayout = new QVBoxLayout(widget1);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        controllerBox->raise();
+        horizontalSlider->raise();
+        stackSlide->raise();
+        okButton->raise();
+        homeButton->raise();
+        backButton->raise();
         QWidget::setTabOrder(horizontalSlider, dial);
         QWidget::setTabOrder(dial, pushButton_2);
         QWidget::setTabOrder(pushButton_2, pushButton);
@@ -221,8 +250,7 @@ public:
         QWidget::setTabOrder(pushButton_15, pushButton_17);
         QWidget::setTabOrder(pushButton_17, pushButton_13);
         QWidget::setTabOrder(pushButton_13, pushButton_16);
-        QWidget::setTabOrder(pushButton_16, tabWidget);
-        QWidget::setTabOrder(tabWidget, pushButton_24);
+        QWidget::setTabOrder(pushButton_16, pushButton_24);
         QWidget::setTabOrder(pushButton_24, pushButton_19);
         QWidget::setTabOrder(pushButton_19, pushButton_22);
         QWidget::setTabOrder(pushButton_22, pushButton_23);
@@ -232,8 +260,9 @@ public:
         retranslateUi(MenuDialog);
         QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), stackSlide, SLOT(slideInIdx(int)));
         QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu_2, SLOT(setSelection(int)));
+        QObject::connect(okButton, SIGNAL(clicked()), qtPieMenu_2, SLOT(select()));
+        QObject::connect(qtPieMenu_2, SIGNAL(itemSelect(int)), stackSlide, SLOT(slideInIdx(int)));
 
-        tabWidget->setCurrentIndex(0);
         stackSlide->setCurrentIndex(2);
 
 
@@ -243,8 +272,6 @@ public:
     void retranslateUi(QDialog *MenuDialog)
     {
         MenuDialog->setWindowTitle(QApplication::translate("MenuDialog", "MenuDialog", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MenuDialog", "Tab 1", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MenuDialog", "Tab 2", 0));
         pushButton_18->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
         pushButton_14->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
         pushButton_15->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
@@ -269,6 +296,10 @@ public:
         pushButton_23->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
         pushButton_20->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
         pushButton_21->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
+        controllerBox->setTitle(QApplication::translate("MenuDialog", "Controller", 0));
+        homeButton->setText(QApplication::translate("MenuDialog", "&Home", 0));
+        okButton->setText(QApplication::translate("MenuDialog", "&OK", 0));
+        backButton->setText(QApplication::translate("MenuDialog", "&Back", 0));
     } // retranslateUi
 
 };
