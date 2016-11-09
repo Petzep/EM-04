@@ -6,7 +6,7 @@ StackSlide::StackSlide(QWidget *parent)
 	// Now, initialize some private variables with default values
 	m_vertical = false;
 	// setVerticalMode(true);
-	m_speed = 1000;
+	m_speed = 600;
 	m_animationtype = QEasingCurve::OutCubic; // check out the QEasingCurve documentation for different styles
 	m_now = 0;
 	m_next = 0;

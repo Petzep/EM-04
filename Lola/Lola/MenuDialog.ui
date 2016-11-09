@@ -59,9 +59,6 @@
    <property name="menuPage">
     <number>2</number>
    </property>
-   <property name="speed">
-    <number>600</number>
-   </property>
    <property name="wrap">
     <bool>false</bool>
    </property>
@@ -435,7 +432,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -469,7 +466,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -480,12 +477,10 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
+  <zorder>layoutWidget</zorder>
   <zorder>controllerBox</zorder>
   <zorder>horizontalSlider</zorder>
   <zorder>stackSlide</zorder>
-  <zorder>okButton</zorder>
-  <zorder>homeButton</zorder>
-  <zorder>backButton</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -591,6 +586,22 @@
     <hint type="destinationlabel">
      <x>356</x>
      <y>94</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>homeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>stackSlide</receiver>
+   <slot>slideHome()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>93</x>
+     <y>212</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>362</x>
+     <y>299</y>
     </hint>
    </hints>
   </connection>
