@@ -29,21 +29,21 @@ public:
     QPushButton *pushButton;
     QtPieMenu *qtPieMenu;
     QCheckBox *checkBox;
-    CustomClock *customClock;
     QDial *dial;
+    CustomClock *customClock;
     QCheckBox *checkBox_2;
 
     void setupUi(QDialog *TestDialog)
     {
         if (TestDialog->objectName().isEmpty())
             TestDialog->setObjectName(QStringLiteral("TestDialog"));
-        TestDialog->resize(674, 420);
+        TestDialog->resize(586, 377);
         pushButton = new QPushButton(TestDialog);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(20, 70, 75, 23));
+        pushButton->setGeometry(QRect(0, 60, 75, 23));
         qtPieMenu = new QtPieMenu(TestDialog);
         qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
-        qtPieMenu->setGeometry(QRect(300, 30, 281, 341));
+        qtPieMenu->setGeometry(QRect(280, 20, 281, 341));
         qtPieMenu->setItemNumbers(20);
         qtPieMenu->setSelectionColor(QColor(144, 0, 0));
         qtPieMenu->setSelectionInnerColor(QColor(255, 255, 255));
@@ -52,27 +52,27 @@ public:
         qtPieMenu->setProperty("colorSecondHand", QVariant(QColor(45, 130, 0)));
         checkBox = new QCheckBox(TestDialog);
         checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(30, 20, 70, 17));
-        customClock = new CustomClock(TestDialog);
-        customClock->setObjectName(QStringLiteral("customClock"));
-        customClock->setGeometry(QRect(40, 180, 161, 141));
-        customClock->setProperty("ToggleSecondHand", QVariant(true));
-        customClock->setColorMinuteHand(QColor(255, 0, 0, 191));
+        checkBox->setGeometry(QRect(10, 10, 70, 17));
         dial = new QDial(TestDialog);
         dial->setObjectName(QStringLiteral("dial"));
-        dial->setGeometry(QRect(20, 90, 50, 64));
+        dial->setGeometry(QRect(0, 80, 50, 64));
         dial->setMinimum(1);
         dial->setMaximum(20);
         dial->setPageStep(10);
+        customClock = new CustomClock(TestDialog);
+        customClock->setObjectName(QStringLiteral("customClock"));
+        customClock->setGeometry(QRect(20, 170, 161, 141));
+        customClock->setProperty("ToggleSecondHand", QVariant(true));
+        customClock->setColorMinuteHand(QColor(255, 0, 0, 191));
         checkBox_2 = new QCheckBox(TestDialog);
         checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setGeometry(QRect(30, 40, 121, 17));
+        checkBox_2->setGeometry(QRect(10, 30, 121, 17));
 
         retranslateUi(TestDialog);
         QObject::connect(pushButton, SIGNAL(clicked()), customClock, SLOT(toggleSecondHand()));
-        QObject::connect(checkBox, SIGNAL(clicked(bool)), customClock, SLOT(setSecondHand(bool)));
-        QObject::connect(dial, SIGNAL(sliderMoved(int)), qtPieMenu, SLOT(setSelection(int)));
         QObject::connect(checkBox_2, SIGNAL(clicked(bool)), qtPieMenu, SLOT(setDanielArrow(bool)));
+        QObject::connect(checkBox, SIGNAL(clicked(bool)), customClock, SLOT(setSecondHand(bool)));
+        QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu, SLOT(setSelection(int)));
 
         QMetaObject::connectSlotsByName(TestDialog);
     } // setupUi

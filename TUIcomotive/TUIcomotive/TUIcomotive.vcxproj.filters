@@ -40,6 +40,11 @@
       <UniqueIdentifier>{70754a64-5440-4eb7-a10b-476078625007}</UniqueIdentifier>
       <Extensions>pro</Extensions>
     </Filter>
+    <Filter Include="Generated Files\NewPi">
+      <UniqueIdentifier>{c29d1894-86fc-4fbf-a276-151ee52dc2da}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,10 +62,16 @@
     <ClCompile Include="TestDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CustomClock.cpp">
-      <Filter>CustomPlugin</Filter>
+    <ClCompile Include="GeneratedFiles\NewPi\moc_CustomClock.cpp">
+      <Filter>Generated Files\NewPi</Filter>
     </ClCompile>
     <ClCompile Include="QtPieMenu.cpp">
+      <Filter>CustomPlugin</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\NewPi\moc_QtPieMenu.cpp">
+      <Filter>Generated Files\NewPi</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomClock.cpp">
       <Filter>CustomPlugin</Filter>
     </ClCompile>
   </ItemGroup>
