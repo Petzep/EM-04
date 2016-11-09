@@ -54,7 +54,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from center to edge
 	gradient.setColorAt(0, m_SelectionInnerColor);
 	gradient.setColorAt(1, m_SelectionOuterColor);
-	painter.rotate((360.0 / m_ItemNumbers)*m_Selection);
+	painter.rotate((-360.0 / m_ItemNumbers)*m_Selection);
 	painter.fillRect(selectionShape.boundingRect(), gradient);
 
 	painter.setPen(Qt::NoPen);
@@ -68,7 +68,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(128, 128)));
 		else
 			painter.drawConvexPolygon(itemShape);
-		painter.rotate(360.0 / m_ItemNumbers);
+		painter.rotate(-360.0 / m_ItemNumbers);
 	}
 	painter.restore();
 	painter.setBrush(m_SelectionColor);

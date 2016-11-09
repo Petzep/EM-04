@@ -18,10 +18,14 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLCDNumber>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "CustomClock.h"
 #include "QtPieMenu.h"
 #include "StackSlide.h"
 
@@ -33,12 +37,12 @@ public:
     QSlider *horizontalSlider;
     StackSlide *stackSlide;
     QWidget *page;
-    QPushButton *pushButton_18;
-    QPushButton *pushButton_14;
-    QPushButton *pushButton_15;
-    QPushButton *pushButton_17;
+    CustomClock *customClock;
+    QProgressBar *progressBar;
+    QLCDNumber *lcdNumber;
+    QLabel *label;
     QPushButton *pushButton_13;
-    QPushButton *pushButton_16;
+    QPushButton *pushButton_14;
     QWidget *leftPage;
     QPushButton *pushButton;
     QPushButton *pushButton_2;
@@ -64,12 +68,12 @@ public:
     QPushButton *pushButton_21;
     QGroupBox *controllerBox;
     QDial *dial;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
     QPushButton *homeButton;
     QPushButton *okButton;
     QPushButton *backButton;
-    QWidget *widget1;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout;
 
     void setupUi(QDialog *MenuDialog)
@@ -91,28 +95,28 @@ public:
         stackSlide->setGeometry(QRect(350, 30, 321, 301));
         stackSlide->setLineWidth(7);
         stackSlide->setMenuPage(2);
-        stackSlide->setSpeed(600);
         stackSlide->setWrap(false);
         page = new QWidget();
         page->setObjectName(QStringLiteral("page"));
-        pushButton_18 = new QPushButton(page);
-        pushButton_18->setObjectName(QStringLiteral("pushButton_18"));
-        pushButton_18->setGeometry(QRect(100, 200, 75, 23));
-        pushButton_14 = new QPushButton(page);
-        pushButton_14->setObjectName(QStringLiteral("pushButton_14"));
-        pushButton_14->setGeometry(QRect(130, 40, 70, 23));
-        pushButton_15 = new QPushButton(page);
-        pushButton_15->setObjectName(QStringLiteral("pushButton_15"));
-        pushButton_15->setGeometry(QRect(90, 160, 75, 23));
-        pushButton_17 = new QPushButton(page);
-        pushButton_17->setObjectName(QStringLiteral("pushButton_17"));
-        pushButton_17->setGeometry(QRect(130, 240, 75, 23));
+        customClock = new CustomClock(page);
+        customClock->setObjectName(QStringLiteral("customClock"));
+        customClock->setGeometry(QRect(50, 80, 100, 100));
+        progressBar = new QProgressBar(page);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setGeometry(QRect(50, 250, 161, 20));
+        progressBar->setValue(24);
+        lcdNumber = new QLCDNumber(page);
+        lcdNumber->setObjectName(QStringLiteral("lcdNumber"));
+        lcdNumber->setGeometry(QRect(30, 30, 64, 23));
+        label = new QLabel(page);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(150, 30, 81, 21));
         pushButton_13 = new QPushButton(page);
         pushButton_13->setObjectName(QStringLiteral("pushButton_13"));
-        pushButton_13->setGeometry(QRect(100, 80, 75, 23));
-        pushButton_16 = new QPushButton(page);
-        pushButton_16->setObjectName(QStringLiteral("pushButton_16"));
-        pushButton_16->setGeometry(QRect(90, 120, 75, 23));
+        pushButton_13->setGeometry(QRect(30, 200, 75, 23));
+        pushButton_14 = new QPushButton(page);
+        pushButton_14->setObjectName(QStringLiteral("pushButton_14"));
+        pushButton_14->setGeometry(QRect(120, 200, 75, 23));
         stackSlide->addWidget(page);
         leftPage = new QWidget();
         leftPage->setObjectName(QStringLiteral("leftPage"));
@@ -194,43 +198,41 @@ public:
         dial->setSliderPosition(3);
         dial->setTracking(true);
         dial->setWrapping(true);
-        widget = new QWidget(controllerBox);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(0, 100, 239, 25));
-        horizontalLayout = new QHBoxLayout(widget);
+        layoutWidget = new QWidget(controllerBox);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(0, 100, 239, 25));
+        horizontalLayout = new QHBoxLayout(layoutWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        homeButton = new QPushButton(widget);
+        homeButton = new QPushButton(layoutWidget);
         homeButton->setObjectName(QStringLiteral("homeButton"));
 
         horizontalLayout->addWidget(homeButton);
 
-        okButton = new QPushButton(widget);
+        okButton = new QPushButton(layoutWidget);
         okButton->setObjectName(QStringLiteral("okButton"));
 
         horizontalLayout->addWidget(okButton);
 
-        backButton = new QPushButton(widget);
+        backButton = new QPushButton(layoutWidget);
         backButton->setObjectName(QStringLiteral("backButton"));
 
         horizontalLayout->addWidget(backButton);
 
-        widget1 = new QWidget(MenuDialog);
-        widget1->setObjectName(QStringLiteral("widget1"));
-        widget1->setGeometry(QRect(0, 0, 2, 2));
-        verticalLayout = new QVBoxLayout(widget1);
+        layoutWidget1 = new QWidget(MenuDialog);
+        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
+        layoutWidget1->setGeometry(QRect(0, 0, 2, 2));
+        verticalLayout = new QVBoxLayout(layoutWidget1);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
+        layoutWidget->raise();
         controllerBox->raise();
         horizontalSlider->raise();
         stackSlide->raise();
-        okButton->raise();
-        homeButton->raise();
-        backButton->raise();
         QWidget::setTabOrder(horizontalSlider, dial);
         QWidget::setTabOrder(dial, pushButton_2);
         QWidget::setTabOrder(pushButton_2, pushButton);
@@ -244,13 +246,7 @@ public:
         QWidget::setTabOrder(pushButton_7, pushButton_10);
         QWidget::setTabOrder(pushButton_10, pushButton_8);
         QWidget::setTabOrder(pushButton_8, pushButton_11);
-        QWidget::setTabOrder(pushButton_11, pushButton_18);
-        QWidget::setTabOrder(pushButton_18, pushButton_14);
-        QWidget::setTabOrder(pushButton_14, pushButton_15);
-        QWidget::setTabOrder(pushButton_15, pushButton_17);
-        QWidget::setTabOrder(pushButton_17, pushButton_13);
-        QWidget::setTabOrder(pushButton_13, pushButton_16);
-        QWidget::setTabOrder(pushButton_16, pushButton_24);
+        QWidget::setTabOrder(pushButton_11, pushButton_24);
         QWidget::setTabOrder(pushButton_24, pushButton_19);
         QWidget::setTabOrder(pushButton_19, pushButton_22);
         QWidget::setTabOrder(pushButton_22, pushButton_23);
@@ -262,8 +258,9 @@ public:
         QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu_2, SLOT(setSelection(int)));
         QObject::connect(okButton, SIGNAL(clicked()), qtPieMenu_2, SLOT(select()));
         QObject::connect(qtPieMenu_2, SIGNAL(itemSelect(int)), stackSlide, SLOT(slideInIdx(int)));
+        QObject::connect(homeButton, SIGNAL(clicked()), stackSlide, SLOT(slideHome()));
 
-        stackSlide->setCurrentIndex(2);
+        stackSlide->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MenuDialog);
@@ -272,12 +269,9 @@ public:
     void retranslateUi(QDialog *MenuDialog)
     {
         MenuDialog->setWindowTitle(QApplication::translate("MenuDialog", "MenuDialog", 0));
-        pushButton_18->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
-        pushButton_14->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
-        pushButton_15->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
-        pushButton_17->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
-        pushButton_13->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
-        pushButton_16->setText(QApplication::translate("MenuDialog", "Upper Button", 0));
+        label->setText(QApplication::translate("MenuDialog", "Test Text", 0));
+        pushButton_13->setText(QApplication::translate("MenuDialog", "PushButton", 0));
+        pushButton_14->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_2->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_3->setText(QApplication::translate("MenuDialog", "PushButton", 0));
