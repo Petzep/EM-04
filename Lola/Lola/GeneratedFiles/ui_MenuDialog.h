@@ -52,6 +52,7 @@ public:
     QPushButton *pushButton_6;
     QWidget *midPage;
     QtPieMenu *qtPieMenu_2;
+    QLabel *selectionLabel;
     QWidget *rightPage;
     QPushButton *pushButton_12;
     QPushButton *pushButton_9;
@@ -67,7 +68,7 @@ public:
     QPushButton *pushButton_20;
     QPushButton *pushButton_21;
     QGroupBox *controllerBox;
-    QDial *dial;
+    QDial *controlDial;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
     QPushButton *homeButton;
@@ -144,6 +145,9 @@ public:
         qtPieMenu_2 = new QtPieMenu(midPage);
         qtPieMenu_2->setObjectName(QStringLiteral("qtPieMenu_2"));
         qtPieMenu_2->setGeometry(QRect(30, 30, 251, 261));
+        selectionLabel = new QLabel(midPage);
+        selectionLabel->setObjectName(QStringLiteral("selectionLabel"));
+        selectionLabel->setGeometry(QRect(130, 140, 47, 13));
         stackSlide->addWidget(midPage);
         rightPage = new QWidget();
         rightPage->setObjectName(QStringLiteral("rightPage"));
@@ -190,14 +194,18 @@ public:
         controllerBox = new QGroupBox(MenuDialog);
         controllerBox->setObjectName(QStringLiteral("controllerBox"));
         controllerBox->setGeometry(QRect(60, 100, 251, 141));
-        dial = new QDial(controllerBox);
-        dial->setObjectName(QStringLiteral("dial"));
-        dial->setGeometry(QRect(90, 20, 61, 61));
-        dial->setMaximum(5);
-        dial->setValue(3);
-        dial->setSliderPosition(3);
-        dial->setTracking(true);
-        dial->setWrapping(true);
+        controlDial = new QDial(controllerBox);
+        controlDial->setObjectName(QStringLiteral("controlDial"));
+        controlDial->setGeometry(QRect(90, 20, 61, 61));
+        controlDial->setMinimum(2);
+        controlDial->setMaximum(7);
+        controlDial->setValue(2);
+        controlDial->setSliderPosition(2);
+        controlDial->setTracking(true);
+        controlDial->setInvertedAppearance(true);
+        controlDial->setInvertedControls(true);
+        controlDial->setWrapping(true);
+        controlDial->setNotchesVisible(true);
         layoutWidget = new QWidget(controllerBox);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
         layoutWidget->setGeometry(QRect(0, 100, 239, 25));
@@ -233,8 +241,8 @@ public:
         controllerBox->raise();
         horizontalSlider->raise();
         stackSlide->raise();
-        QWidget::setTabOrder(horizontalSlider, dial);
-        QWidget::setTabOrder(dial, pushButton_2);
+        QWidget::setTabOrder(horizontalSlider, controlDial);
+        QWidget::setTabOrder(controlDial, pushButton_2);
         QWidget::setTabOrder(pushButton_2, pushButton);
         QWidget::setTabOrder(pushButton, pushButton_3);
         QWidget::setTabOrder(pushButton_3, pushButton_4);
@@ -254,13 +262,13 @@ public:
         QWidget::setTabOrder(pushButton_20, pushButton_21);
 
         retranslateUi(MenuDialog);
-        QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), stackSlide, SLOT(slideInIdx(int)));
-        QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu_2, SLOT(setSelection(int)));
         QObject::connect(okButton, SIGNAL(clicked()), qtPieMenu_2, SLOT(select()));
         QObject::connect(qtPieMenu_2, SIGNAL(itemSelect(int)), stackSlide, SLOT(slideInIdx(int)));
         QObject::connect(homeButton, SIGNAL(clicked()), stackSlide, SLOT(slideHome()));
+        QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), stackSlide, SLOT(slideInIdx(int)));
+        QObject::connect(qtPieMenu_2, SIGNAL(itemName(QString)), selectionLabel, SLOT(setText(QString)));
 
-        stackSlide->setCurrentIndex(0);
+        stackSlide->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MenuDialog);
@@ -278,6 +286,7 @@ public:
         pushButton_4->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_5->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_6->setText(QApplication::translate("MenuDialog", "PushButton", 0));
+        selectionLabel->setText(QApplication::translate("MenuDialog", "EM-04", 0));
         pushButton_12->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_9->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_7->setText(QApplication::translate("MenuDialog", "PushButton", 0));

@@ -84,6 +84,19 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 
 void QtPieMenu::loadIcons()
 {
+	QFile inputFile("Icons/iconLabel.txt");
+	if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream in(&inputFile);
+		while (!in.atEnd())
+		{
+			QString line = in.readLine();
+			m_IconNames.push_back(line);
+
+		}
+		inputFile.close();
+	}
+
 	for (int i = 0; i < m_ItemNumbers; i++)
 	{
 		QString filename = tr("Icons/icon (%1).png").arg(i+1);
@@ -209,6 +222,7 @@ void QtPieMenu::setMenuColor(const QColor & color)
 void QtPieMenu::setSelection(int selection)
 {
 	m_Selection = selection;
+	emit itemName(m_IconNames.at(selection));
 	update();
 }
 

@@ -90,9 +90,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CustomClock.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="QtPieMenu.cpp">
-      <Filter>Custom Plugins</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_QtPieMenu.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -116,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_StackSlide.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="QtPieMenu.cpp">
+      <Filter>Custom Plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

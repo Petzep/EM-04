@@ -227,6 +227,19 @@
       </rect>
      </property>
     </widget>
+    <widget class="QLabel" name="selectionLabel">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>140</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>EM-04</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="rightPage">
     <widget class="QPushButton" name="pushButton_12">
@@ -401,7 +414,7 @@
    <property name="title">
     <string>Controller</string>
    </property>
-   <widget class="QDial" name="dial">
+   <widget class="QDial" name="controlDial">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -410,14 +423,17 @@
       <height>61</height>
      </rect>
     </property>
+    <property name="minimum">
+     <number>2</number>
+    </property>
     <property name="maximum">
-     <number>5</number>
+     <number>7</number>
     </property>
     <property name="value">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="sliderPosition">
-     <number>3</number>
+     <number>2</number>
     </property>
     <property name="tracking">
      <bool>true</bool>
@@ -505,7 +521,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>horizontalSlider</tabstop>
-  <tabstop>dial</tabstop>
+  <tabstop>controlDial</tabstop>
   <tabstop>pushButton_2</tabstop>
   <tabstop>pushButton</tabstop>
   <tabstop>pushButton_3</tabstop>
@@ -527,38 +543,6 @@
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>stackSlide</receiver>
-   <slot>slideInIdx(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>556</x>
-     <y>353</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>647</x>
-     <y>305</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dial</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>qtPieMenu_2</receiver>
-   <slot>setSelection(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>184</x>
-     <y>164</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>404</x>
-     <y>159</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>okButton</sender>
    <signal>clicked()</signal>
@@ -604,6 +588,38 @@
     <hint type="destinationlabel">
      <x>362</x>
      <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>horizontalSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>stackSlide</receiver>
+   <slot>slideInIdx(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>556</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>647</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qtPieMenu_2</sender>
+   <signal>itemName(QString)</signal>
+   <receiver>selectionLabel</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>466</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>496</x>
+     <y>179</y>
     </hint>
    </hints>
   </connection>

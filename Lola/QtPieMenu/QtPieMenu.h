@@ -3,6 +3,8 @@
 #include <QtWidgets/QWidget>
 #include <qpainter.h>
 #include <qicon.h>
+#include <qfile.h>
+#include <qtextstream.h>
 
 class QtPieMenu : public QWidget
 {
@@ -46,6 +48,7 @@ public:
 
 	signals:
 	void itemSelect(int item);
+	void itemName(QString name);
 
 protected:
 	void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
@@ -61,4 +64,5 @@ private:
 	QColor m_SelectionColor;
 	QColor m_MenuColor;
 	QVector<QIcon*> m_Icons;
+	QVector<QString> m_IconNames;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <qevent.h>
 #include "ui_MenuDialog.h"
 
 class MenuDialog : public QDialog, public Ui::MenuDialog
@@ -10,4 +11,8 @@ class MenuDialog : public QDialog, public Ui::MenuDialog
 public:
 	MenuDialog(QWidget *parent = Q_NULLPTR);
 	~MenuDialog();
+	bool event(QEvent *event);
+
+public slots:
+	void on_controlDial_valueChanged(int);
 };
