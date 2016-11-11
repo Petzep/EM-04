@@ -101,6 +101,12 @@
    <property name="pageStep">
     <number>10</number>
    </property>
+   <property name="invertedAppearance">
+    <bool>true</bool>
+   </property>
+   <property name="wrapping">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="CustomClock" name="customClock">
    <property name="geometry">
@@ -133,6 +139,19 @@
    </property>
    <property name="text">
     <string>DANIEL ARROW!!!!!</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>30</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>
@@ -212,6 +231,38 @@
     <hint type="destinationlabel">
      <x>307</x>
      <y>140</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qtPieMenu</sender>
+   <signal>itemName(QString)</signal>
+   <receiver>label</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>448</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>436</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qtPieMenu</sender>
+   <signal>itemSelect(int)</signal>
+   <receiver>label</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>420</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>420</x>
+     <y>183</y>
     </hint>
    </hints>
   </connection>

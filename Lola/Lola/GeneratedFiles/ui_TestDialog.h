@@ -17,6 +17,7 @@
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include "CustomClock.h"
 #include "QtPieMenu.h"
@@ -32,6 +33,7 @@ public:
     QDial *dial;
     CustomClock *customClock;
     QCheckBox *checkBox_2;
+    QLabel *label;
 
     void setupUi(QDialog *TestDialog)
     {
@@ -59,6 +61,8 @@ public:
         dial->setMinimum(1);
         dial->setMaximum(20);
         dial->setPageStep(10);
+        dial->setInvertedAppearance(true);
+        dial->setWrapping(true);
         customClock = new CustomClock(TestDialog);
         customClock->setObjectName(QStringLiteral("customClock"));
         customClock->setGeometry(QRect(20, 170, 161, 141));
@@ -67,12 +71,17 @@ public:
         checkBox_2 = new QCheckBox(TestDialog);
         checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
         checkBox_2->setGeometry(QRect(10, 30, 121, 17));
+        label = new QLabel(TestDialog);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(400, 30, 47, 13));
 
         retranslateUi(TestDialog);
         QObject::connect(pushButton, SIGNAL(clicked()), customClock, SLOT(toggleSecondHand()));
         QObject::connect(checkBox_2, SIGNAL(clicked(bool)), qtPieMenu, SLOT(setDanielArrow(bool)));
         QObject::connect(checkBox, SIGNAL(clicked(bool)), customClock, SLOT(setSecondHand(bool)));
         QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu, SLOT(setSelection(int)));
+        QObject::connect(qtPieMenu, SIGNAL(itemName(QString)), label, SLOT(setText(QString)));
+        QObject::connect(qtPieMenu, SIGNAL(itemSelect(int)), label, SLOT(clear()));
 
         QMetaObject::connectSlotsByName(TestDialog);
     } // setupUi
@@ -83,6 +92,7 @@ public:
         pushButton->setText(QApplication::translate("TestDialog", "PushButton", 0));
         checkBox->setText(QApplication::translate("TestDialog", "CheckBox", 0));
         checkBox_2->setText(QApplication::translate("TestDialog", "DANIEL ARROW!!!!!", 0));
+        label->setText(QApplication::translate("TestDialog", "TextLabel", 0));
     } // retranslateUi
 
 };

@@ -1,4 +1,23 @@
 <RCC>
-    <qresource prefix="TUIcomotive">
+    <qresource prefix="/TUIcomotive">
+        <file>Icons/boot.mp4</file>
+    </qresource>
+    <qresource prefix="/menuIcons">
+        <file>Icons/icon (1).png</file>
+        <file>Icons/icon (2).png</file>
+        <file>Icons/icon (3).png</file>
+        <file>Icons/icon (4).png</file>
+        <file>Icons/icon (5).png</file>
+        <file>Icons/icon (6).png</file>
+        <file>Icons/icon (7).png</file>
+        <file>Icons/icon (8).png</file>
+        <file>Icons/icon (9).png</file>
+        <file>Icons/icon (10).png</file>
+        <file>Icons/icon (11).png</file>
+        <file>Icons/icon (12).png</file>
+        <file>Icons/icon (13).png</file>
+        <file>Icons/icon (14).png</file>
+        <file>Icons/icon (15).png</file>
+        <file>Icons/iconLabel.txt</file>
     </qresource>
 </RCC>

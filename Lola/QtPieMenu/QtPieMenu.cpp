@@ -84,7 +84,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 
 void QtPieMenu::loadIcons()
 {
-	QFile inputFile("Icons/iconLabel.txt");
+	QFile inputFile(":menuIcons/Icons/iconLabel.txt");
 	if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		QTextStream in(&inputFile);
@@ -99,7 +99,7 @@ void QtPieMenu::loadIcons()
 
 	for (int i = 0; i < m_ItemNumbers; i++)
 	{
-		QString filename = tr("Icons/icon (%1).png").arg(i+1);
+		QString filename = tr(":menuIcons/Icons/icon (%1).png").arg(i+1);
 		QIcon* icon = new QIcon(filename);
 		if (icon->pixmap(QSize(10, 10)).isNull()) //small trick to test if the icon has loaded
 		{
@@ -222,7 +222,11 @@ void QtPieMenu::setMenuColor(const QColor & color)
 void QtPieMenu::setSelection(int selection)
 {
 	m_Selection = selection;
-	emit itemName(m_IconNames.at(selection));
+	QString name;
+	if (selection > m_IconNames.count() - 1)
+		emit itemName("NaN");
+	else
+		emit itemName(m_IconNames.at(selection)); 
 	update();
 }
 
