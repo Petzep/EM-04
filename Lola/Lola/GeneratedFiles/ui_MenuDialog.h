@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGroupBox>
@@ -23,6 +24,7 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include "CustomClock.h"
@@ -61,12 +63,12 @@ public:
     QPushButton *pushButton_8;
     QPushButton *pushButton_11;
     QWidget *page_2;
-    QPushButton *pushButton_24;
-    QPushButton *pushButton_19;
-    QPushButton *pushButton_22;
-    QPushButton *pushButton_23;
-    QPushButton *pushButton_20;
-    QPushButton *pushButton_21;
+    QDial *bassDial;
+    QDial *trebDial;
+    QDial *volumeDial;
+    QLabel *label_4;
+    QLabel *label_5;
+    QLabel *label_6;
     QGroupBox *controllerBox;
     QDial *controlDial;
     QWidget *layoutWidget;
@@ -76,15 +78,25 @@ public:
     QPushButton *backButton;
     QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout;
+    QGroupBox *groupBox;
+    QLabel *label_2;
+    QLabel *label_3;
+    QCheckBox *debugCheckBox;
+    QGroupBox *groupBox_2;
+    QTextBrowser *textBrowser;
 
     void setupUi(QDialog *MenuDialog)
     {
         if (MenuDialog->objectName().isEmpty())
             MenuDialog->setObjectName(QStringLiteral("MenuDialog"));
+        MenuDialog->setEnabled(true);
         MenuDialog->resize(704, 368);
         horizontalSlider = new QSlider(MenuDialog);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
+        horizontalSlider->setEnabled(true);
         horizontalSlider->setGeometry(QRect(420, 340, 160, 22));
+        horizontalSlider->setMouseTracking(true);
+        horizontalSlider->setFocusPolicy(Qt::NoFocus);
         horizontalSlider->setMinimum(0);
         horizontalSlider->setMaximum(4);
         horizontalSlider->setValue(2);
@@ -145,9 +157,12 @@ public:
         qtPieMenu_2 = new QtPieMenu(midPage);
         qtPieMenu_2->setObjectName(QStringLiteral("qtPieMenu_2"));
         qtPieMenu_2->setGeometry(QRect(30, 30, 251, 261));
+        qtPieMenu_2->setFocusPolicy(Qt::ClickFocus);
+        qtPieMenu_2->setSelection(2);
         selectionLabel = new QLabel(midPage);
         selectionLabel->setObjectName(QStringLiteral("selectionLabel"));
-        selectionLabel->setGeometry(QRect(130, 140, 47, 13));
+        selectionLabel->setGeometry(QRect(96, 140, 111, 20));
+        selectionLabel->setAlignment(Qt::AlignCenter);
         stackSlide->addWidget(midPage);
         rightPage = new QWidget();
         rightPage->setObjectName(QStringLiteral("rightPage"));
@@ -172,31 +187,42 @@ public:
         stackSlide->addWidget(rightPage);
         page_2 = new QWidget();
         page_2->setObjectName(QStringLiteral("page_2"));
-        pushButton_24 = new QPushButton(page_2);
-        pushButton_24->setObjectName(QStringLiteral("pushButton_24"));
-        pushButton_24->setGeometry(QRect(150, 190, 75, 23));
-        pushButton_19 = new QPushButton(page_2);
-        pushButton_19->setObjectName(QStringLiteral("pushButton_19"));
-        pushButton_19->setGeometry(QRect(100, 30, 70, 23));
-        pushButton_22 = new QPushButton(page_2);
-        pushButton_22->setObjectName(QStringLiteral("pushButton_22"));
-        pushButton_22->setGeometry(QRect(100, 240, 75, 23));
-        pushButton_23 = new QPushButton(page_2);
-        pushButton_23->setObjectName(QStringLiteral("pushButton_23"));
-        pushButton_23->setGeometry(QRect(170, 140, 75, 23));
-        pushButton_20 = new QPushButton(page_2);
-        pushButton_20->setObjectName(QStringLiteral("pushButton_20"));
-        pushButton_20->setGeometry(QRect(170, 100, 75, 23));
-        pushButton_21 = new QPushButton(page_2);
-        pushButton_21->setObjectName(QStringLiteral("pushButton_21"));
-        pushButton_21->setGeometry(QRect(140, 60, 75, 23));
+        bassDial = new QDial(page_2);
+        bassDial->setObjectName(QStringLiteral("bassDial"));
+        bassDial->setGeometry(QRect(110, 20, 50, 64));
+        bassDial->setMaximum(10);
+        bassDial->setNotchTarget(17);
+        bassDial->setNotchesVisible(false);
+        trebDial = new QDial(page_2);
+        trebDial->setObjectName(QStringLiteral("trebDial"));
+        trebDial->setGeometry(QRect(110, 220, 50, 64));
+        trebDial->setMaximum(10);
+        trebDial->setNotchTarget(17);
+        trebDial->setNotchesVisible(false);
+        volumeDial = new QDial(page_2);
+        volumeDial->setObjectName(QStringLiteral("volumeDial"));
+        volumeDial->setGeometry(QRect(180, 90, 111, 111));
+        volumeDial->setMaximum(50);
+        volumeDial->setValue(10);
+        volumeDial->setNotchTarget(0.75);
+        volumeDial->setNotchesVisible(false);
+        label_4 = new QLabel(page_2);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(170, 40, 47, 13));
+        label_5 = new QLabel(page_2);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setGeometry(QRect(160, 250, 47, 13));
+        label_6 = new QLabel(page_2);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setGeometry(QRect(220, 70, 47, 13));
         stackSlide->addWidget(page_2);
         controllerBox = new QGroupBox(MenuDialog);
         controllerBox->setObjectName(QStringLiteral("controllerBox"));
-        controllerBox->setGeometry(QRect(60, 100, 251, 141));
+        controllerBox->setGeometry(QRect(50, 110, 261, 141));
         controlDial = new QDial(controllerBox);
         controlDial->setObjectName(QStringLiteral("controlDial"));
         controlDial->setGeometry(QRect(90, 20, 61, 61));
+        controlDial->setFocusPolicy(Qt::NoFocus);
         controlDial->setMinimum(2);
         controlDial->setMaximum(7);
         controlDial->setValue(2);
@@ -208,7 +234,7 @@ public:
         controlDial->setNotchesVisible(true);
         layoutWidget = new QWidget(controllerBox);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(0, 100, 239, 25));
+        layoutWidget->setGeometry(QRect(10, 100, 239, 25));
         horizontalLayout = new QHBoxLayout(layoutWidget);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -216,16 +242,19 @@ public:
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         homeButton = new QPushButton(layoutWidget);
         homeButton->setObjectName(QStringLiteral("homeButton"));
+        homeButton->setFocusPolicy(Qt::NoFocus);
 
         horizontalLayout->addWidget(homeButton);
 
         okButton = new QPushButton(layoutWidget);
         okButton->setObjectName(QStringLiteral("okButton"));
+        okButton->setFocusPolicy(Qt::NoFocus);
 
         horizontalLayout->addWidget(okButton);
 
         backButton = new QPushButton(layoutWidget);
         backButton->setObjectName(QStringLiteral("backButton"));
+        backButton->setFocusPolicy(Qt::NoFocus);
 
         horizontalLayout->addWidget(backButton);
 
@@ -237,29 +266,50 @@ public:
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
+        groupBox = new QGroupBox(MenuDialog);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        groupBox->setGeometry(QRect(50, 270, 261, 81));
+        label_2 = new QLabel(groupBox);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(20, 20, 71, 16));
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setGeometry(QRect(90, 20, 51, 16));
+        debugCheckBox = new QCheckBox(groupBox);
+        debugCheckBox->setObjectName(QStringLiteral("debugCheckBox"));
+        debugCheckBox->setGeometry(QRect(20, 50, 121, 17));
+        debugCheckBox->setFocusPolicy(Qt::NoFocus);
+        groupBox_2 = new QGroupBox(MenuDialog);
+        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
+        groupBox_2->setGeometry(QRect(60, 10, 251, 91));
+        textBrowser = new QTextBrowser(groupBox_2);
+        textBrowser->setObjectName(QStringLiteral("textBrowser"));
+        textBrowser->setEnabled(true);
+        textBrowser->setGeometry(QRect(10, 20, 221, 61));
+        textBrowser->setFocusPolicy(Qt::NoFocus);
+        textBrowser->setAcceptDrops(false);
         layoutWidget->raise();
         controllerBox->raise();
         horizontalSlider->raise();
         stackSlide->raise();
-        QWidget::setTabOrder(horizontalSlider, controlDial);
-        QWidget::setTabOrder(controlDial, pushButton_2);
-        QWidget::setTabOrder(pushButton_2, pushButton);
-        QWidget::setTabOrder(pushButton, pushButton_3);
+        groupBox->raise();
+        groupBox_2->raise();
+        QWidget::setTabOrder(pushButton_13, pushButton_14);
+        QWidget::setTabOrder(pushButton_14, pushButton);
+        QWidget::setTabOrder(pushButton, pushButton_2);
+        QWidget::setTabOrder(pushButton_2, pushButton_3);
         QWidget::setTabOrder(pushButton_3, pushButton_4);
         QWidget::setTabOrder(pushButton_4, pushButton_5);
         QWidget::setTabOrder(pushButton_5, pushButton_6);
-        QWidget::setTabOrder(pushButton_6, pushButton_12);
-        QWidget::setTabOrder(pushButton_12, pushButton_9);
-        QWidget::setTabOrder(pushButton_9, pushButton_7);
-        QWidget::setTabOrder(pushButton_7, pushButton_10);
+        QWidget::setTabOrder(pushButton_6, pushButton_7);
+        QWidget::setTabOrder(pushButton_7, pushButton_9);
+        QWidget::setTabOrder(pushButton_9, pushButton_11);
+        QWidget::setTabOrder(pushButton_11, pushButton_10);
         QWidget::setTabOrder(pushButton_10, pushButton_8);
-        QWidget::setTabOrder(pushButton_8, pushButton_11);
-        QWidget::setTabOrder(pushButton_11, pushButton_24);
-        QWidget::setTabOrder(pushButton_24, pushButton_19);
-        QWidget::setTabOrder(pushButton_19, pushButton_22);
-        QWidget::setTabOrder(pushButton_22, pushButton_23);
-        QWidget::setTabOrder(pushButton_23, pushButton_20);
-        QWidget::setTabOrder(pushButton_20, pushButton_21);
+        QWidget::setTabOrder(pushButton_8, pushButton_12);
+        QWidget::setTabOrder(pushButton_12, bassDial);
+        QWidget::setTabOrder(bassDial, volumeDial);
+        QWidget::setTabOrder(volumeDial, trebDial);
 
         retranslateUi(MenuDialog);
         QObject::connect(okButton, SIGNAL(clicked()), qtPieMenu_2, SLOT(select()));
@@ -267,6 +317,9 @@ public:
         QObject::connect(homeButton, SIGNAL(clicked()), stackSlide, SLOT(slideHome()));
         QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), stackSlide, SLOT(slideInIdx(int)));
         QObject::connect(qtPieMenu_2, SIGNAL(itemName(QString)), selectionLabel, SLOT(setText(QString)));
+        QObject::connect(qtPieMenu_2, SIGNAL(itemSelect(int)), label_3, SLOT(setNum(int)));
+        QObject::connect(debugCheckBox, SIGNAL(toggled(bool)), controllerBox, SLOT(setEnabled(bool)));
+        QObject::connect(debugCheckBox, SIGNAL(toggled(bool)), horizontalSlider, SLOT(setEnabled(bool)));
 
         stackSlide->setCurrentIndex(2);
 
@@ -293,16 +346,26 @@ public:
         pushButton_10->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_8->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_11->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_24->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
-        pushButton_19->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
-        pushButton_22->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
-        pushButton_23->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
-        pushButton_20->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
-        pushButton_21->setText(QApplication::translate("MenuDialog", "Bottom Page", 0));
+        label_4->setText(QApplication::translate("MenuDialog", "Bass", 0));
+        label_5->setText(QApplication::translate("MenuDialog", "Trebble", 0));
+        label_6->setText(QApplication::translate("MenuDialog", "Volume", 0));
         controllerBox->setTitle(QApplication::translate("MenuDialog", "Controller", 0));
         homeButton->setText(QApplication::translate("MenuDialog", "&Home", 0));
         okButton->setText(QApplication::translate("MenuDialog", "&OK", 0));
         backButton->setText(QApplication::translate("MenuDialog", "&Back", 0));
+        groupBox->setTitle(QApplication::translate("MenuDialog", "Debug info:", 0));
+        label_2->setText(QApplication::translate("MenuDialog", "Item Number:", 0));
+        label_3->setText(QString());
+        debugCheckBox->setText(QApplication::translate("MenuDialog", "DebugControlers", 0));
+        groupBox_2->setTitle(QApplication::translate("MenuDialog", "Controls", 0));
+        textBrowser->setHtml(QApplication::translate("MenuDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Left:    [4]	Select:    [5]</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Right:  [6]	Back:      [7]</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">	Home:     [0]</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", 0));
     } // retranslateUi
 
 };

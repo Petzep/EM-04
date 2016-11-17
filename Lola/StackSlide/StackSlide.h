@@ -32,6 +32,7 @@ public:
 	bool verticalMode() const;
 	bool wrap() const;
 	int menuPage() const;
+	bool inAnimation() const;
 
 	public slots:
 	// Some basic settings API

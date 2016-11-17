@@ -4,22 +4,32 @@ TUIcomotive::TUIcomotive(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+	//Add list entries
+	addListItem(QString("Press MenuButton"), QString("Hoi"));
+	addListItem(QString("to start"), QString("Doei"));
+	addListItem(QString("the User Interface Protoype"), QString("Groetjes Nephtaly"));
+	
+	//Make the button stylish-green
+	ui.menuButton->setStyleSheet("QPushButton {"
+									"background-color: green;"
+									"border-style: outset;"
+									"border-radius: 10px;"
+									"border-color: beige;"   
+									"font: italic 10px;"
+									"min-width: 7em;"
+									"padding: 6px;}"
+								"QPushButton:pressed {"
+									"background-color: black;"
+									"color: green;"
+									"border-style: inset;}");
 }
 
 void TUIcomotive::on_addButton_clicked(void)
 {
 	AddDialog dialog(this);
 
-	if (dialog.exec()) {
-		QString name = dialog.nameEdit->text();
-		QString email = dialog.emailEdit->text();
-
-		if (!name.isEmpty() && !email.isEmpty()) {
-			QListWidgetItem *item = new QListWidgetItem(name, ui.bangaList);
-			item->setData(Qt::UserRole, email);
-			ui.bangaList->setCurrentItem(item);
-		}
-	}
+	if (dialog.exec()) 
+		addListItem(dialog.nameEdit->text(), dialog.emailEdit->text());
 }
 
 void TUIcomotive::on_testButton_clicked(void)
@@ -63,5 +73,14 @@ void TUIcomotive::on_deleteButton_clicked()
 			ui.bangaList->setCurrentRow(0);
 		else
 			on_bangaList_currentItemChanged();
+	}
+}
+
+void TUIcomotive::addListItem(QString name, QString email)
+{
+	if (!name.isEmpty() && !email.isEmpty()) {
+		QListWidgetItem *item = new QListWidgetItem(name, ui.bangaList);
+		item->setData(Qt::UserRole, email);
+		ui.bangaList->setCurrentItem(item);
 	}
 }

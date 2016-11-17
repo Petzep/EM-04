@@ -40,40 +40,39 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 
 	int side = qMin(width(), height());
 
+	//make the coordinate system from -100 to 100 with origin in the middle
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.translate(width() / 2, height() / 2);
 	painter.scale(side / 200.0, side / 200.0);
 
-	/*selectionShape.translate(QPoint(-1, (-100 + 9)));
-	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from top-left to bottom-right
-	//selectionShape.translate(QPointF(-m_SelectionRadius*0.1, (-100+m_SelectionRadius-(0.1*m_SelectionRadius))));
-	*/
-
+	//Paint selector
 	selectionShape.translate(QPointF(-0.5, (qreal)-100 + itemShape.boundingRect().width() - 0.5));
-	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width()); // diagonal gradient from center to edge
+	QRadialGradient gradient(selectionShape.boundingRect().center(), selectionShape.boundingRect().width());
 	gradient.setColorAt(0, m_SelectionInnerColor);
 	gradient.setColorAt(1, m_SelectionOuterColor);
-	painter.rotate((-360.0 / m_ItemNumbers)*m_Selection);
+	painter.rotate((360.0 / m_ItemNumbers)*(m_Selection-2));
 	painter.fillRect(selectionShape.boundingRect(), gradient);
 
 	painter.setPen(Qt::NoPen);
 	painter.setBrush(m_MenuColor);
 	painter.save();
 
+	//Paint items
 	itemShape.translate(QPoint(0, (qreal)-100 + itemShape.boundingRect().width()));
+	painter.rotate((360.0 / m_ItemNumbers)*2); //rotate in such a way that the rotation is clockwise starting from the bottom
 	for (int i = 0; i < m_ItemNumbers; ++i) {
 		if (m_Icons.at((i + m_Selection) % m_ItemNumbers))
-			//m_Icons.at((i + m_Selection) % m_ItemNumbers)->paint(&painter, selectionShape.toPolygon().boundingRect());
 			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(128, 128)));
 		else
 			painter.drawConvexPolygon(itemShape);
-		painter.rotate(-360.0 / m_ItemNumbers);
+		painter.rotate(360.0 / m_ItemNumbers);
 	}
 	painter.restore();
 	painter.setBrush(m_SelectionColor);
-	//painter.drawConvexPolygon(itemShape);
 
+
+	//Paint DanielArrow
 	if (m_DanielArrow)
 	{
 		painter.setBrush(QColor(Qt::green));

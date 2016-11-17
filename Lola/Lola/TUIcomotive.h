@@ -6,6 +6,7 @@
 #include "MenuDialog.h"
 #include "ui_TUIcomotive.h"
 
+
 class TUIcomotive : public QMainWindow
 {
     Q_OBJECT
@@ -22,4 +23,5 @@ public slots:
 	void on_deleteButton_clicked(void);
 	void on_testButton_clicked(void);
 	void on_menuButton_clicked(void);
+	void addListItem(QString name, QString email);
 };

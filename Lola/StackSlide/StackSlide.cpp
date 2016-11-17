@@ -41,6 +41,11 @@ int StackSlide::menuPage() const
 	return m_menuPage;
 }
 
+bool StackSlide::inAnimation() const
+{
+	return m_active;
+}
+
 void StackSlide::setSpeed(int speed)
 {
 	m_speed = speed;

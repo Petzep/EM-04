@@ -1,7 +1,5 @@
 <RCC>
-    <qresource prefix="/TUIcomotive">
-        <file>Icons/boot.mp4</file>
-    </qresource>
+    <qresource prefix="/TUIcomotive"/>
     <qresource prefix="/menuIcons">
         <file>Icons/icon (1).png</file>
         <file>Icons/icon (2).png</file>
