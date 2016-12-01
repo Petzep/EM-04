@@ -260,3 +260,4 @@ paket-files/
 .idea/
 *.sln.iml
 
+/Lola/Lola/BuildRuleQt.targets

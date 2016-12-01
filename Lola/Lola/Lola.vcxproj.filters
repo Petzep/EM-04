@@ -46,6 +46,11 @@
       <UniqueIdentifier>{baccaa2f-7176-433b-ac1a-0771644aad61}</UniqueIdentifier>
       <Extensions>pro</Extensions>
     </Filter>
+    <Filter Include="Generated Files\RaspberryPi">
+      <UniqueIdentifier>{d3ebe7ff-402f-4452-8fe6-bea74710a5bb}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -117,6 +122,12 @@
     <ClCompile Include="QtPieMenu.cpp">
       <Filter>Custom Plugins</Filter>
     </ClCompile>
+    <ClCompile Include="StyleDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_StyleDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TUIcomotive.h">
@@ -155,6 +166,12 @@
     <CustomBuild Include="TUIcomotive.qrc">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="StyleDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="StyleDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_TUIcomotive.h">
@@ -167,6 +184,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_MenuDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_StyleDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
