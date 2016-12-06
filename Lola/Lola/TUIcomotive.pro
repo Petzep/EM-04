@@ -11,9 +11,9 @@ TEMPLATE = app
 
 #By default the following file lists are updated automatically by VisualGDB.
 
-SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp main.cpp
-HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h
-FORMS     += TUIcomotive.ui  TestDialog.ui AddDialog.ui MenuDialog.ui
+SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp StyleDialog.cpp main.cpp
+HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h ui_StyleDialog.h
+FORMS     += TUIcomotive.ui TestDialog.ui AddDialog.ui MenuDialog.ui StyleDialog.ui
 RESOURCES += TUIcomotive.qrc
 
 include($$lower($$join(CONFIGNAME,,,.pro)))

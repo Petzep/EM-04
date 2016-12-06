@@ -47,75 +47,34 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #pragma once
+#include <QProxyStyle>
+#include <QPalette>
 
-#include <QDialog>
+class QPainterPath;
 
-class QCheckBox;
-class QComboBox;
-class QDateTimeEdit;
-class QDial;
-class QGroupBox;
-class QLabel;
-class QLineEdit;
-class QProgressBar;
-class QPushButton;
-class QRadioButton;
-class QScrollBar;
-class QSlider;
-class QSpinBox;
-class QTabWidget;
-class QTableWidget;
-class QTextEdit;
-
-class StyleDialog : public QDialog
+class NorwegianWoodStyle : public QProxyStyle
 {
 	Q_OBJECT
 
 public:
-	StyleDialog(QWidget *parent = 0);
+	NorwegianWoodStyle();
 
-	private slots:
-	void changeStyle(const QString &styleName);
-	void changePalette();
-	void advanceProgressBar();
+	void polish(QPalette &palette) Q_DECL_OVERRIDE;
+	void polish(QWidget *widget) Q_DECL_OVERRIDE;
+	void unpolish(QWidget *widget) Q_DECL_OVERRIDE;
+	int pixelMetric(PixelMetric metric, const QStyleOption *option,
+		const QWidget *widget) const Q_DECL_OVERRIDE;
+	int styleHint(StyleHint hint, const QStyleOption *option,
+		const QWidget *widget, QStyleHintReturn *returnData) const Q_DECL_OVERRIDE;
+	void drawPrimitive(PrimitiveElement element, const QStyleOption *option,
+		QPainter *painter, const QWidget *widget) const Q_DECL_OVERRIDE;
+	void drawControl(ControlElement control, const QStyleOption *option,
+		QPainter *painter, const QWidget *widget) const Q_DECL_OVERRIDE;
 
 private:
-	void createTopLeftGroupBox();
-	void createTopRightGroupBox();
-	void createBottomLeftTabWidget();
-	void createBottomRightGroupBox();
-	void createProgressBar();
-
-	QPalette originalPalette;
-
-	QLabel *styleLabel;
-	QComboBox *styleComboBox;
-	QCheckBox *useStylePaletteCheckBox;
-	QCheckBox *disableWidgetsCheckBox;
-
-	QGroupBox *topLeftGroupBox;
-	QRadioButton *radioButton1;
-	QRadioButton *radioButton2;
-	QRadioButton *radioButton3;
-	QCheckBox *checkBox;
-
-	QGroupBox *topRightGroupBox;
-	QPushButton *defaultPushButton;
-	QPushButton *togglePushButton;
-	QPushButton *flatPushButton;
-
-	QTabWidget *bottomLeftTabWidget;
-	QTableWidget *tableWidget;
-	QTextEdit *textEdit;
-
-	QGroupBox *bottomRightGroupBox;
-	QLineEdit *lineEdit;
-	QSpinBox *spinBox;
-	QDateTimeEdit *dateTimeEdit;
-	QSlider *slider;
-	QScrollBar *scrollBar;
-	QDial *dial;
-
-	QProgressBar *progressBar;
+	static void setTexture(QPalette &palette, QPalette::ColorRole role,
+		const QPixmap &pixmap);
+	static QPainterPath roundRectPath(const QRect &rect);
 };

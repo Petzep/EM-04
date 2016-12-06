@@ -18,4 +18,8 @@
         <file>Icons/icon (15).png</file>
         <file>Icons/iconLabel.txt</file>
     </qresource>
+    <qresource prefix="/">
+        <file>images/woodbackground.png</file>
+        <file>images/woodbutton.png</file>
+    </qresource>
 </RCC>

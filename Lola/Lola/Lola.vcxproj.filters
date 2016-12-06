@@ -128,6 +128,12 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_StyleDialog.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="NorwegianWoodStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_NorwegianWoodStyle.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TUIcomotive.h">
@@ -171,6 +177,9 @@
     </CustomBuild>
     <CustomBuild Include="StyleDialog.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="NorwegianWoodStyle.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
