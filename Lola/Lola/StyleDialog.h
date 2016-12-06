@@ -73,9 +73,10 @@ class StyleDialog : public QDialog
 	Q_OBJECT
 
 public:
-	StyleDialog(QWidget *parent = 0);
+	StyleDialog(QWidget *parent = Q_NULLPTR);
+	~StyleDialog();
 
-	private slots:
+private slots:
 	void changeStyle(const QString &styleName);
 	void changePalette();
 	void advanceProgressBar();

@@ -50,7 +50,7 @@
 
 #include <QtWidgets>
 
-#include "norwegianwoodstyle.h"
+#include "NorwegianWoodStyle.h"
 #include "StyleDialog.h"
 
 StyleDialog::StyleDialog(QWidget *parent)
@@ -261,4 +261,8 @@ void StyleDialog::createProgressBar()
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(advanceProgressBar()));
 	timer->start(1000);
+}
+
+StyleDialog::~StyleDialog()
+{
 }

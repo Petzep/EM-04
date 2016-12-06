@@ -50,7 +50,7 @@
 
 #include <QtWidgets>
 
-#include "norwegianwoodstyle.h"
+#include "NorwegianWoodStyle.h"
 
 NorwegianWoodStyle::NorwegianWoodStyle() :
 	QProxyStyle(QStyleFactory::create("windows"))

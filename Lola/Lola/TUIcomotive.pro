@@ -11,8 +11,8 @@ TEMPLATE = app
 
 #By default the following file lists are updated automatically by VisualGDB.
 
-SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp StyleDialog.cpp main.cpp
-HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h ui_StyleDialog.h
+SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp NorwegianWoodStyle.cpp StyleDialog.cpp main.cpp
+HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h NorwegianWoodStyle.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h GeneratedFiles/ui_StyleDialog.h StyleDialog.h
 FORMS     += TUIcomotive.ui TestDialog.ui AddDialog.ui MenuDialog.ui StyleDialog.ui
 RESOURCES += TUIcomotive.qrc
 
