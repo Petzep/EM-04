@@ -32,6 +32,8 @@
 #define	DIM_MESSAGE			7
 #define	TOTAL_MESSAGE		8
 
+#define BLINK_FREQ			750
+
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
 #endif
@@ -347,7 +349,7 @@ int main(void) {
 
 	for (;;) //infinite loop
 	{		
-		bool blinkLeft = 	Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
+		bool blinkLeft = true;//Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
 		bool blinkRight = 	Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
 		bool alarm = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
 		bool lights = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
@@ -402,7 +404,6 @@ int main(void) {
 			if(wiperOn)
 			{
 				//first disable reset
-				
 				msg_obj.data[3] = false;
 				msg_obj.data[4] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
@@ -435,24 +436,21 @@ int main(void) {
 		//
 		//Left Blink
 		//
-
-		if ((SysTickCnt - lastClick) >= 1000)
+		if ((SysTickCnt - lastClick) >= BLINK_FREQ)
 		{
 			click = true;
 			msg_obj.msgobj = 0; 
 			msg_obj.mode_id = LEFT_DEVICES | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
-			if(blinkLeftOn || alarmOn)
+			//Turn on if there is no blink and (left_blinker or Alarm is on)
+			if((blinkLeftOn || alarmOn) && !blinkLeftState)
 			{
-				if(!blinkLeftState)
-				{
-					blinkLeftState = true;
-					msg_obj.data[0] = true;
-					LPC_CCAN_API->can_transmit(&msg_obj);
-				}
+				blinkLeftState = true;
+				msg_obj.data[0] = true;
+				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
-			else if(blinkLeftState)
+			else
 			{
 				blinkLeftState = false;
 				msg_obj.data[0] = false;
@@ -460,40 +458,23 @@ int main(void) {
 			}
 		}
 
-		/*if (!(SysTickCnt % 1000) && blinkLeftState) //on each second while blinkLeftState is true
-		{
-			msg_obj.msgobj = 0;
-			msg_obj.mask = 0x0;
-			msg_obj.dlc = 2;
-			msg_obj.data[0] = 0;
-			msg_obj.data[1] = 0;
-			msg_obj.mode_id = LEFT_DEVICES | CAN_MSGOBJ_STD;
-			blinkLeftState = false;
-			
-			Delay(1000);
-			LPC_CCAN_API->can_transmit(&msg_obj);
-		}*/
-
 		//
 		//Right Blink
 		//
-		if ((SysTickCnt - lastClick) >= 1000)
+		if ((SysTickCnt - lastClick) >= BLINK_FREQ)
 		{
 			click = true;
 			msg_obj.msgobj = 0; 
 			msg_obj.mode_id = RIGHT_DEVICES | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
-			if (blinkLeftOn || alarmOn)
+			if ((blinkLeftOn || alarmOn) && !blinkLeftState)
 			{
-				if (!blinkRightState)
-				{
-					blinkRightState = true;
-					msg_obj.data[0] = true;
-					LPC_CCAN_API->can_transmit(&msg_obj);
-				}				
+				blinkRightState = true;
+				msg_obj.data[0] = true;
+				LPC_CCAN_API->can_transmit(&msg_obj);			
 			}
-			else if (blinkRightState)
+			else
 			{
 				blinkRightState = false;
 				msg_obj.data[0] = false;
@@ -501,20 +482,6 @@ int main(void) {
 			}
 		}
 		
-		/*if (!(SysTickCnt % 1000) && blinkRightState)
-		{
-			msg_obj.msgobj = 0;
-			msg_obj.mask = 0x0;
-			msg_obj.dlc = 2;
-			msg_obj.data[0] = 0;
-			msg_obj.data[1] = 0;
-			msg_obj.mode_id = RIGHT_DEVICES | CAN_MSGOBJ_STD;
-			blinkRightState = false;
-			Delay(1000);
-			
-			LPC_CCAN_API->can_transmit(&msg_obj);
-		}*/
-
 		//
 		//heartbeat
 		//
@@ -571,3 +538,8 @@ int p14 = getPin(2,7); // --> left indicator
 int p15 = getPin(1,8); //
 int p16 = getPin(2,0); //
 */
+
+// led 1 (green) power light
+// led 2 (red) 2,10
+// led 3 (yellow) 2,2
+// led 4 (blue) 0,7
