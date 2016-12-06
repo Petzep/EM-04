@@ -73,6 +73,7 @@ bool MenuDialog::event(QEvent *event)
 					{
 						switch (cmd)
 						{
+						case Qt::Key_7:
 						case Qt::Key_5:
 							dial->setNotchesVisible(false);
 							break;
@@ -111,6 +112,10 @@ bool MenuDialog::event(QEvent *event)
 							focusNextChild();
 							break;
 						}
+						case Qt::Key_7:
+							stackSlide->slideHome();
+							qtPieMenu_2->setFocus();
+							break;
 						default:
 							break;
 						}
