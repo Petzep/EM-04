@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>586</width>
-    <height>377</height>
+    <width>899</width>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,8 +29,8 @@
   <widget class="QtPieMenu" name="qtPieMenu">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>20</y>
+     <x>290</x>
+     <y>40</y>
      <width>281</width>
      <height>341</height>
     </rect>
@@ -147,12 +147,36 @@
      <x>400</x>
      <y>30</y>
      <width>47</width>
-     <height>13</height>
+     <height>311</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>580</x>
+     <y>330</y>
+     <width>208</width>
+     <height>208</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QDial" name="dial_4"/>
+    </item>
+    <item row="1" column="1">
+     <widget class="QDial" name="dial_5"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QDial" name="dial_2"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QDial" name="dial_3"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

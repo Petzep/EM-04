@@ -16,6 +16,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -24,6 +25,7 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSlider>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -36,7 +38,23 @@ QT_BEGIN_NAMESPACE
 class Ui_MenuDialog
 {
 public:
-    QSlider *horizontalSlider;
+    QGridLayout *gridLayout_2;
+    QVBoxLayout *verticalLayout;
+    QVBoxLayout *verticalLayout_3;
+    QGroupBox *groupBox_2;
+    QTextBrowser *textBrowser;
+    QGroupBox *controllerBox;
+    QDial *controlDial;
+    QWidget *layoutWidget;
+    QHBoxLayout *horizontalLayout;
+    QPushButton *homeButton;
+    QPushButton *okButton;
+    QPushButton *backButton;
+    QGroupBox *groupBox;
+    QLabel *label_2;
+    QLabel *label_3;
+    QCheckBox *debugCheckBox;
+    QVBoxLayout *verticalLayout_2;
     StackSlide *stackSlide;
     QWidget *page;
     CustomClock *customClock;
@@ -53,6 +71,7 @@ public:
     QPushButton *pushButton_5;
     QPushButton *pushButton_6;
     QWidget *midPage;
+    QGridLayout *gridLayout;
     QtPieMenu *qtPieMenu_2;
     QLabel *selectionLabel;
     QWidget *rightPage;
@@ -69,43 +88,120 @@ public:
     QLabel *label_4;
     QLabel *label_5;
     QLabel *label_6;
-    QGroupBox *controllerBox;
-    QDial *controlDial;
-    QWidget *layoutWidget;
-    QHBoxLayout *horizontalLayout;
-    QPushButton *homeButton;
-    QPushButton *okButton;
-    QPushButton *backButton;
-    QWidget *layoutWidget1;
-    QVBoxLayout *verticalLayout;
-    QGroupBox *groupBox;
-    QLabel *label_2;
-    QLabel *label_3;
-    QCheckBox *debugCheckBox;
-    QGroupBox *groupBox_2;
-    QTextBrowser *textBrowser;
+    QHBoxLayout *horizontalLayout_2;
+    QSpacerItem *horizontalSpacer;
+    QSlider *horizontalSlider;
+    QSpacerItem *horizontalSpacer_2;
 
     void setupUi(QDialog *MenuDialog)
     {
         if (MenuDialog->objectName().isEmpty())
             MenuDialog->setObjectName(QStringLiteral("MenuDialog"));
         MenuDialog->setEnabled(true);
-        MenuDialog->resize(704, 368);
-        horizontalSlider = new QSlider(MenuDialog);
-        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setEnabled(true);
-        horizontalSlider->setGeometry(QRect(420, 340, 160, 22));
-        horizontalSlider->setMouseTracking(true);
-        horizontalSlider->setFocusPolicy(Qt::NoFocus);
-        horizontalSlider->setMinimum(0);
-        horizontalSlider->setMaximum(4);
-        horizontalSlider->setValue(2);
-        horizontalSlider->setOrientation(Qt::Horizontal);
-        horizontalSlider->setTickPosition(QSlider::TicksAbove);
-        horizontalSlider->setTickInterval(1);
+        MenuDialog->resize(689, 367);
+        gridLayout_2 = new QGridLayout(MenuDialog);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+
+        gridLayout_2->addLayout(verticalLayout, 0, 0, 1, 1);
+
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        groupBox_2 = new QGroupBox(MenuDialog);
+        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
+        groupBox_2->setMinimumSize(QSize(251, 91));
+        textBrowser = new QTextBrowser(groupBox_2);
+        textBrowser->setObjectName(QStringLiteral("textBrowser"));
+        textBrowser->setEnabled(true);
+        textBrowser->setGeometry(QRect(10, 20, 221, 61));
+        textBrowser->setMinimumSize(QSize(221, 61));
+        textBrowser->setFocusPolicy(Qt::NoFocus);
+        textBrowser->setAcceptDrops(false);
+
+        verticalLayout_3->addWidget(groupBox_2);
+
+        controllerBox = new QGroupBox(MenuDialog);
+        controllerBox->setObjectName(QStringLiteral("controllerBox"));
+        controllerBox->setMinimumSize(QSize(261, 141));
+        controlDial = new QDial(controllerBox);
+        controlDial->setObjectName(QStringLiteral("controlDial"));
+        controlDial->setGeometry(QRect(90, 20, 61, 61));
+        controlDial->setMinimumSize(QSize(61, 61));
+        controlDial->setFocusPolicy(Qt::NoFocus);
+        controlDial->setMinimum(2);
+        controlDial->setMaximum(7);
+        controlDial->setValue(2);
+        controlDial->setSliderPosition(2);
+        controlDial->setTracking(true);
+        controlDial->setInvertedAppearance(true);
+        controlDial->setInvertedControls(true);
+        controlDial->setWrapping(true);
+        controlDial->setNotchesVisible(true);
+        layoutWidget = new QWidget(controllerBox);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(10, 100, 239, 25));
+        layoutWidget->setMinimumSize(QSize(239, 25));
+        horizontalLayout = new QHBoxLayout(layoutWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        homeButton = new QPushButton(layoutWidget);
+        homeButton->setObjectName(QStringLiteral("homeButton"));
+        homeButton->setMinimumSize(QSize(75, 23));
+        homeButton->setFocusPolicy(Qt::NoFocus);
+
+        horizontalLayout->addWidget(homeButton);
+
+        okButton = new QPushButton(layoutWidget);
+        okButton->setObjectName(QStringLiteral("okButton"));
+        okButton->setMinimumSize(QSize(75, 23));
+        okButton->setFocusPolicy(Qt::NoFocus);
+
+        horizontalLayout->addWidget(okButton);
+
+        backButton = new QPushButton(layoutWidget);
+        backButton->setObjectName(QStringLiteral("backButton"));
+        backButton->setMinimumSize(QSize(75, 23));
+        backButton->setFocusPolicy(Qt::NoFocus);
+
+        horizontalLayout->addWidget(backButton);
+
+
+        verticalLayout_3->addWidget(controllerBox);
+
+        groupBox = new QGroupBox(MenuDialog);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        groupBox->setMinimumSize(QSize(261, 81));
+        label_2 = new QLabel(groupBox);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(20, 20, 71, 16));
+        label_2->setMinimumSize(QSize(71, 16));
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setGeometry(QRect(90, 20, 51, 16));
+        label_3->setMinimumSize(QSize(51, 16));
+        debugCheckBox = new QCheckBox(groupBox);
+        debugCheckBox->setObjectName(QStringLiteral("debugCheckBox"));
+        debugCheckBox->setGeometry(QRect(20, 50, 121, 17));
+        debugCheckBox->setMinimumSize(QSize(121, 17));
+        debugCheckBox->setFocusPolicy(Qt::NoFocus);
+
+        verticalLayout_3->addWidget(groupBox);
+
+
+        gridLayout_2->addLayout(verticalLayout_3, 1, 1, 1, 1);
+
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         stackSlide = new StackSlide(MenuDialog);
         stackSlide->setObjectName(QStringLiteral("stackSlide"));
-        stackSlide->setGeometry(QRect(350, 30, 321, 301));
         stackSlide->setLineWidth(7);
         stackSlide->setMenuPage(2);
         stackSlide->setWrap(false);
@@ -154,15 +250,25 @@ public:
         stackSlide->addWidget(leftPage);
         midPage = new QWidget();
         midPage->setObjectName(QStringLiteral("midPage"));
+        gridLayout = new QGridLayout(midPage);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         qtPieMenu_2 = new QtPieMenu(midPage);
         qtPieMenu_2->setObjectName(QStringLiteral("qtPieMenu_2"));
-        qtPieMenu_2->setGeometry(QRect(30, 30, 251, 261));
+        qtPieMenu_2->setMinimumSize(QSize(251, 261));
         qtPieMenu_2->setFocusPolicy(Qt::ClickFocus);
         qtPieMenu_2->setSelection(2);
+
+        gridLayout->addWidget(qtPieMenu_2, 1, 0, 1, 1);
+
         selectionLabel = new QLabel(midPage);
         selectionLabel->setObjectName(QStringLiteral("selectionLabel"));
-        selectionLabel->setGeometry(QRect(96, 140, 111, 20));
+        selectionLabel->setMaximumSize(QSize(16777215, 19));
         selectionLabel->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(selectionLabel, 0, 0, 1, 1);
+
         stackSlide->addWidget(midPage);
         rightPage = new QWidget();
         rightPage->setObjectName(QStringLiteral("rightPage"));
@@ -216,84 +322,40 @@ public:
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setGeometry(QRect(220, 70, 47, 13));
         stackSlide->addWidget(page_2);
-        controllerBox = new QGroupBox(MenuDialog);
-        controllerBox->setObjectName(QStringLiteral("controllerBox"));
-        controllerBox->setGeometry(QRect(50, 110, 261, 141));
-        controlDial = new QDial(controllerBox);
-        controlDial->setObjectName(QStringLiteral("controlDial"));
-        controlDial->setGeometry(QRect(90, 20, 61, 61));
-        controlDial->setFocusPolicy(Qt::NoFocus);
-        controlDial->setMinimum(2);
-        controlDial->setMaximum(7);
-        controlDial->setValue(2);
-        controlDial->setSliderPosition(2);
-        controlDial->setTracking(true);
-        controlDial->setInvertedAppearance(true);
-        controlDial->setInvertedControls(true);
-        controlDial->setWrapping(true);
-        controlDial->setNotchesVisible(true);
-        layoutWidget = new QWidget(controllerBox);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 100, 239, 25));
-        horizontalLayout = new QHBoxLayout(layoutWidget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        homeButton = new QPushButton(layoutWidget);
-        homeButton->setObjectName(QStringLiteral("homeButton"));
-        homeButton->setFocusPolicy(Qt::NoFocus);
 
-        horizontalLayout->addWidget(homeButton);
+        verticalLayout_2->addWidget(stackSlide);
 
-        okButton = new QPushButton(layoutWidget);
-        okButton->setObjectName(QStringLiteral("okButton"));
-        okButton->setFocusPolicy(Qt::NoFocus);
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout->addWidget(okButton);
+        horizontalLayout_2->addItem(horizontalSpacer);
 
-        backButton = new QPushButton(layoutWidget);
-        backButton->setObjectName(QStringLiteral("backButton"));
-        backButton->setFocusPolicy(Qt::NoFocus);
+        horizontalSlider = new QSlider(MenuDialog);
+        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
+        horizontalSlider->setEnabled(true);
+        horizontalSlider->setMouseTracking(true);
+        horizontalSlider->setFocusPolicy(Qt::NoFocus);
+        horizontalSlider->setMinimum(0);
+        horizontalSlider->setMaximum(4);
+        horizontalSlider->setValue(2);
+        horizontalSlider->setOrientation(Qt::Horizontal);
+        horizontalSlider->setTickPosition(QSlider::TicksAbove);
+        horizontalSlider->setTickInterval(1);
 
-        horizontalLayout->addWidget(backButton);
+        horizontalLayout_2->addWidget(horizontalSlider);
 
-        layoutWidget1 = new QWidget(MenuDialog);
-        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(0, 0, 2, 2));
-        verticalLayout = new QVBoxLayout(layoutWidget1);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        groupBox = new QGroupBox(MenuDialog);
-        groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(50, 270, 261, 81));
-        label_2 = new QLabel(groupBox);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(20, 20, 71, 16));
-        label_3 = new QLabel(groupBox);
-        label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(90, 20, 51, 16));
-        debugCheckBox = new QCheckBox(groupBox);
-        debugCheckBox->setObjectName(QStringLiteral("debugCheckBox"));
-        debugCheckBox->setGeometry(QRect(20, 50, 121, 17));
-        debugCheckBox->setFocusPolicy(Qt::NoFocus);
-        groupBox_2 = new QGroupBox(MenuDialog);
-        groupBox_2->setObjectName(QStringLiteral("groupBox_2"));
-        groupBox_2->setGeometry(QRect(60, 10, 251, 91));
-        textBrowser = new QTextBrowser(groupBox_2);
-        textBrowser->setObjectName(QStringLiteral("textBrowser"));
-        textBrowser->setEnabled(true);
-        textBrowser->setGeometry(QRect(10, 20, 221, 61));
-        textBrowser->setFocusPolicy(Qt::NoFocus);
-        textBrowser->setAcceptDrops(false);
-        layoutWidget->raise();
-        controllerBox->raise();
-        horizontalSlider->raise();
-        stackSlide->raise();
-        groupBox->raise();
-        groupBox_2->raise();
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_2);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_2);
+
+
+        gridLayout_2->addLayout(verticalLayout_2, 1, 2, 1, 1);
+
         QWidget::setTabOrder(pushButton_13, pushButton_14);
         QWidget::setTabOrder(pushButton_14, pushButton);
         QWidget::setTabOrder(pushButton, pushButton_2);
@@ -330,6 +392,23 @@ public:
     void retranslateUi(QDialog *MenuDialog)
     {
         MenuDialog->setWindowTitle(QApplication::translate("MenuDialog", "MenuDialog", 0));
+        groupBox_2->setTitle(QApplication::translate("MenuDialog", "Controls", 0));
+        textBrowser->setHtml(QApplication::translate("MenuDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Left:    [4]	Select:    [5]</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Right:  [6]	Back:      [7]</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">	Home:     [0]</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", 0));
+        controllerBox->setTitle(QApplication::translate("MenuDialog", "Controller", 0));
+        homeButton->setText(QApplication::translate("MenuDialog", "&Home", 0));
+        okButton->setText(QApplication::translate("MenuDialog", "&OK", 0));
+        backButton->setText(QApplication::translate("MenuDialog", "&Back", 0));
+        groupBox->setTitle(QApplication::translate("MenuDialog", "Debug info:", 0));
+        label_2->setText(QApplication::translate("MenuDialog", "Item Number:", 0));
+        label_3->setText(QString());
+        debugCheckBox->setText(QApplication::translate("MenuDialog", "DebugControlers", 0));
         label->setText(QApplication::translate("MenuDialog", "Test Text", 0));
         pushButton_13->setText(QApplication::translate("MenuDialog", "PushButton", 0));
         pushButton_14->setText(QApplication::translate("MenuDialog", "PushButton", 0));
@@ -349,23 +428,6 @@ public:
         label_4->setText(QApplication::translate("MenuDialog", "Bass", 0));
         label_5->setText(QApplication::translate("MenuDialog", "Trebble", 0));
         label_6->setText(QApplication::translate("MenuDialog", "Volume", 0));
-        controllerBox->setTitle(QApplication::translate("MenuDialog", "Controller", 0));
-        homeButton->setText(QApplication::translate("MenuDialog", "&Home", 0));
-        okButton->setText(QApplication::translate("MenuDialog", "&OK", 0));
-        backButton->setText(QApplication::translate("MenuDialog", "&Back", 0));
-        groupBox->setTitle(QApplication::translate("MenuDialog", "Debug info:", 0));
-        label_2->setText(QApplication::translate("MenuDialog", "Item Number:", 0));
-        label_3->setText(QString());
-        debugCheckBox->setText(QApplication::translate("MenuDialog", "DebugControlers", 0));
-        groupBox_2->setTitle(QApplication::translate("MenuDialog", "Controls", 0));
-        textBrowser->setHtml(QApplication::translate("MenuDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Left:    [4]	Select:    [5]</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Right:  [6]	Back:      [7]</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">	Home:     [0]</p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", 0));
     } // retranslateUi
 
 };

@@ -16,9 +16,11 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QWidget>
 #include "CustomClock.h"
 #include "QtPieMenu.h"
 
@@ -34,18 +36,24 @@ public:
     CustomClock *customClock;
     QCheckBox *checkBox_2;
     QLabel *label;
+    QWidget *widget;
+    QGridLayout *gridLayout;
+    QDial *dial_4;
+    QDial *dial_5;
+    QDial *dial_2;
+    QDial *dial_3;
 
     void setupUi(QDialog *TestDialog)
     {
         if (TestDialog->objectName().isEmpty())
             TestDialog->setObjectName(QStringLiteral("TestDialog"));
-        TestDialog->resize(586, 377);
+        TestDialog->resize(899, 562);
         pushButton = new QPushButton(TestDialog);
         pushButton->setObjectName(QStringLiteral("pushButton"));
         pushButton->setGeometry(QRect(0, 60, 75, 23));
         qtPieMenu = new QtPieMenu(TestDialog);
         qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
-        qtPieMenu->setGeometry(QRect(280, 20, 281, 341));
+        qtPieMenu->setGeometry(QRect(290, 40, 281, 341));
         qtPieMenu->setItemNumbers(20);
         qtPieMenu->setSelectionColor(QColor(144, 0, 0));
         qtPieMenu->setSelectionInnerColor(QColor(255, 255, 255));
@@ -73,7 +81,35 @@ public:
         checkBox_2->setGeometry(QRect(10, 30, 121, 17));
         label = new QLabel(TestDialog);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(400, 30, 47, 13));
+        label->setGeometry(QRect(400, 30, 47, 311));
+        widget = new QWidget(TestDialog);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(580, 330, 208, 208));
+        gridLayout = new QGridLayout(widget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        dial_4 = new QDial(widget);
+        dial_4->setObjectName(QStringLiteral("dial_4"));
+
+        gridLayout->addWidget(dial_4, 1, 0, 1, 1);
+
+        dial_5 = new QDial(widget);
+        dial_5->setObjectName(QStringLiteral("dial_5"));
+
+        gridLayout->addWidget(dial_5, 1, 1, 1, 1);
+
+        dial_2 = new QDial(widget);
+        dial_2->setObjectName(QStringLiteral("dial_2"));
+
+        gridLayout->addWidget(dial_2, 0, 0, 1, 1);
+
+        dial_3 = new QDial(widget);
+        dial_3->setObjectName(QStringLiteral("dial_3"));
+
+        gridLayout->addWidget(dial_3, 0, 1, 1, 1);
+
 
         retranslateUi(TestDialog);
         QObject::connect(pushButton, SIGNAL(clicked()), customClock, SLOT(toggleSecondHand()));
