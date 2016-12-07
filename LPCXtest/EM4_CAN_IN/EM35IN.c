@@ -349,12 +349,14 @@ int main(void) {
 
 	for (;;) //infinite loop
 	{		
-		bool blinkLeft = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
-		bool blinkRight = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
-		bool alarm = true;//Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
-		bool lights = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
-		bool wiper = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
+		bool blinkLeft = Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
+		bool blinkRight = Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
+		bool alarm = Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
+		bool lights = Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
+		bool wiper = Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
 		bool click = false;
+
+		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
 
 		//////////////////////////////
 		////////BUTTON HANDLER////////
@@ -436,7 +438,7 @@ int main(void) {
 		//
 		//Left Blink
 		//
-		if ((blinkLeftOn || alarmOn) && ((SysTickCnt - lastClick) >= BLINK_FREQ))
+		if ((blinkLeftOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
 			msg_obj.msgobj = __COUNTER__;
@@ -463,7 +465,7 @@ int main(void) {
 		//
 		//Right Blink
 		//
-		if ((blinkRightOn || alarmOn) && ((SysTickCnt - lastClick) >= BLINK_FREQ))
+		if ((blinkRightOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
 			msg_obj.msgobj = __COUNTER__;
