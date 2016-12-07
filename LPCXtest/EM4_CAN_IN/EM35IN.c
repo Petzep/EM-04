@@ -349,11 +349,11 @@ int main(void) {
 
 	for (;;) //infinite loop
 	{		
-		bool blinkLeft = true;//Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
-		bool blinkRight = 	Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
-		bool alarm = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
-		bool lights = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
-		bool wiper = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
+		bool blinkLeft = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
+		bool blinkRight = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
+		bool alarm = true;//Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
+		bool lights = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
+		bool wiper = false;//Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
 		bool click = false;
 
 		//////////////////////////////
@@ -380,7 +380,7 @@ int main(void) {
 		{
 			//Toggle DIM_LIGHTS head and rear
 			lightsOn = lights;
-			msg_obj.msgobj = 0; 
+			msg_obj.msgobj = __COUNTER__;
 			msg_obj.mode_id = DIM_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
@@ -392,7 +392,7 @@ int main(void) {
 		{
 			//Toggle whiper, send to personal adress from whiper
 			wiperOn = wiper;
-			msg_obj.msgobj = 0; 
+			msg_obj.msgobj = __COUNTER__;
 			msg_obj.mode_id = WHIPER_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 5;
@@ -436,51 +436,58 @@ int main(void) {
 		//
 		//Left Blink
 		//
-		if ((SysTickCnt - lastClick) >= BLINK_FREQ)
+		if ((blinkLeftOn || alarmOn) && ((SysTickCnt - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
-			msg_obj.msgobj = 0; 
-			msg_obj.mode_id = LEFT_DEVICES | CAN_MSGOBJ_STD;
+			msg_obj.msgobj = __COUNTER__;
+			msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			//Turn on if there is no blink and (left_blinker or Alarm is on)
-			if((blinkLeftOn || alarmOn) && !blinkLeftState)
+			if(!blinkLeftState)
 			{
 				blinkLeftState = true;
 				msg_obj.data[0] = true;
 				LPC_CCAN_API->can_transmit(&msg_obj);
+				Delay(10);
 			}
 			else
 			{
 				blinkLeftState = false;
 				msg_obj.data[0] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
+				Delay(10);
 			}
 		}
 
 		//
 		//Right Blink
 		//
-		if ((SysTickCnt - lastClick) >= BLINK_FREQ)
+		if ((blinkRightOn || alarmOn) && ((SysTickCnt - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
-			msg_obj.msgobj = 0; 
-			msg_obj.mode_id = RIGHT_DEVICES | CAN_MSGOBJ_STD;
+			msg_obj.msgobj = __COUNTER__;
+			msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
-			if ((blinkLeftOn || alarmOn) && !blinkLeftState)
+			if (!blinkRightState)
 			{
 				blinkRightState = true;
 				msg_obj.data[0] = true;
-				LPC_CCAN_API->can_transmit(&msg_obj);			
+				LPC_CCAN_API->can_transmit(&msg_obj);
+				Delay(10);
 			}
 			else
 			{
 				blinkRightState = false;
 				msg_obj.data[0] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
+				Delay(10);
 			}
 		}
+
+		if (click)
+			lastClick = SysTickCnt;
 		
 		//
 		//heartbeat
@@ -489,7 +496,7 @@ int main(void) {
 		{
 			lastSystickcnt = SysTickCnt;
 			
-			msg_obj.msgobj = 0;
+			msg_obj.msgobj = __COUNTER__;
 			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
@@ -500,15 +507,17 @@ int main(void) {
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
 			}
 			else 
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 		}
-		if(click)
-			lastClick = SysTickCnt;
 	}
 	return 0;
 }
