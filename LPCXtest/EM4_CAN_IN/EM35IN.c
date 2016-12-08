@@ -70,17 +70,6 @@ void TIMER32_0_IRQHandler(void){
 	}
 }
 
-/**
-* @brief	Handle interrupt from 32-bit timer
-* @return	Nothing
-*/
-void TIMER32_1_IRQHandler(void) {
-	if (Chip_TIMER_MatchPending(LPC_TIMER32_1, 1)) {
-		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 1);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
-	}
-}
-
 void Delay(unsigned long tick) {
 	unsigned long systickcnt;
 
@@ -218,51 +207,14 @@ void CAN_rx(uint8_t msg_obj_num) {
 	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
-		if (msg_obj_num == FRONT_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == REAR_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == LEFT_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == RIGHT_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == DIM_MESSAGE)
-		{
-			//Toggle DIM_lights (Head and rear)
-			setPort(3, msg_obj.data[0]);
-		}
-
 		if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
+
 		}
 
 		if (msg_obj_num == ALL_MESSAGE)
 		{
 			
-			setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
 		}
 		
 		// Turn on the yellow led and Enable timer interrupt
@@ -309,9 +261,8 @@ int main(void) {
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
 
-	//Enable timer 1 and 2 clock 
+	//Enable timer 1 clock
 	Chip_TIMER_Init(LPC_TIMER32_0);
-	Chip_TIMER_Init(LPC_TIMER32_1);
 
 	//Timer setup for match and interrupt at 1/4 seconds (250ms)
 	Chip_TIMER_Reset(LPC_TIMER32_0);
@@ -320,19 +271,12 @@ int main(void) {
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
-	//Timer setup for match and interrupt at 1/1 seconds (1000ms)
-	Chip_TIMER_Reset(LPC_TIMER32_1);
-	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 1);
-	Chip_TIMER_SetMatch(LPC_TIMER32_1, 1, (SystemCoreClock / 1));
-	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_1, 1);
-	Chip_TIMER_Enable(LPC_TIMER32_1);
-
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 2 | 1 << 3);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 2 | 1 << 10);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1 << 10);
 	
 	bool blinkLeftOn =		false;
 	bool blinkLeftState =	false;
@@ -451,14 +395,12 @@ int main(void) {
 				blinkLeftState = true;
 				msg_obj.data[0] = true;
 				LPC_CCAN_API->can_transmit(&msg_obj);
-				Delay(10);
 			}
 			else
 			{
 				blinkLeftState = false;
 				msg_obj.data[0] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
-				Delay(10);
 			}
 		}
 
@@ -477,14 +419,12 @@ int main(void) {
 				blinkRightState = true;
 				msg_obj.data[0] = true;
 				LPC_CCAN_API->can_transmit(&msg_obj);
-				Delay(10);
 			}
 			else
 			{
 				blinkRightState = false;
 				msg_obj.data[0] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
-				Delay(10);
 			}
 		}
 
@@ -494,7 +434,7 @@ int main(void) {
 		//
 		//heartbeat
 		//
-		if ((SysTickCnt - lastSystickcnt) >= 1000)
+		if ((LoopTick - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;
 			
@@ -509,15 +449,11 @@ int main(void) {
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);	//led 4 (yellow)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//led 2 (red)
 			}
 			else 
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 			}
 		}
 	}

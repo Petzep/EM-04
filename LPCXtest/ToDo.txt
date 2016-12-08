@@ -1,9 +1,7 @@
 TODO:
-
-- Make lights from CAN_IN and CAN_OUT give out which error is given
-- Watchdog implenmentation
+ - check SetPort on CAN_IN
+ - Rename EM35
+ - IO config
 
 
 TEST:
-- Test 0b1010 binary literal DONE
-- Test disable interupt in can_rx()
