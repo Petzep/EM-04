@@ -32,6 +32,8 @@
 #define	DIM_MESSAGE			7
 #define	TOTAL_MESSAGE		8
 
+#define BLINK_FREQ			750
+
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
 #endif
@@ -64,17 +66,6 @@ void SysTick_Handler(void) {
 void TIMER32_0_IRQHandler(void){
 	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
-	}
-}
-
-/**
-* @brief	Handle interrupt from 32-bit timer
-* @return	Nothing
-*/
-void TIMER32_1_IRQHandler(void) {
-	if (Chip_TIMER_MatchPending(LPC_TIMER32_1, 1)) {
-		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 1);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
 	}
 }
@@ -216,51 +207,14 @@ void CAN_rx(uint8_t msg_obj_num) {
 	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
-		if (msg_obj_num == FRONT_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == REAR_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == LEFT_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == RIGHT_MESSAGE)
-		{
-			setPort(2, msg_obj.data[0]);
-		}
-
-		if (msg_obj_num == DIM_MESSAGE)
-		{
-			//Toggle DIM_lights (Head and rear)
-			setPort(3, msg_obj.data[0]);
-		}
-
 		if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
+
 		}
 
 		if (msg_obj_num == ALL_MESSAGE)
 		{
 			
-			setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
 		}
 		
 		// Turn on the yellow led and Enable timer interrupt
@@ -307,9 +261,8 @@ int main(void) {
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
 
-	//Enable timer 1 and 2 clock 
+	//Enable timer 1 clock
 	Chip_TIMER_Init(LPC_TIMER32_0);
-	Chip_TIMER_Init(LPC_TIMER32_1);
 
 	//Timer setup for match and interrupt at 1/4 seconds (250ms)
 	Chip_TIMER_Reset(LPC_TIMER32_0);
@@ -318,19 +271,12 @@ int main(void) {
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
-	//Timer setup for match and interrupt at 1/1 seconds (1000ms)
-	Chip_TIMER_Reset(LPC_TIMER32_1);
-	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 1);
-	Chip_TIMER_SetMatch(LPC_TIMER32_1, 1, (SystemCoreClock / 1));
-	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_1, 1);
-	Chip_TIMER_Enable(LPC_TIMER32_1);
-
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 2 | 1 << 3);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 2 | 1 << 10);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1 << 10);
 	
 	bool blinkLeftOn =		false;
 	bool blinkLeftState =	false;
@@ -347,12 +293,14 @@ int main(void) {
 
 	for (;;) //infinite loop
 	{		
-		bool blinkLeft = 	Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
-		bool blinkRight = 	Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
-		bool alarm = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
-		bool lights = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
-		bool wiper = 		Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
+		bool blinkLeft = Chip_GPIO_ReadPortBit(LPC_GPIO, 0,3);
+		bool blinkRight = Chip_GPIO_ReadPortBit(LPC_GPIO, 2,7);
+		bool alarm = Chip_GPIO_ReadPortBit(LPC_GPIO, 2,8);
+		bool lights = Chip_GPIO_ReadPortBit(LPC_GPIO, 0,2);
+		bool wiper = Chip_GPIO_ReadPortBit(LPC_GPIO, 2,1);
 		bool click = false;
+
+		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
 
 		//////////////////////////////
 		////////BUTTON HANDLER////////
@@ -378,7 +326,7 @@ int main(void) {
 		{
 			//Toggle DIM_LIGHTS head and rear
 			lightsOn = lights;
-			msg_obj.msgobj = 0; 
+			msg_obj.msgobj = __COUNTER__;
 			msg_obj.mode_id = DIM_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
@@ -390,7 +338,7 @@ int main(void) {
 		{
 			//Toggle whiper, send to personal adress from whiper
 			wiperOn = wiper;
-			msg_obj.msgobj = 0; 
+			msg_obj.msgobj = __COUNTER__;
 			msg_obj.mode_id = WHIPER_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 5;
@@ -402,7 +350,6 @@ int main(void) {
 			if(wiperOn)
 			{
 				//first disable reset
-				
 				msg_obj.data[3] = false;
 				msg_obj.data[4] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
@@ -435,24 +382,21 @@ int main(void) {
 		//
 		//Left Blink
 		//
-
-		if ((SysTickCnt - lastClick) >= 1000)
+		if ((blinkLeftOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
-			msg_obj.msgobj = 0; 
-			msg_obj.mode_id = LEFT_DEVICES | CAN_MSGOBJ_STD;
+			msg_obj.msgobj = __COUNTER__;
+			msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
-			if(blinkLeftOn || alarmOn)
+			//Turn on if there is no blink and (left_blinker or Alarm is on)
+			if(!blinkLeftState)
 			{
-				if(!blinkLeftState)
-				{
-					blinkLeftState = true;
-					msg_obj.data[0] = true;
-					LPC_CCAN_API->can_transmit(&msg_obj);
-				}
+				blinkLeftState = true;
+				msg_obj.data[0] = true;
+				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
-			else if(blinkLeftState)
+			else
 			{
 				blinkLeftState = false;
 				msg_obj.data[0] = false;
@@ -460,69 +404,41 @@ int main(void) {
 			}
 		}
 
-		/*if (!(SysTickCnt % 1000) && blinkLeftState) //on each second while blinkLeftState is true
-		{
-			msg_obj.msgobj = 0;
-			msg_obj.mask = 0x0;
-			msg_obj.dlc = 2;
-			msg_obj.data[0] = 0;
-			msg_obj.data[1] = 0;
-			msg_obj.mode_id = LEFT_DEVICES | CAN_MSGOBJ_STD;
-			blinkLeftState = false;
-			
-			Delay(1000);
-			LPC_CCAN_API->can_transmit(&msg_obj);
-		}*/
-
 		//
 		//Right Blink
 		//
-		if ((SysTickCnt - lastClick) >= 1000)
+		if ((blinkRightOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
-			msg_obj.msgobj = 0; 
-			msg_obj.mode_id = RIGHT_DEVICES | CAN_MSGOBJ_STD;
+			msg_obj.msgobj = __COUNTER__;
+			msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
-			if (blinkLeftOn || alarmOn)
+			if (!blinkRightState)
 			{
-				if (!blinkRightState)
-				{
-					blinkRightState = true;
-					msg_obj.data[0] = true;
-					LPC_CCAN_API->can_transmit(&msg_obj);
-				}				
+				blinkRightState = true;
+				msg_obj.data[0] = true;
+				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
-			else if (blinkRightState)
+			else
 			{
 				blinkRightState = false;
 				msg_obj.data[0] = false;
 				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
 		}
-		
-		/*if (!(SysTickCnt % 1000) && blinkRightState)
-		{
-			msg_obj.msgobj = 0;
-			msg_obj.mask = 0x0;
-			msg_obj.dlc = 2;
-			msg_obj.data[0] = 0;
-			msg_obj.data[1] = 0;
-			msg_obj.mode_id = RIGHT_DEVICES | CAN_MSGOBJ_STD;
-			blinkRightState = false;
-			Delay(1000);
-			
-			LPC_CCAN_API->can_transmit(&msg_obj);
-		}*/
 
+		if (click)
+			lastClick = SysTickCnt;
+		
 		//
 		//heartbeat
 		//
-		if ((SysTickCnt - lastSystickcnt) >= 1000)
+		if ((LoopTick - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;
 			
-			msg_obj.msgobj = 0;
+			msg_obj.msgobj = __COUNTER__;
 			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
@@ -540,8 +456,6 @@ int main(void) {
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
 			}
 		}
-		if(click)
-			lastClick = SysTickCnt;
 	}
 	return 0;
 }
@@ -571,3 +485,8 @@ int p14 = getPin(2,7); // --> left indicator
 int p15 = getPin(1,8); //
 int p16 = getPin(2,0); //
 */
+
+// led 1 (green) power light
+// led 2 (red) 2,10
+// led 3 (yellow) 2,2
+// led 4 (blue) 0,7
