@@ -228,22 +228,3 @@ void QtPieMenu::setSelection(int selection)
 		emit itemName(m_IconNames.at(selection)); 
 	update();
 }
-
-/* 
-QIcon("icons/drag.png")
-
-QIcon::State state = QIcon::Off;
-QIcon::Mode mode = QIcon::Normal;
-if (guessModeStateAct->isChecked())
-{
-	if (imageName.contains(QLatin1String("_act"), Qt::CaseInsensitive))
-		mode = QIcon::Active;	
-	else if (imageName.contains(QLatin1String("_dis"), Qt::CaseInsensitive))
-		mode = QIcon::Disabled;
-	else if (imageName.contains(QLatin1String("_sel"), Qt::CaseInsensitive))
-		mode = QIcon::Selected;
-
-	if (imageName.contains(QLatin1String("_on"), Qt::CaseInsensitive))
-		state = QIcon::On;
-}
-*/

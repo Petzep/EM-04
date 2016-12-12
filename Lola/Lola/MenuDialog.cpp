@@ -4,7 +4,7 @@ MenuDialog::MenuDialog(QWidget *parent)
 	: QDialog(parent)
 {
 	setupUi(this);
-	qtPieMenu_2->setFocus();
+	MENU->setFocus();
 	debugCheckBox->setChecked(true);
 }
 
@@ -14,7 +14,7 @@ MenuDialog::~MenuDialog()
 
 void MenuDialog::on_controlDial_valueChanged(int value)
 {
-	this->qtPieMenu_2->setSelection(value - 2);
+	this->MENU->setSelection(value - 2);
 }
 
 bool MenuDialog::event(QEvent *event)
@@ -24,29 +24,29 @@ bool MenuDialog::event(QEvent *event)
 		int cmd = ke->key();
 		if(!stackSlide->inAnimation())
 		{
-			if (cmd >= Qt::Key_0 && cmd <= Qt::Key_9) //filter for num-keys
+			if (cmd >= Qt::Key_0 && cmd <= Qt::Key_9) //filter for numeric-keys
 			{
 				int value;
-				int itemNumbers = qtPieMenu_2->itemNumbers();
+				int itemNumbers = MENU->itemNumbers();
 
 				//Event handler for qtPieMenu
-				if (qtPieMenu_2->hasFocus())
+				if (MENU->hasFocus())
 				{
 					switch (cmd)
 					{
 					case Qt::Key_4:
 					{
-						value = qtPieMenu_2->selection() - 1;
+						value = MENU->selection() - 1;
 						break;
 					}
 					case Qt::Key_6:
 					{
-						value = qtPieMenu_2->selection() + 1;
+						value = MENU->selection() + 1;
 						break;
 					}
 					case Qt::Key_5:
 					{
-						qtPieMenu_2->select();
+						MENU->select();
 
 						break;
 					}
@@ -62,12 +62,13 @@ bool MenuDialog::event(QEvent *event)
 						else if (value < 0)
 							value = (value + itemNumbers) % itemNumbers;
 
-						qtPieMenu_2->setSelection(value);
+						MENU->setSelection(value);
 					}
 				}
 				//Dail event handler
 				else if (volumeDial->hasFocus() || trebDial->hasFocus() || bassDial->hasFocus())
 				{
+					const char* test = focusWidget()->metaObject()->className();
 					QDial* dial = (QDial*)focusWidget();
 					if (dial->notchesVisible())
 					{
@@ -114,7 +115,7 @@ bool MenuDialog::event(QEvent *event)
 						}
 						case Qt::Key_7:
 							stackSlide->slideHome();
-							qtPieMenu_2->setFocus();
+							MENU->setFocus();
 							break;
 						default:
 							break;
@@ -148,7 +149,7 @@ bool MenuDialog::event(QEvent *event)
 		if (ke->key() == Qt::Key_0)
 		{
 			stackSlide->slideHome();
-			qtPieMenu_2->setFocus();
+			MENU->setFocus();
 		}
 		return true;
 	}

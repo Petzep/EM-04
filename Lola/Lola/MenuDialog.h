@@ -1,5 +1,7 @@
 #pragma once
 
+#define MENU qtPieMenu_2
+
 #include <QDialog>
 #include <qevent.h>
 #include "ui_MenuDialog.h"

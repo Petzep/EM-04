@@ -1,8 +1,5 @@
-Label N
-Label E
-Label P
-Label H
-Label T
-Label A
-Label L
-Label Y
+Gauges Panel
+Left Test Panel
+Menu
+Right Test Panel
+Dail Panel
