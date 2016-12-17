@@ -17,6 +17,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testinator", "Testinator\Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAN_OUT_AS_IN", "CAN_OUT_AS_IN\CAN_OUT_AS_IN.vcxproj", "{D9C24C82-975D-43D6-98C7-CB5452567EE8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EM4_CAN_IN_40_PIN", "EM4_CAN_IN_40_PIN\EM4_CAN_IN_40_PIN.vcxproj", "{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LPC17XXtest", "LPC17XXtest\LPC17XXtest.vcxproj", "{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -53,6 +57,18 @@ Global
 		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x64.ActiveCfg = Release|Win32
 		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x86.ActiveCfg = Release|Win32
 		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x86.Build.0 = Release|Win32
+		{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}.Debug|x64.ActiveCfg = Debug|Win32
+		{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}.Debug|x86.ActiveCfg = Debug|Win32
+		{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}.Debug|x86.Build.0 = Debug|Win32
+		{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}.Release|x64.ActiveCfg = Release|Win32
+		{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}.Release|x86.ActiveCfg = Release|Win32
+		{9BDDF95B-DF97-4DB4-992D-BE2774CDAD5D}.Release|x86.Build.0 = Release|Win32
+		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Debug|x64.ActiveCfg = Debug|Win32
+		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Debug|x86.ActiveCfg = Debug|Win32
+		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Debug|x86.Build.0 = Debug|Win32
+		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Release|x64.ActiveCfg = Release|Win32
+		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Release|x86.ActiveCfg = Release|Win32
+		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

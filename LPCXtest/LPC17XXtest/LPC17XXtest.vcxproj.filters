@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{3546cebf-64e1-451d-b5f0-b24c95ce7696}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{704a642a-f8dd-4f52-8e39-52cf122d0ae0}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{b858cf56-a9c5-4283-b04f-1c1d639b0383}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Make files">
+      <UniqueIdentifier>{9a391b71-3c90-4a2c-a25b-184e96152aa7}</UniqueIdentifier>
+      <Extensions>*.mak</Extensions>
+    </Filter>
+    <Filter Include="VisualGDB settings">
+      <UniqueIdentifier>{dd583118-e2ec-41e4-bcb8-360b791b90df}</UniqueIdentifier>
+      <Extensions>*.vgdbsettings</Extensions>
+    </Filter>
+    <Filter Include="Source files\Device-specific files">
+      <UniqueIdentifier>{c61f5740-b92b-4b9e-8c07-0cec3adc4495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Device-specific files">
+      <UniqueIdentifier>{b6757bf0-d803-4e6c-9cce-40046c8b2667}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\adc_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\can_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\chip_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\clock_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\cmp_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\crc_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\dac_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\eeprom_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\emc_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\enet_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\gpdma_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\gpioint_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\gpio_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\i2c_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\i2s_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\iocon_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\lcd_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\pmu_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\ritimer_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\rtc_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sdc_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sdmmc_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\spi_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\ssp_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\stopwatch_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sysctl_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sysinit_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\timer_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\uart_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\wwdt_17xx_40xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\eeprom.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\fpu_init.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\iap.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\ring_buffer.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\Common\startup.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC17xx_40xx\StartupFiles\ORIGINAL_cr_startup_lpc175x_6x.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="LEDBlink17XX.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="debug.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="LPC17XXtest-Debug.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="release.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="LPC17XXtest-Release.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="nxp_lpc.mak">
+      <Filter>Source files\Device-specific files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\arm_common_tables.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\arm_math.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cm0.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cm0plus.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cm3.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cm4.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cm4_simd.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cmFunc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_cmInstr.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_sc000.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\Include\core_sc300.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\CMSIS\CMSIS\RTOS\cmsis_os.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\adc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\can_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\chip.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\chip_lpc175x_6x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\chip_lpc177x_8x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\chip_lpc407x_8x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\clock_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\cmp_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\cmsis.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\crc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\dac_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\eeprom_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\emc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\enet_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\fmc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\gpdma_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\gpioint_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\gpio_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\i2c_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\i2s_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\iocon_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\lcd_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\mcpwm_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\pmu_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\qei_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\ritimer_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\romapi_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\rtc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sdc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sdmmc_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\spifi_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\spi_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\ssp_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\sysctl_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\timer_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\uart_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\usb_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\wwdt_17xx_40xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\config_175x_6x\cmsis_175x_6x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_17xx_40xx\config_177x_8x\cmsis_177x_8x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\eeprom.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\error.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\fpu_init.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\iap.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\lpc_types.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\ring_buffer.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\sdmmc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\chip_common\stopwatch.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_adc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_cdc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_cdcuser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_core.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_desc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_dfu.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_dfuuser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_hid.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_hiduser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_hw.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_msc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_mscuser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_rom_api.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\Common\sys_config.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="nxp_lpc.xml">
+      <Filter>VisualGDB settings</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

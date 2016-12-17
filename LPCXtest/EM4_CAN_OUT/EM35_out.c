@@ -333,6 +333,7 @@ int main(void){
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+
 			}
 			else 
 			{
