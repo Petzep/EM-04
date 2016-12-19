@@ -68,7 +68,6 @@ bool MenuDialog::event(QEvent *event)
 				//Dail event handler
 				else if (volumeDial->hasFocus() || trebDial->hasFocus() || bassDial->hasFocus())
 				{
-					const char* test = focusWidget()->metaObject()->className();
 					QDial* dial = (QDial*)focusWidget();
 					if (dial->notchesVisible())
 					{
