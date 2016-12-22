@@ -50,6 +50,12 @@ void TUIcomotive::on_styleButton_clicked(void)
 	dialog.exec();
 }
 
+void TUIcomotive::on_canButton_clicked(void)
+{
+	CanDialog dialog(this);
+	dialog.exec();
+}
+
 void TUIcomotive::on_bangaList_currentItemChanged()
 {
 	QListWidgetItem *curItem = ui.bangaList->currentItem();

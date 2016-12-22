@@ -5,6 +5,7 @@
 #include "TestDialog.h"
 #include "MenuDialog.h"
 #include "StyleDialog.h"
+#include "CanDialog.h"
 #include "ui_TUIcomotive.h"
 
 
@@ -25,5 +26,6 @@ public slots:
 	void on_testButton_clicked(void);
 	void on_menuButton_clicked(void);
 	void on_styleButton_clicked(void);
+	void on_canButton_clicked(void);
 	void addListItem(QString name, QString email);
 };
