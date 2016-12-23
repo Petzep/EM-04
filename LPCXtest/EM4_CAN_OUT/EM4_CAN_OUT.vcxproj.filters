@@ -29,9 +29,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EM35_out.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\EmbeddedBSPs\Common\startup.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
     </ClCompile>
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c">
       <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="EM4_CAN_OUT.c">
+      <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

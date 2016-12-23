@@ -12,16 +12,17 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 
 #include <chip.h>
 
-#define DEVICE_NR			0x020
+#define DEVICE_NR			0b0111
+#define	EM_04_CAN_RANGE		0x100
 
-#define ALL_ADDRESS			0x000
-#define DIM_ADDRESS			0x008
-#define FRONT_DEVICES		0x000
-#define REAR_DEVICES		0x001
-#define LEFT_DEVICES		0x002
-#define RIGHT_DEVICES		0x003
-#define WHIPER_ADDRESS		0x012
-#define BROADCAST_ADDRESS	0x030
+#define ALL_ADDRESS			(0x000 | EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x008 | EM_04_CAN_RANGE)
+#define FRONT_DEVICES		(0x000 | EM_04_CAN_RANGE)
+#define REAR_DEVICES		(0x001 | EM_04_CAN_RANGE)
+#define LEFT_DEVICES		(0x002 | EM_04_CAN_RANGE)
+#define RIGHT_DEVICES		(0x003 | EM_04_CAN_RANGE)
+#define WHIPER_ADDRESS		(0x004 | EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS	(0x030 | EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -32,7 +33,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define	DIM_MESSAGE			7
 #define	TOTAL_MESSAGE		8
 
-#define BLINK_FREQ			3
+#define BLINK_FREQ			750
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -140,7 +141,12 @@ int main(void)
 
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 10 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 <<  10| 1 << 11);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 15 | 1 << 16 | 1 << 17 | 1 << 18 | 1 << 22);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 4 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 14 | 1 << 15);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 4, 1 << 28 | 1 << 29);
+
 
 	bool blinkLeftOn = false;
 	bool blinkLeftState = false;
@@ -151,17 +157,52 @@ int main(void)
 	bool alarmOn = false;
 	bool wiperOn = false;
 
+	bool sendOn = false;
+	bool can1On = false;
+	bool can2On = false;
+
 	bool ledOn = false;
 	unsigned long lastSystickcnt = 0;
 
 
 	for (;;) //infinite loop
 	{
-		bool blinkLeft = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 3);
-		bool blinkRight = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 7);
-		bool alarm = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 8);
-		bool lights = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 2);
-		bool wiper = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 1);
+		bool pin5 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 22);
+		bool pin4 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 18);
+		bool pin3 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 17);
+		bool pin2 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 15);
+		bool pin1 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 16);
+		bool pin10 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 8);
+		bool pin9 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 7);
+		bool pin8 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 6);
+		bool pin7 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 5);
+		bool pin6 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 4);
+		bool pin15 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 3);
+		bool pin14 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 2);
+		bool pin13 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 1);
+		bool pin12 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 0);
+		bool pin11 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 9);
+		bool pin19 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8);
+		bool pin20 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 7);
+		bool pin16 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6);
+		bool pin18 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 28);
+		bool pin17 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 29);
+		bool pin22 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 15);
+		bool pin24 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 14);
+		bool pin21 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 10);
+		bool pin27 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 9);
+		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
+		bool pin26 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);
+		bool pin25 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 1);
+		bool pin23 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 0);
+
+		bool blinkLeft = pin1;
+		bool blinkRight = pin5;
+		bool alarm = pin8;
+		bool lights = pin3;
+		bool wiper = pin15;
+		bool can1 = pin2;
+		bool can2 = pin4;
 		bool click = false;
 
 		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
@@ -194,6 +235,30 @@ int main(void)
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Type = 0;
 			SendMsgBuf.Data[0] = lightsOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if (can1 != can1On)
+		{
+			//Toggle DIM_LIGHTS head and rear
+			can1On = can1;
+			SendMsgBuf.ID = 0b0111 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = can1On;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if (can2 != can2On)
+		{
+			//Toggle DIM_LIGHTS head and rear
+			can2On = can2;
+			SendMsgBuf.ID = 0b0100 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = can2On;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
@@ -241,6 +306,94 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
+		}
+
+		if (pin28 != sendOn)
+		{
+			//SEND all buttons
+			sendOn = pin28;
+			SendMsgBuf.ID = BROADCAST_ADDRESS + 1 + 256 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 6;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 1;
+			SendMsgBuf.Data[1] = pin1;
+			SendMsgBuf.Data[2] = pin2;
+			SendMsgBuf.Data[3] = pin3;
+			SendMsgBuf.Data[4] = pin4;
+			SendMsgBuf.Data[5] = pin5;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			Delay(50);
+
+			SendMsgBuf.ID = BROADCAST_ADDRESS + 6 + 256 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 6;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 0x6;
+			SendMsgBuf.Data[1] = pin6;
+			SendMsgBuf.Data[2] = pin7;
+			SendMsgBuf.Data[3] = pin8;
+			SendMsgBuf.Data[4] = pin9;
+			SendMsgBuf.Data[5] = pin10;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			Delay(50);
+
+			SendMsgBuf.ID = BROADCAST_ADDRESS + 11 + 256 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 6;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 0x11;
+			SendMsgBuf.Data[1] = pin11;
+			SendMsgBuf.Data[2] = pin12;
+			SendMsgBuf.Data[3] = pin13;
+			SendMsgBuf.Data[4] = pin14;
+			SendMsgBuf.Data[5] = pin15;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			Delay(50);
+
+			SendMsgBuf.ID = BROADCAST_ADDRESS + 16 + 256 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 6;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 0x16;
+			SendMsgBuf.Data[1] = pin16;
+			SendMsgBuf.Data[2] = pin17;
+			SendMsgBuf.Data[3] = !pin18; //STUK
+			SendMsgBuf.Data[4] = pin19;
+			SendMsgBuf.Data[5] = pin20;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			Delay(50);
+
+			SendMsgBuf.ID = BROADCAST_ADDRESS + 21 + 256 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 6;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 0x21;
+			SendMsgBuf.Data[1] = false;
+			SendMsgBuf.Data[2] = pin21;
+			SendMsgBuf.Data[3] = pin22;
+			SendMsgBuf.Data[4] = pin23;
+			SendMsgBuf.Data[5] = pin24;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			Delay(50);
+
+			SendMsgBuf.ID = BROADCAST_ADDRESS + 26 + 256 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 6;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 0x26;
+			SendMsgBuf.Data[1] = false;
+			SendMsgBuf.Data[2] = !pin25;
+			SendMsgBuf.Data[3] = !pin26;
+			SendMsgBuf.Data[4] = !pin27;
+			SendMsgBuf.Data[5] = !pin28;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			
 		}
 
 
@@ -327,3 +480,37 @@ int main(void)
 	}
 	return 0;
 }
+
+/*
+Ouput pins:
+-------------
+8	1,7
+7	3,3
+1	2,7
+2	2,8
+3	2,1
+4	0,3
+5	0,4
+6	0,5
+
+Led pins:
+-------------
+led 1 (green) power light
+led 2 (red) 2,10
+led 3 (yellow) 2,2
+led 4 (blue) 0,7
+
+DEVICE ID config:
+-------------
+
+name ||KIPPP| out |twins|front| 0b0000
+======||===============================
+IN  ||--0--|--1--|--0--|--0--| 0b0000
+Front ||--0--|--1--|--1--|--1--| 0b0111
+Back ||--0--|--1--|--1--|--0--| 0b0110
+Mid ||--0--|--1--|--0--|--0--| 0b0100
+HUD ||--1--|--0--|--0--|--1--| 0b1001
+Tor ||--1--|--0--|--0--|--0--| 0b1000
+Mid ||--0--|--1--|--0--|--0--| 0b0100
+
+*/

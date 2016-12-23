@@ -123,17 +123,10 @@ void setPort(int port, bool onoff);
 
 void CAN_init() {
 	/* Publish CAN Callback Functions */
-	CCAN_CALLBACKS_T callbacks = {
-		CAN_rx,
-		CAN_tx,
-		CAN_error,
+	CCAN_CALLBACKS_T callbacks = { CAN_rx, CAN_tx, CAN_error, NULL, NULL, NULL,
 		NULL,
-		NULL,
-		NULL,
-		NULL,
-		NULL,
-	};
-	
+		NULL, };
+
 	/* Initialize CAN Controller */
 	uint32_t CanApiClkInitTable[2];
 	baudrateCalculate(500000, CanApiClkInitTable); //500kbits
@@ -147,48 +140,11 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	if (DEVICE_NR & 0b0010) //Select only the front bit
-	{
-		msg_obj.msgobj = FRONT_MESSAGE;
-		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
-		msg_obj.mask = 0xFFF;
-		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
-
-	if (!(DEVICE_NR & 0b0010)) //Select only the rear bit (=not front bit)
-	{
-		msg_obj.msgobj = REAR_MESSAGE;
-		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; 
-		msg_obj.mask = 0xFFF;
-		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
-
-	if (!(DEVICE_NR & 0b0001))  //Select only the right bit (=not right bit)
-	{
-		msg_obj.msgobj = LEFT_MESSAGE;
-		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
-		msg_obj.mask = 0xFFF;
-		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
-	
-	if (DEVICE_NR & 0b0001) //Select only the right bit
-	{
-		msg_obj.msgobj = RIGHT_MESSAGE;
-		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
-		msg_obj.mask = 0xFFF;
-		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
-
 	msg_obj.msgobj = PERSNOAL_MESSAGE;
 	msg_obj.mode_id = DEVICE_NR;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = DIM_MESSAGE;
-	msg_obj.mode_id = DIM_ADDRESS;
-	msg_obj.mask = 0xFFF;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -264,10 +220,10 @@ int main(void) {
 	//Enable timer 1 clock
 	Chip_TIMER_Init(LPC_TIMER32_0);
 
-	//Timer setup for match and interrupt at 1/4 seconds (250ms)
+	//Timer setup for match and interrupt at 1/10 seconds (100ms)
 	Chip_TIMER_Reset(LPC_TIMER32_0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
-	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 4));
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 10));
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
@@ -484,6 +440,19 @@ int p13 = getPin(2,1); // --> right middle
 int p14 = getPin(2,7); // --> left indicator
 int p15 = getPin(1,8); //
 int p16 = getPin(2,0); //
+
+DEVICE ID config:
+-------------
+
+ name ||KIPPP| out |twins|front| 0b0000
+======||===============================
+  IN  ||--0--|--1--|--0--|--0--| 0b0000
+Front ||--0--|--1--|--1--|--1--| 0b0111
+ Back ||--0--|--1--|--1--|--0--| 0b0110
+  Mid ||--0--|--1--|--0--|--0--| 0b0100
+  HUD ||--1--|--0--|--0--|--1--| 0b1001
+  Tor ||--1--|--0--|--0--|--0--| 0b1000
+  Mid ||--0--|--1--|--0--|--0--| 0b0100
 */
 
 // led 1 (green) power light
