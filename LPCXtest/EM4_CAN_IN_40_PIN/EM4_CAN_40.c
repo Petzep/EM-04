@@ -167,34 +167,34 @@ int main(void)
 
 	for (;;) //infinite loop
 	{
-		bool pin5 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 22);
-		bool pin4 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 18);
-		bool pin3 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 17);
-		bool pin2 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 15);
 		bool pin1 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 16);
-		bool pin10 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 8);
-		bool pin9 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 7);
-		bool pin8 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 6);
-		bool pin7 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 5);
+		bool pin2 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 15);
+		bool pin3 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 17);
+		bool pin4 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 18);
+		bool pin5 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 22);
 		bool pin6 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 4);
-		bool pin15 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 3);
-		bool pin14 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 2);
-		bool pin13 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 1);
-		bool pin12 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 0);
+		bool pin7 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 5);
+		bool pin8 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 6);
+		bool pin9 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 7);
+		bool pin10 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 8);
 		bool pin11 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 9);
+		bool pin12 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 0);
+		bool pin13 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 1);
+		bool pin14 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 2);
+		bool pin15 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 3);
+		bool pin16 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6);
+		bool pin17 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 29);
+		bool pin18 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 28);
 		bool pin19 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8);
 		bool pin20 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 7);
-		bool pin16 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6);
-		bool pin18 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 28);
-		bool pin17 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 29);
-		bool pin22 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 15);
-		bool pin24 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 14);
 		bool pin21 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 10);
+		bool pin22 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 15);
+		bool pin23 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 0);
+		bool pin24 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 14);
+		bool pin25 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 1);
+		bool pin26 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);
 		bool pin27 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 9);
 		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
-		bool pin26 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);
-		bool pin25 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 1);
-		bool pin23 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 0);
 
 		bool blinkLeft = pin1;
 		bool blinkRight = pin5;
