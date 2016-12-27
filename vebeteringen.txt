@@ -1,0 +1,7 @@
+HUD - shiftreg naar 3.3
+MotorC - cap bij de LDO
+CAN_OUt - MOSFET reverse
+Motorc -  SEM
+Hookpins voor ground - All boards
+HUD - headers JTAG programmer met gleuven
+HUD - stepdown converter, oplossing voor soldeer ONDER de chip

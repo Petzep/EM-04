@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EM4_CAN_IN_40_PIN", "EM4_CA
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LPC17XXtest", "LPC17XXtest\LPC17XXtest.vcxproj", "{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EM4_FAN_DRIVER", "EM4_FAN_DRIVER\EM4_FAN_DRIVER.vcxproj", "{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -69,6 +71,12 @@ Global
 		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Release|x64.ActiveCfg = Release|Win32
 		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Release|x86.ActiveCfg = Release|Win32
 		{7BB854F2-D4B1-45F4-BBFC-C35EB6634A53}.Release|x86.Build.0 = Release|Win32
+		{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}.Debug|x64.ActiveCfg = Debug|Win32
+		{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}.Debug|x86.ActiveCfg = Debug|Win32
+		{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}.Debug|x86.Build.0 = Debug|Win32
+		{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}.Release|x64.ActiveCfg = Release|Win32
+		{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}.Release|x86.ActiveCfg = Release|Win32
+		{4CC7A758-5CB9-4599-BBD5-BB061B00CF9B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
