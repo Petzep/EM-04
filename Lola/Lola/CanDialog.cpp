@@ -11,34 +11,6 @@ CanDialog::CanDialog(QWidget *parent)
 	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Data")));
 	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Message")));
 	
-	QString line = "(000137494712) <0x001> [8] 11 22 33 44 55 66 77 88 ";
-	QStringList splitList;
-	CanLogMsg canData;
-
-	splitList = line.split(')').first().split('(');
-	canData.time = splitList.last().toLongLong();
-	splitList.clear();
-
-	splitList = line.split('>').first().split('<');
-	canData.id = splitList.last().toInt();
-	splitList.clear();
-
-	splitList = line.split(']').first().split('[');
-	canData.dlc = splitList.last().toInt();
-	splitList.clear();
-
-	QRegExp rx("(\\d+)");
-	int pos = 0;
-	int index = 0;
-	while((pos = rx.indexIn(line, pos)) != -1)
-	{
-		canData.msg[index] = rx.cap(1).toInt();
-		pos += rx.matchedLength();
-	}
-
-	QModelIndex Qindex = model->index(0, 0, QModelIndex());
-	model->setData(Qindex, canData.dlc);
-	
 	canTable->setModel(model);
 	
 }
@@ -71,18 +43,19 @@ void CanDialog::readFile(QString filename)
 		canData.dlc = splitList.last().toInt();
 		splitList.clear();
 
-		QRegExp rx("(\\d+)");
+		QRegExp rx("(\\d\\d )");
 		int pos = 0;
-		int index = 0;
-		while((pos = rx.indexIn(line, pos)) != -1)
+		for(int i = 0; i < canData.dlc; i++)
 		{
-			canData.msg[index] = rx.cap(1).toInt();
-			pos += rx.matchedLength();
-			index++;
+			if((pos = rx.indexIn(line, pos)) != -1)
+			{
+				canData.msg[i] = rx.cap(1).toInt();
+				pos += rx.matchedLength();
+			}
 		}
 
-		model->insertRow(model->rowCount());
-		model->setData(model->index(1, 1), canData.dlc, Qt::DisplayRole);
+		QModelIndex Qindex = model->index(0, 0, QModelIndex());
+		model->setData(Qindex, canData.dlc);
 
 	}
 }
@@ -110,17 +83,28 @@ void CanDialog::on_refreshButton_clicked(void)
 	canData.dlc = splitList.last().toInt();
 	splitList.clear();
 
-	QRegExp rx("(\\d+)");
+	QRegExp rx("(\\d\\d )");
 	int pos = 0;
 	int index = 0;
-	while((pos = rx.indexIn(line, pos)) != -1)
+
+	for(int i = 0; i < canData.dlc; i++)
 	{
-		canData.msg[index] = rx.cap(1).toInt();
-		pos += rx.matchedLength();
-		index++;
+		if((pos = rx.indexIn(line, pos)) != -1)
+		{
+			canData.msg[i] = rx.cap(1).toInt();
+			pos += rx.matchedLength();
+		}
 	}
 
-	model->setData(model->index(0, 0), canData.dlc, Qt::DisplayRole);
+	QModelIndex Qindex = model->index(0, 0, QModelIndex());
+	model->setData(Qindex, canData.time);
+	Qindex = model->index(0, 1, QModelIndex());
+	model->setData(Qindex, canData.id);
+	Qindex = model->index(0, 2, QModelIndex());
+	model->setData(Qindex, canData.dlc);
+	Qindex = model->index(0, 3, QModelIndex());
+	model->setData(Qindex, canData.msg[1]);
+
 }
 
 
