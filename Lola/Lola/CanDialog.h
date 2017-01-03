@@ -7,14 +7,13 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstringlist.h>
-#include <QItemDelegate>
 
 struct CanLogMsg
 {
 	long long time;
-	int id;
+	QString id;
 	int dlc;
-	int msg[8] = { };
+	QStringList data;
 };
 
 class CanDialog : public QDialog, public Ui::CanDialog

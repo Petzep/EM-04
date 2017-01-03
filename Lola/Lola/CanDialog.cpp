@@ -21,41 +21,49 @@ CanDialog::~CanDialog()
 
 void CanDialog::readFile(QString filename)
 { 
-	QFile file("canout.txt");
+	QFile file(QString (QCoreApplication::applicationDirPath() +"/" + filename));
 	if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return;
 
 	QStringList splitList;
 	QTextStream in(&file);
 	CanLogMsg canData;
-	while(!in.atEnd())
+	for(int index = 0; !in.atEnd(); index++)
 	{
 		QString line = in.readLine();
 		splitList = line.split(')').first().split('(');
 		canData.time = splitList.last().toLongLong();
 		splitList.clear();
 
-		splitList = line.split('>').first().split('<');
-		canData.id = splitList.last().toInt();
+		splitList = line.split('>').first().split('x');
+		canData.id = splitList.last();
 		splitList.clear();
 
 		splitList = line.split(']').first().split('[');
 		canData.dlc = splitList.last().toInt();
 		splitList.clear();
 
-		QRegExp rx("(\\d\\d )");
+		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
 		int pos = 0;
+		canData.data.clear();
 		for(int i = 0; i < canData.dlc; i++)
 		{
 			if((pos = rx.indexIn(line, pos)) != -1)
 			{
-				canData.msg[i] = rx.cap(1).toInt();
+				canData.data.append(rx.cap(1));
 				pos += rx.matchedLength();
 			}
 		}
 
-		QModelIndex Qindex = model->index(0, 0, QModelIndex());
+		QModelIndex Qindex = model->index(index, 0, QModelIndex());
+		model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
+		Qindex = model->index(index, 1, QModelIndex());
+		
+			model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
+		Qindex = model->index(index, 2, QModelIndex());
 		model->setData(Qindex, canData.dlc);
+		Qindex = model->index(index, 3, QModelIndex());
+		model->setData(Qindex, canData.data.join(" "));
 
 	}
 }
@@ -67,43 +75,43 @@ void CanDialog::dataToTable(CanLogMsg data)
 
 void CanDialog::on_refreshButton_clicked(void)
 {
-	QString line = "(000137494712) <0x001> [8] 11 22 33 44 55 66 77 88 ";
-	QStringList splitList;
-	CanLogMsg canData;
+	readFile("canout.txt");
+	//QString line = "(000137494712) <0x001> [8] 11 22 33 44 55 66 77 88 ";
+	//QStringList splitList;
+	//CanLogMsg canData;
 
-	splitList = line.split(')').first().split('(');
-	canData.time = splitList.last().toLongLong();
-	splitList.clear();
+	//splitList = line.split(')').first().split('(');
+	//canData.time = splitList.last().toLongLong();
+	//splitList.clear();
 
-	splitList = line.split('>').first().split('<0x');
-	canData.id = splitList.last().toInt();
-	splitList.clear();
+	//splitList = line.split('>').first().split('x');
+	//canData.id = splitList.last().toInt();
+	//splitList.clear();
 
-	splitList = line.split(']').first().split('[');
-	canData.dlc = splitList.last().toInt();
-	splitList.clear();
+	//splitList = line.split(']').first().split('[');
+	//canData.dlc = splitList.last().toInt();
+	//splitList.clear();
 
-	QRegExp rx("(\\d\\d )");
-	int pos = 0;
-	int index = 0;
+	//QRegExp rx("(\\d\\d )");
+	//int pos = 0;
 
-	for(int i = 0; i < canData.dlc; i++)
-	{
-		if((pos = rx.indexIn(line, pos)) != -1)
-		{
-			canData.msg[i] = rx.cap(1).toInt();
-			pos += rx.matchedLength();
-		}
-	}
+	//for(int i = 0; i < canData.dlc; i++)
+	//{
+	//	if((pos = rx.indexIn(line, pos)) != -1)
+	//	{
+	//		canData.data.append(rx.cap(1));
+	//		pos += rx.matchedLength();
+	//	}
+	//}
 
-	QModelIndex Qindex = model->index(0, 0, QModelIndex());
-	model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
-	Qindex = model->index(0, 1, QModelIndex());
-	model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id, 3, 10, QChar('0'))));
-	Qindex = model->index(0, 2, QModelIndex());
-	model->setData(Qindex, canData.dlc);
-	Qindex = model->index(0, 3, QModelIndex());
-	model->setData(Qindex, canData.msg[1]);
+	//QModelIndex Qindex = model->index(0, 0, QModelIndex());
+	//model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
+	//Qindex = model->index(0, 1, QModelIndex());
+	//model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id, 3, 10, QChar('0'))));
+	//Qindex = model->index(0, 2, QModelIndex());
+	//model->setData(Qindex, canData.dlc);
+	//Qindex = model->index(0, 3, QModelIndex());
+	//model->setData(Qindex, canData.data.join(" "));
 
 }
 
