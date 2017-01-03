@@ -86,7 +86,7 @@
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.c" />
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.c" />
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c" />
-    <ClCompile Include="EM35IN.c" />
+    <ClCompile Include="EM4_CAN_IN.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="debug.mak" />

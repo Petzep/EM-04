@@ -12,15 +12,18 @@
 
 #include <chip.h>
 
-#define DEVICE_NR			0x012
+#define DEVICE_NR			0b0110
+#define	EM_04_CAN_RANGE		0x100
 
-#define ALL_ADDRESS			0x000
-#define DIM_ADDRESS			0x008
-#define FRONT_DEVICES		0x000
-#define REAR_DEVICES		0x001
-#define LEFT_DEVICES		0x002
-#define RIGHT_DEVICES		0x003
-#define BROADCAST_ADDRESS	0x030
+#define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
+#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
+#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
+#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
+#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
+#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -30,19 +33,6 @@
 #define	PERSNOAL_MESSAGE	6
 #define	DIM_MESSAGE			7
 #define	TOTAL_MESSAGE		8
-
-/*enum CAN_MESSAGE
-{
-	ALL_MESSAGE = 1,
-	FRONT_MESSAGE,
-	REAR_MESSAGE,
-	LEFT_MESSAGE,
-	RIGHT_MESSAGE,
-	PERSNOAL_MESSAGE,
-	DIM_MESSAGE,
-	TOTAL_MESSAGE,
-};*/
-
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -150,7 +140,7 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	if (DEVICE_NR & 0b0010) //Select only the front bit
+	if (DEVICE_NR & 0b0011) //Select only the front bit of the twins
 	{
 		msg_obj.msgobj = FRONT_MESSAGE;
 		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
@@ -158,7 +148,7 @@ void CAN_init() {
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
-	if (!(DEVICE_NR & 0b0010)) //Select only the rear bit (=not front bit)
+	if (!(DEVICE_NR & 0b0011)) //Select only the rear bit (=not front bit) of the twins
 	{
 		msg_obj.msgobj = REAR_MESSAGE;
 		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; 
@@ -166,16 +156,13 @@ void CAN_init() {
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
-	if (!(DEVICE_NR & 0b0001))  //Select only the right bit (=not right bit)
+	if (DEVICE_NR & 0b0010)  //Select only the twin bit
 	{
 		msg_obj.msgobj = LEFT_MESSAGE;
 		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
-	
-	if (DEVICE_NR & 0b0001) //Select only the right bit
-	{
+
 		msg_obj.msgobj = RIGHT_MESSAGE;
 		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
 		msg_obj.mask = 0xFFF;
@@ -212,22 +199,24 @@ void CAN_rx(uint8_t msg_obj_num) {
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
 		if (msg_obj_num == FRONT_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			setPort(1, msg_obj.data[0]);
+			setPort(2, msg_obj.data[1]);
 		}
 
 		if (msg_obj_num == REAR_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			setPort(6, msg_obj.data[0]);
+			setPort(5, msg_obj.data[1]);
 		}
 
 		if (msg_obj_num == LEFT_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			setPort(0, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == RIGHT_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			setPort(7, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == DIM_MESSAGE)
@@ -238,12 +227,36 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			setPort(0, msg_obj.data[0]);
+			/*setPort(0, msg_obj.data[0]);
 			setPort(1, msg_obj.data[1]);
 			setPort(2, msg_obj.data[2]);
 			setPort(3, msg_obj.data[3]);
 			setPort(4, msg_obj.data[4]);
 			setPort(5, msg_obj.data[5]);
+			setPort(6, msg_obj.data[6]);
+			setPort(7, msg_obj.data[7]);*/
+			if (msg_obj.data[0])
+			{
+				setPort(0, true);
+				setPort(1, true);
+				setPort(2, true);
+				setPort(3, true);
+				setPort(4, true);
+				setPort(5, true);
+				setPort(6, true);
+				setPort(7, true);
+			}
+			else
+			{
+				setPort(0, false);
+				setPort(1, false);
+				setPort(2, false);
+				setPort(3, false);
+				setPort(4, false);
+				setPort(5, false);
+				setPort(6, false);
+				setPort(7, false);
+			}
 		}
 
 		if (msg_obj_num == ALL_MESSAGE)
@@ -255,6 +268,8 @@ void CAN_rx(uint8_t msg_obj_num) {
 			setPort(3, msg_obj.data[3]);
 			setPort(4, msg_obj.data[4]);
 			setPort(5, msg_obj.data[5]);
+			setPort(6, msg_obj.data[6]);
+			setPort(7, msg_obj.data[7]);
 		}
 		
 		// Turn on the yellow led and Enable timer interrupt
@@ -280,12 +295,14 @@ void CAN_error(uint32_t error_info){
 }
 
 void setPort(int port, bool onoff){
-	if(port == 0) Chip_GPIO_WritePortBit(LPC_GPIO,2,7,onoff);
-	if(port == 1) Chip_GPIO_WritePortBit(LPC_GPIO,2,8,onoff);
-	if(port == 2) Chip_GPIO_WritePortBit(LPC_GPIO,2,1,onoff);
-	if(port == 3) Chip_GPIO_WritePortBit(LPC_GPIO,0,3,onoff);
-	if(port == 4) Chip_GPIO_WritePortBit(LPC_GPIO,1,5,onoff);
-	if(port == 5) Chip_GPIO_WritePortBit(LPC_GPIO,0,5,onoff);
+	if (port == 0) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
+	if (port == 1) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, onoff);
+	if (port == 2) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
+	if (port == 3) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, onoff);
+	if (port == 4) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
+	if (port == 5) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
+	if (port == 6) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 4, onoff);
+	if (port == 7) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 5, onoff);
 }
 
 
@@ -300,18 +317,19 @@ int main(void){
 	//Enable timer 1 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
 
-	//Timer setup for match and interrupt at 1/2 seconds (500ms)
+	//Timer setup for match and interrupt at 1/10 seconds (100ms)
 	Chip_TIMER_Reset(LPC_TIMER32_0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
-	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 2));
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 10));
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 5 | 1 << 7);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 5);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 4 | 1 << 5  | 1 << 7);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 7);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 3);
 	
 	bool ledOn = true;
 	unsigned long lastSystickcnt = 0;
@@ -323,7 +341,7 @@ int main(void){
 			lastSystickcnt = SysTickCnt;
 			
 			msg_obj.msgobj = 0;
-			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
@@ -333,11 +351,13 @@ int main(void){
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+				//setPort(0, true);
 			}
 			else 
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+				//setPort(0, false);
 			}
 		}
 	}
@@ -346,16 +366,38 @@ int main(void){
 
 
 /*
-connector schematic chip
-1			BJT1		2,7
-2			BJT2		2,8
-3			BJT3		2,1
-4			BJT4		0,3
-//5			BJT5		0,4
-//6			BJT6		0,5
-*/
+Ouput pins:
+-------------
+8	1,7
+7	3,3
+1	2,7
+2	2,8
+3	2,1
+4	0,3
+5	0,4
+6	0,5
 
-// led 1 (green) power light
-// led 2 (red) 2,10
-// led 3 (yellow) 2,2
-// led 4 (blue) 0,7
+Led pins:
+-------------
+led 1 (green) power light
+led 2 (red) 2,10
+led 3 (yellow) 2,2
+led 4 (blue) 0,7
+
+DEVICE ID config:
+-------------
+
+ name ||KIPPP| out |twins|front| dec | 0b0000
+======||=====================================
+  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
+ Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
+  Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100
+  HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
+  Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
+  Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+
+*/
+/*
+int test = 0b1100
+;*/
