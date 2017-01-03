@@ -295,10 +295,10 @@ void CAN_error(uint32_t error_info){
 }
 
 void setPort(int port, bool onoff){
-	if (port == 0) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
-	if (port == 1) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, onoff);
+	if (port == 0) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, onoff);
+	if (port == 1) Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, onoff);
 	if (port == 2) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
-	if (port == 3) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, onoff);
+	if (port == 3) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, onoff);
 	if (port == 4) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
 	if (port == 5) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
 	if (port == 6) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 4, onoff);
@@ -351,13 +351,31 @@ int main(void){
 			{
 				ledOn = false;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-				//setPort(0, true);
+				/*
+				setPort(0, true);
+				setPort(1, true);
+				setPort(2, true);
+				setPort(3, true);
+				setPort(4, true);
+				setPort(5, true);
+				setPort(6, true);
+				setPort(7, true);
+				*/
 			}
 			else 
 			{
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				//setPort(0, false);
+				/*
+				setPort(0, false);
+				setPort(1, false);
+				setPort(2, false);
+				setPort(3, false);
+				setPort(4, false);
+				setPort(5, false);
+				setPort(6, false);
+				setPort(7, false);
+				*/
 			}
 		}
 	}
