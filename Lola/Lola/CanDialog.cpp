@@ -75,7 +75,7 @@ void CanDialog::on_refreshButton_clicked(void)
 	canData.time = splitList.last().toLongLong();
 	splitList.clear();
 
-	splitList = line.split('>').first().split('<');
+	splitList = line.split('>').first().split('<0x');
 	canData.id = splitList.last().toInt();
 	splitList.clear();
 
@@ -97,9 +97,9 @@ void CanDialog::on_refreshButton_clicked(void)
 	}
 
 	QModelIndex Qindex = model->index(0, 0, QModelIndex());
-	model->setData(Qindex, canData.time);
+	model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
 	Qindex = model->index(0, 1, QModelIndex());
-	model->setData(Qindex, canData.id);
+	model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id, 3, 10, QChar('0'))));
 	Qindex = model->index(0, 2, QModelIndex());
 	model->setData(Qindex, canData.dlc);
 	Qindex = model->index(0, 3, QModelIndex());
