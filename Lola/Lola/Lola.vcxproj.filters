@@ -134,6 +134,12 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_NorwegianWoodStyle.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="CanDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CanDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TUIcomotive.h">
@@ -181,6 +187,12 @@
     <CustomBuild Include="NorwegianWoodStyle.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="CanDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CanDialog.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_TUIcomotive.h">
@@ -198,11 +210,19 @@
     <ClInclude Include="GeneratedFiles\ui_StyleDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_CanDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TUIcomotive.pro" />
     <None Include="raspberrypi.pro">
       <Filter>QMake Project files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Resources\canout.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
