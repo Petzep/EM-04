@@ -12,17 +12,18 @@
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0111
+#define DEVICE_NR			0b0110
 #define	EM_04_CAN_RANGE		0x100
 
-#define ALL_ADDRESS			(0x000 | EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x008 | EM_04_CAN_RANGE)
-#define FRONT_DEVICES		(0x000 | EM_04_CAN_RANGE)
-#define REAR_DEVICES		(0x001 | EM_04_CAN_RANGE)
-#define LEFT_DEVICES		(0x002 | EM_04_CAN_RANGE)
-#define RIGHT_DEVICES		(0x003 | EM_04_CAN_RANGE)
-#define WHIPER_ADDRESS		(0x004 | EM_04_CAN_RANGE)
-#define BROADCAST_ADDRESS	(0x030 | EM_04_CAN_RANGE)
+#define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
+#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
+#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
+#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
+#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
+#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -386,14 +387,17 @@ led 4 (blue) 0,7
 DEVICE ID config:
 -------------
 
- name ||KIPPP| out |twins|front| 0b0000
-======||===============================
-  IN  ||--0--|--1--|--0--|--0--| 0b0000
-Front ||--0--|--1--|--1--|--1--| 0b0111
- Back ||--0--|--1--|--1--|--0--| 0b0110
-  Mid ||--0--|--1--|--0--|--0--| 0b0100
-  HUD ||--1--|--0--|--0--|--1--| 0b1001
-  Tor ||--1--|--0--|--0--|--0--| 0b1000
-  Mid ||--0--|--1--|--0--|--0--| 0b0100
+ name ||KIPPP| out |twins|front| dec | 0b0000
+======||=====================================
+  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
+ Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
+  Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100
+  HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
+  Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
+  Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
 
 */
+/*
+int test = 0b1100
+;*/

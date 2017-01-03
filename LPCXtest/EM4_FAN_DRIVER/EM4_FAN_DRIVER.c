@@ -12,18 +12,18 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0111
+#define DEVICE_NR			0b1100
 #define	EM_04_CAN_RANGE		0x100
 
-#define ALL_ADDRESS			(0x000 | EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x008 | EM_04_CAN_RANGE)
-#define FRONT_DEVICES		(0x000 | EM_04_CAN_RANGE)
-#define REAR_DEVICES		(0x001 | EM_04_CAN_RANGE)
-#define LEFT_DEVICES		(0x002 | EM_04_CAN_RANGE)
-#define RIGHT_DEVICES		(0x003 | EM_04_CAN_RANGE)
-#define WHIPER_ADDRESS		(0x004 | EM_04_CAN_RANGE)
-#define FAN_ADDRESS			(0x005 | EM_04_CAN_RANGE)
-#define BROADCAST_ADDRESS	(0x030 | EM_04_CAN_RANGE)
+#define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
+#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
+#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
+#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
+#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
+#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -48,7 +48,10 @@ volatile unsigned long SysTickCnt;
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 12000000;
 const uint32_t RTCOscRateIn = 32768;
-int dutyCycle = 5;
+const int min_dutyCycle = 32;
+const int max_dutyClycle = 99;
+int dutyCycle = 32;
+
 
 CCAN_MSG_OBJ_T msg_obj;
 
@@ -120,7 +123,10 @@ void CAN_rx(uint8_t msg_obj_num);
 void CAN_tx(uint8_t msg_obj_num);
 void CAN_error(uint32_t error_info);
 
-void setPort(int port, bool onoff);
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 
 void CAN_init() {
@@ -171,7 +177,14 @@ void CAN_rx(uint8_t msg_obj_num) {
 	{
 		if (msg_obj_num == FAN_MESSAGE)
 		{
-			int dutyCycle = msg_obj.data[0];
+			int setting = msg_obj.data[0];
+			if (setting > 100)
+				setting = 100;
+
+			if (setting <= 0)
+				dutyCycle = 1;
+			else
+				dutyCycle = map(setting, 0, 100, min_dutyCycle, max_dutyClycle);
 		}
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -182,14 +195,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 		if (msg_obj_num == ALL_MESSAGE)
 		{
 
-			setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
-			setPort(6, msg_obj.data[6]);
-			setPort(7, msg_obj.data[7]);
+			
 		}
 
 		// Turn on the yellow led and Enable timer interrupt
@@ -219,7 +225,7 @@ int main(void) {
 	CAN_init();
 
 	SystemCoreClockUpdate();
-	//Enable and setup SysTick Timer at 1/100000 seconds (1ms)
+	//Enable and setup SysTick Timer at 1/100000 seconds (100us)
 	SysTick_Config(SystemCoreClock / 100000);
 
 	//Enable timer 1 clock 
@@ -274,14 +280,17 @@ led 4 (blue) 0,7
 DEVICE ID config:
 -------------
 
- name ||KIPPP| out |twins|front| 0b0000
-======||===============================
-  IN  ||--0--|--1--|--0--|--0--| 0b0000
-Front ||--0--|--1--|--1--|--1--| 0b0111
- Back ||--0--|--1--|--1--|--0--| 0b0110
-  Mid ||--0--|--1--|--0--|--0--| 0b0100
-  HUD ||--1--|--0--|--0--|--1--| 0b1001
-  Tor ||--1--|--0--|--0--|--0--| 0b1000
-  Mid ||--0--|--1--|--0--|--0--| 0b0100
+ name ||KIPPP| out |twins|front| dec | 0b0000
+======||=====================================
+  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
+ Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
+  Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100
+  HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
+  Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
+  Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
 
 */
+/*
+int test = 0b1100
+;*/

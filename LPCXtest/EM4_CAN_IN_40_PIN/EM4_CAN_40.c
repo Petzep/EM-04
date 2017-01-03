@@ -12,17 +12,18 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0111
+#define DEVICE_NR			0b0000
 #define	EM_04_CAN_RANGE		0x100
 
-#define ALL_ADDRESS			(0x000 | EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x008 | EM_04_CAN_RANGE)
-#define FRONT_DEVICES		(0x000 | EM_04_CAN_RANGE)
-#define REAR_DEVICES		(0x001 | EM_04_CAN_RANGE)
-#define LEFT_DEVICES		(0x002 | EM_04_CAN_RANGE)
-#define RIGHT_DEVICES		(0x003 | EM_04_CAN_RANGE)
-#define WHIPER_ADDRESS		(0x004 | EM_04_CAN_RANGE)
-#define BROADCAST_ADDRESS	(0x030 | EM_04_CAN_RANGE)
+#define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
+#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
+#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
+#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
+#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
+#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -161,6 +162,9 @@ int main(void)
 	bool can1On = false;
 	bool can2On = false;
 
+	bool fanOn = false;
+	int fanSetting = 0;
+
 	bool ledOn = false;
 	unsigned long lastSystickcnt = 0;
 
@@ -203,6 +207,8 @@ int main(void)
 		bool wiper = pin15;
 		bool can1 = pin2;
 		bool can2 = pin4;
+		bool send = pin28;
+		bool fan = pin26;
 		bool click = false;
 
 		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
@@ -263,6 +269,24 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
+		if(fan != fanOn)
+		{
+			fanOn = fan;
+			if(fan)
+			{
+				fanSetting += 10;
+				if(fanSetting > 100)
+					fanSetting = 0;
+
+				SendMsgBuf.ID = FAN_ADDRESS | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = fanSetting;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+		}
+
 		if (wiper != wiperOn)
 		{
 			//Toggle whiper, send to personal adress from whiper
@@ -308,91 +332,94 @@ int main(void)
 			}
 		}
 
-		if (pin28 != sendOn)
+		if (send != sendOn)
 		{
+			sendOn = send;
 			//SEND all buttons
-			sendOn = pin28;
-			SendMsgBuf.ID = BROADCAST_ADDRESS + 1 + 256 | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 6;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 1;
-			SendMsgBuf.Data[1] = pin1;
-			SendMsgBuf.Data[2] = pin2;
-			SendMsgBuf.Data[3] = pin3;
-			SendMsgBuf.Data[4] = pin4;
-			SendMsgBuf.Data[5] = pin5;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			if (send)
+			{
+				SendMsgBuf.ID = BROADCAST_ADDRESS + 1 + 256 | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 6;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 1;
+				SendMsgBuf.Data[1] = pin1;
+				SendMsgBuf.Data[2] = pin2;
+				SendMsgBuf.Data[3] = pin3;
+				SendMsgBuf.Data[4] = pin4;
+				SendMsgBuf.Data[5] = pin5;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			Delay(50);
+				Delay(50);
 
-			SendMsgBuf.ID = BROADCAST_ADDRESS + 6 + 256 | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 6;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 0x6;
-			SendMsgBuf.Data[1] = pin6;
-			SendMsgBuf.Data[2] = pin7;
-			SendMsgBuf.Data[3] = pin8;
-			SendMsgBuf.Data[4] = pin9;
-			SendMsgBuf.Data[5] = pin10;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				SendMsgBuf.ID = BROADCAST_ADDRESS + 6 + 256 | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 6;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 0x6;
+				SendMsgBuf.Data[1] = pin6;
+				SendMsgBuf.Data[2] = pin7;
+				SendMsgBuf.Data[3] = pin8;
+				SendMsgBuf.Data[4] = pin9;
+				SendMsgBuf.Data[5] = pin10;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			Delay(50);
+				Delay(50);
 
-			SendMsgBuf.ID = BROADCAST_ADDRESS + 11 + 256 | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 6;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 0x11;
-			SendMsgBuf.Data[1] = pin11;
-			SendMsgBuf.Data[2] = pin12;
-			SendMsgBuf.Data[3] = pin13;
-			SendMsgBuf.Data[4] = pin14;
-			SendMsgBuf.Data[5] = pin15;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				SendMsgBuf.ID = BROADCAST_ADDRESS + 11 + 256 | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 6;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 0x11;
+				SendMsgBuf.Data[1] = pin11;
+				SendMsgBuf.Data[2] = pin12;
+				SendMsgBuf.Data[3] = pin13;
+				SendMsgBuf.Data[4] = pin14;
+				SendMsgBuf.Data[5] = pin15;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			Delay(50);
+				Delay(50);
 
-			SendMsgBuf.ID = BROADCAST_ADDRESS + 16 + 256 | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 6;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 0x16;
-			SendMsgBuf.Data[1] = pin16;
-			SendMsgBuf.Data[2] = pin17;
-			SendMsgBuf.Data[3] = !pin18; //STUK
-			SendMsgBuf.Data[4] = pin19;
-			SendMsgBuf.Data[5] = pin20;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				SendMsgBuf.ID = BROADCAST_ADDRESS + 16 + 256 | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 6;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 0x16;
+				SendMsgBuf.Data[1] = pin16;
+				SendMsgBuf.Data[2] = pin17;
+				SendMsgBuf.Data[3] = !pin18; //STUK
+				SendMsgBuf.Data[4] = pin19;
+				SendMsgBuf.Data[5] = pin20;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			Delay(50);
+				Delay(50);
 
-			SendMsgBuf.ID = BROADCAST_ADDRESS + 21 + 256 | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 6;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 0x21;
-			SendMsgBuf.Data[1] = false;
-			SendMsgBuf.Data[2] = pin21;
-			SendMsgBuf.Data[3] = pin22;
-			SendMsgBuf.Data[4] = pin23;
-			SendMsgBuf.Data[5] = pin24;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				SendMsgBuf.ID = BROADCAST_ADDRESS + 21 + 256 | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 6;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 0x21;
+				SendMsgBuf.Data[1] = false;
+				SendMsgBuf.Data[2] = pin21;
+				SendMsgBuf.Data[3] = pin22;
+				SendMsgBuf.Data[4] = pin23;
+				SendMsgBuf.Data[5] = pin24;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			Delay(50);
+				Delay(50);
 
-			SendMsgBuf.ID = BROADCAST_ADDRESS + 26 + 256 | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 6;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 0x26;
-			SendMsgBuf.Data[1] = false;
-			SendMsgBuf.Data[2] = !pin25;
-			SendMsgBuf.Data[3] = !pin26;
-			SendMsgBuf.Data[4] = !pin27;
-			SendMsgBuf.Data[5] = !pin28;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				SendMsgBuf.ID = BROADCAST_ADDRESS + 26 + 256 | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 6;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 0x26;
+				SendMsgBuf.Data[1] = false;
+				SendMsgBuf.Data[2] = !pin25;
+				SendMsgBuf.Data[3] = !pin26;
+				SendMsgBuf.Data[4] = !pin27;
+				SendMsgBuf.Data[5] = !pin28;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
 			
 		}
 
@@ -503,14 +530,17 @@ led 4 (blue) 0,7
 DEVICE ID config:
 -------------
 
-name ||KIPPP| out |twins|front| 0b0000
-======||===============================
-IN  ||--0--|--1--|--0--|--0--| 0b0000
-Front ||--0--|--1--|--1--|--1--| 0b0111
-Back ||--0--|--1--|--1--|--0--| 0b0110
-Mid ||--0--|--1--|--0--|--0--| 0b0100
-HUD ||--1--|--0--|--0--|--1--| 0b1001
-Tor ||--1--|--0--|--0--|--0--| 0b1000
-Mid ||--0--|--1--|--0--|--0--| 0b0100
+ name ||KIPPP| out |twins|front| dec | 0b0000
+======||=====================================
+  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
+ Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
+  Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100
+  HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
+  Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
+  Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
 
 */
+/*
+int test = 0b1100
+;*/
