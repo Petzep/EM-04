@@ -27,15 +27,14 @@ CanDialog::CanDialog(QWidget *parent)
 	canData.dlc = splitList.last().toInt();
 	splitList.clear();
 
-/*	QRegExp rx("(\\d+)");
+	QRegExp rx("(\\d+)");
 	int pos = 0;
 	int index = 0;
 	while((pos = rx.indexIn(line, pos)) != -1)
 	{
 		canData.msg[index] = rx.cap(1).toInt();
 		pos += rx.matchedLength();
-		index++;
-	}*/
+	}
 
 	QModelIndex Qindex = model->index(0, 0, QModelIndex());
 	model->setData(Qindex, canData.dlc);

@@ -14,7 +14,7 @@ struct CanLogMsg
 	long long time;
 	int id;
 	int dlc;
-	int *msg;
+	int msg[8] = { };
 };
 
 class CanDialog : public QDialog, public Ui::CanDialog
