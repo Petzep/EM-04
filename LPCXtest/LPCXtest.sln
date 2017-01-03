@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testinator", "Testinator\Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CAN_OUT_AS_IN", "CAN_OUT_AS_IN\CAN_OUT_AS_IN.vcxproj", "{D9C24C82-975D-43D6-98C7-CB5452567EE8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HUDandiel", "HUDandiel\HUDandiel.vcxproj", "{4802B101-5943-4FC6-8E93-DD2B4EC5F373}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -53,6 +55,12 @@ Global
 		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x64.ActiveCfg = Release|Win32
 		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x86.ActiveCfg = Release|Win32
 		{D9C24C82-975D-43D6-98C7-CB5452567EE8}.Release|x86.Build.0 = Release|Win32
+		{4802B101-5943-4FC6-8E93-DD2B4EC5F373}.Debug|x64.ActiveCfg = Debug|Win32
+		{4802B101-5943-4FC6-8E93-DD2B4EC5F373}.Debug|x86.ActiveCfg = Debug|Win32
+		{4802B101-5943-4FC6-8E93-DD2B4EC5F373}.Debug|x86.Build.0 = Debug|Win32
+		{4802B101-5943-4FC6-8E93-DD2B4EC5F373}.Release|x64.ActiveCfg = Release|Win32
+		{4802B101-5943-4FC6-8E93-DD2B4EC5F373}.Release|x86.ActiveCfg = Release|Win32
+		{4802B101-5943-4FC6-8E93-DD2B4EC5F373}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
