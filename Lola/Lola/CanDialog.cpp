@@ -11,8 +11,7 @@ CanDialog::CanDialog(QWidget *parent)
 	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Data")));
 	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Message")));
 	
-	canTable->setModel(model);
-	
+	canTable->setModel(model);	
 }
 
 CanDialog::~CanDialog()
@@ -24,6 +23,9 @@ void CanDialog::readFile(QString filename)
 	QFile file(QString (QCoreApplication::applicationDirPath() +"/" + filename));
 	if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return;
+
+	if(!watcher.directories().empty())
+		watcher.addPath(QString(QCoreApplication::applicationDirPath() + "/" + filename));
 
 	QStringList splitList;
 	QTextStream in(&file);
@@ -64,8 +66,8 @@ void CanDialog::readFile(QString filename)
 		model->setData(Qindex, canData.dlc);
 		Qindex = model->index(index, 3, QModelIndex());
 		model->setData(Qindex, canData.data.join(" "));
-
 	}
+	file.close();
 }
 
 void CanDialog::dataToTable(CanLogMsg data)
