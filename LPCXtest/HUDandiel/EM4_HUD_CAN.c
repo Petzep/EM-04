@@ -30,6 +30,7 @@ void Delay(unsigned long tick)
 	while ((SysTickCnt - systickcnt) < tick);
 }
 
+//7-seg tick function
 void Tick() {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//7Seg
