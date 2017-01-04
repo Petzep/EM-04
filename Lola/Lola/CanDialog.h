@@ -7,6 +7,7 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstringlist.h>
+#include <qfilesystemwatcher.h>
 
 struct CanLogMsg
 {
@@ -28,6 +29,7 @@ public:
 
 private:
 	QStandardItemModel *model;
+	QFileSystemWatcher watcher;
 
 public slots:
 	void on_refreshButton_clicked(void);
