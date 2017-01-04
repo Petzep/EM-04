@@ -21,23 +21,17 @@ void Delay(unsigned long tick)
 }
 
 void Tick() {
-	Delay(CLK);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);
-	Delay(CLK);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//7Seg
 }
 
 void TickBat() {
-	Delay(CLK);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 5, true);
-	Delay(CLK);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 5, false);	//Bat
 }
 
 void TickDNR() {
-	Delay(CLK);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, true);
-	Delay(CLK);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, false);	//DNR
 }
 
@@ -82,11 +76,13 @@ void StrobefDNR() {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, false);	//Bat
 }
 
-void dimLight() {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);
-	Delay(5);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
-	Delay(5);
+void dimLight(int dutyCycle, int CLKTIME) {
+	for (int i = 0; i < CLKTIME; i++) {
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 0);
+		Delay(100-dutyCycle);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 1);
+		Delay(dutyCycle);
+	}
 }
 
 void sevenSegZero(bool dotOn) {
@@ -261,15 +257,15 @@ void sevenSegNumber(int nr, bool dotOn) {
 	}
 }
 
-void sevenSeg(bool dotOn) {
+void sevenSeg(bool dotOn, int number) {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
-	for (int j = 0; j < 60; j++) {
-		sevenSegNumber(j/10, dotOn);
-		sevenSegNumber(j % 10, false);
+//	for (int j = 0; j < 60; j++) {
+		sevenSegNumber(number/10, dotOn);
+		sevenSegNumber(number % 10, false);
 		Strobef();
-		Delay(100);
-	}
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
+//		Delay(100);
+//	}
+//	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
 }
 
 void BatFill() {
@@ -308,7 +304,6 @@ void BatFill() {
 }
 
 void BatClock(int counter) {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 1);
 	for (int i = 0; i < (10-counter); i++) {
 		DataLowBat();
 		TickBat();
@@ -322,9 +317,9 @@ void BatClock(int counter) {
 	StrobefBat();
 }
 
-void DNR() {
+void DNR(int j) {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, 1);
-	for (int j = 0; j < 26; j++) {
+//	for (int j = 0; j < 26; j++) {
 		if (j == 0) {	//A
 			for (int i = 0; i < 12; i++) {
 				if (i == 5 || i == 6 || i == 7 || i == 9 || i == 10 || i == 11) {
@@ -665,9 +660,8 @@ void DNR() {
 
 
 
-		Delay(5000);
 		StrobefDNR();
-	}
+
 
 
 //	for (int i = 0; i < 12; i++) {
@@ -704,7 +698,6 @@ void DNR() {
 //			}
 //		}*/
 //	}
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, 0);
 }
 
 void botRed() {
@@ -779,7 +772,7 @@ int main()
 	SystemCoreClockUpdate();
 	Chip_GPIO_Init(LPC_GPIO);
 
-	SysTick_Config(SystemCoreClock / 10000);
+	SysTick_Config(SystemCoreClock / 100000);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
@@ -809,15 +802,30 @@ int main()
 	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, 0);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 0);
 
+	DataLow();
+	DataLowBat();
+	DataLowDNR();
+
+	for (int i = 0; i < 16; i++) {		//Flush shift registers
+		Tick();
+		TickBat();
+		TickDNR();
+	}
+
 
 	bool dot = false;
-	int speed = 100;
-	int counter = 0;
+	int counter = 1;
+	int number = 0;
+	int limit = 59;
+	int DNRcount = 0;
+	int dutyCycle = 10;		//integer between 0 and 100
+	int CLKTIME = 1000;		//Time for one integer to be added on 7Seg
 
 	for (;;)
 	{		
 		//RGBcycle();
-		sevenSeg(dot);
+		sevenSeg(dot, number);
+		dimLight(dutyCycle, CLKTIME);
 		/*if (dot == false) {
 			dot = true;
 		}
@@ -827,13 +835,24 @@ int main()
 		/*for (int i = 0; i < 10; i++) {
 			BatFill(counter);
 		}*/
-		BatClock(counter);
-		//DNR();
+		if (number == limit && counter == 0) {
+			DNR(DNRcount);
+			DNRcount++;
+		}
+		if (number == (limit)) {
+			BatClock(counter);
 			counter++;
-			if (counter > 10) {
-				counter = 0;
-			}
-
+		}
+		if (counter > 10) {
+			counter = 0;
+		}
+		if (DNRcount == 25) {
+			DNRcount = 0;
+		}
+		number++;
+		if (number > limit) {
+			number = 0;
+		}
 
 
 		
