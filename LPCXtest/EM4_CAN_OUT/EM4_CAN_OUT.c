@@ -23,6 +23,7 @@
 #define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
 #define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
+#define HUD_ADDRESS			(0x006 + EM_04_CAN_RANGE)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -69,6 +70,10 @@ void TIMER32_0_IRQHandler(void){
 	}
 }
 
+/**
+* @brief	Delay function in (SysTick / x) (default x = 1000, Delay in ms)
+* @return	Nothing
+*/
 void Delay(unsigned long tick) {
 	unsigned long systickcnt;
 
@@ -87,7 +92,10 @@ void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 
-
+/**
+* @brief	Baudrate calculator
+* @return	Baudrates on for the CAN
+*/
 void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg){
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
 	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
@@ -120,7 +128,8 @@ void CAN_error(uint32_t error_info);
 
 void setPort(int port, bool onoff);
 
-
+/* CAN Initialise */
+/* Initialises the CAN and configures the filters*/
 void CAN_init() {
 	/* Publish CAN Callback Functions */
 	CCAN_CALLBACKS_T callbacks = { CAN_rx, CAN_tx, CAN_error, NULL, NULL, NULL,
