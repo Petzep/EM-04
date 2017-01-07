@@ -38,6 +38,14 @@ Controls the HUD of EM-04
 #define RGB_TOP 1
 #define RGB_BOT 0
 
+// To have the timer tick run at 100,000 Hz, the prescaler is SYSTEM CLOCK / 100,000
+#define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
+#define PWM_PRESCALER ((unsigned long)SystemCoreClock / (unsigned long)PWM_FREQ_RESHZ)
+
+#define PWM_PERIOD_HZ (1000)
+#define PWM_PERIOD_COUNT (PWM_FREQ_RESHZ / PWM_PERIOD_HZ)
+#define PWM_DC_COUNT(a) ( (((101-a) * PWM_PERIOD_COUNT) / 100) )
+
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -71,6 +79,56 @@ void SysTick_Handler(void)
 	SysTickCnt++;
 }
 
+
+void PWMUpdate(int pwm, unsigned char ucPercent)
+{
+	//set match register that control duty cycle
+	switch(pwm)
+	{
+		case 0:
+			Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(ucPercent));
+			break;
+		case 1:
+			Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(ucPercent));
+			break;
+		case 2:
+			Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(ucPercent));
+			break;
+		case 3:
+			Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(ucPercent));
+			break;
+		default:
+			break;
+	}
+}
+
+/**
+* @brief	Handle interrupt from 32-bit timer
+* @return	Nothing
+*/
+void TIMER32_0_IRQHandler(void)
+{
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
+		Chip_GPIO_SetPinToggle(LPC_GPIO, 3, 3);
+}
+
+void TIMER32_1_IRQHandler(void)
+{
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 0))
+		Chip_GPIO_SetPinToggle(LPC_GPIO, 2, 10);
+}
+
+void TIMER16_0_IRQHandler(void)
+{
+	if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 0))
+		Chip_GPIO_SetPinToggle(LPC_GPIO, 2, 0);
+}
+
+void TIMER16_1_IRQHandler(void)
+{
+	//if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 0))
+		//Chip_GPIO_SetPinToggle(LPC_GPIO, 7, 0);
+}
 /**
 * @brief	Delay function in (SysTick / x) (default x = 1000, Delay in ms)
 * @return	Nothing
@@ -644,6 +702,67 @@ int main()
 	//Enable and setup SysTick Timer at 1/100000 seconds
 	SysTick_Config(SystemCoreClock / 100000);
 
+	//Enable timer 0,1,2,3 clock 
+	Chip_TIMER_Init(LPC_TIMER32_0);
+	Chip_TIMER_Init(LPC_TIMER32_1);
+	Chip_TIMER_Init(LPC_TIMER16_0);
+	Chip_TIMER_Init(LPC_TIMER16_1);
+	//Reset any timer pending
+	Chip_TIMER_Reset(LPC_TIMER32_0);
+	Chip_TIMER_Reset(LPC_TIMER32_1);
+	Chip_TIMER_Reset(LPC_TIMER16_0);
+	Chip_TIMER_Reset(LPC_TIMER16_1);
+	//set the resolution of the ticks to the PWM timer (match register resolution)
+	Chip_TIMER_PrescaleSet(LPC_TIMER32_0, (PWM_PRESCALER - 1));
+	Chip_TIMER_PrescaleSet(LPC_TIMER32_1, (PWM_PRESCALER - 1));
+	Chip_TIMER_PrescaleSet(LPC_TIMER16_0, (PWM_PRESCALER - 1));
+	Chip_TIMER_PrescaleSet(LPC_TIMER16_1, (PWM_PRESCALER - 1));
+	//Set duty cycle - MR0 default
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(0));
+	Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(0));
+	Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(0));
+	Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(0));
+	//Enable interupt on MR0
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 0);
+	//MR0 should not stop or clear the timer
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 0);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_1, 0);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_0, 0);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_1, 0);
+	//Set period - MR1
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, PWM_PERIOD_COUNT);
+	Chip_TIMER_SetMatch(LPC_TIMER32_1, 1, PWM_PERIOD_COUNT);
+	Chip_TIMER_SetMatch(LPC_TIMER16_0, 1, PWM_PERIOD_COUNT);
+	Chip_TIMER_SetMatch(LPC_TIMER16_1, 1, PWM_PERIOD_COUNT);
+	//MR1 should reset the timer to restart the cycle
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER16_1, 1);
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER16_1, 1);
+	//Enable the timers
+	Chip_TIMER_Enable(LPC_TIMER32_0);
+	Chip_TIMER_Enable(LPC_TIMER32_1);
+	Chip_TIMER_Enable(LPC_TIMER16_0);
+	Chip_TIMER_Enable(LPC_TIMER16_1);
+
+	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0
+	((LPC_TIMER_T *)LPC_TIMER16_1)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0
+	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0
+	((LPC_TIMER_T *)LPC_TIMER16_1)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0	
+
+	/* Enable timer interrupt */
+	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_ClearPendingIRQ(TIMER_32_1_IRQn);
+	NVIC_ClearPendingIRQ(TIMER_16_0_IRQn);
+	NVIC_ClearPendingIRQ(TIMER_16_1_IRQn);
+	NVIC_EnableIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_1_IRQn);
+	NVIC_EnableIRQ(TIMER_16_0_IRQn);
+	NVIC_EnableIRQ(TIMER_16_1_IRQn);
+
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9);
@@ -677,7 +796,7 @@ int main()
 	bool dot = false;
 	int counter = 1;
 	int number = 0;
-	int limit = 59;
+	int limit = 99;
 	char DNRcount = '0';
 	int dutyCycle = 10;		//integer between 0 and 100
 	int CLKTIME = 1000;		//Time for one integer to be added on 7Seg
@@ -686,13 +805,15 @@ int main()
 	{		
 		//RGBcycle(500, true, true);
 		sevenSeg(dot, number);
+		PWMUpdate(0, number / 10);
 		//rgbLed(RGB_TOP, number % 3);
 		//rgbLed(RGB_BOT, number % 3);
 		//rgbLed(RGB_TOP, greenLed);
 		//BatFill(10000);
 		//rgbLed(RGB_TOP, redLed);
 		//RGBcycle(500, false, true);
-		dimLight(dutyCycle, CLKTIME);
+		//dimLight(dutyCycle, CLKTIME);
+		Delay(1000);
 
 		if (number == limit && counter == 0) {
 			DNR(DNRcount);
