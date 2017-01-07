@@ -33,12 +33,17 @@ int main()
 	
 	SysTick_Config(SystemCoreClock / 1000);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1 << 10);
 
 	for (;;)
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 1);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 1);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
 		Delay(1000);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
 		Delay(1000);
 	}
 
