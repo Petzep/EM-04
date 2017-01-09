@@ -109,19 +109,43 @@ void PWMUpdate(int pwm, unsigned char ucPercent)
 void TIMER32_0_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
-		Chip_GPIO_SetPinToggle(LPC_GPIO, 3, 3);
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+	}
 }
 
 void TIMER32_1_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 0))
-		Chip_GPIO_SetPinToggle(LPC_GPIO, 2, 10);
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 1);
+	}
 }
 
 void TIMER16_0_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 0))
-		Chip_GPIO_SetPinToggle(LPC_GPIO, 2, 0);
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 1);
+	}
 }
 
 void TIMER16_1_IRQHandler(void)
@@ -317,16 +341,6 @@ void StrobefDNR() {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, false);	//Bat
 }
 
-//ugly delay function + dimmer
-void dimLight(int dutyCycle, int CLKTIME) {
-	for (int i = 0; i < CLKTIME; i++) {
-		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 0);
-		Delay(100-dutyCycle);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 1);
-		Delay(dutyCycle);
-	}
-}
-
 //7-seg sub function
 void sevenSegNumber(int number, bool dotOn) {
 	unsigned long long value;
@@ -368,6 +382,10 @@ void sevenSegNumber(int number, bool dotOn) {
 	}
 
 	unsigned int count = 0;
+	
+	if(dotOn)
+		value |= 0b10000000;
+
 	for(int i = 0; i < 8; i++)
 	{
 		unsigned long long bit = value & 0b10000000;
@@ -379,11 +397,20 @@ void sevenSegNumber(int number, bool dotOn) {
 }
 
 //7-seg function
-void sevenSeg(bool dotOn, int number)
+void sevenSeg(bool dotOn, int number, int pwm)
 {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
-	sevenSegNumber(number/10, dotOn);
-	sevenSegNumber(number % 10, false);
+	PWMUpdate(2, pwm);
+	if(dotOn)
+	{
+		sevenSegNumber(number / 10, true);
+		sevenSegNumber(number % 10, false);
+		Strobef();
+	}
+	else
+	{
+		sevenSegNumber(number / 10, false);
+		sevenSegNumber(number % 10, false);
+	}
 	Strobef();
 }
 
@@ -439,10 +466,10 @@ void BatClock(int counter) {
 }
 
 //DNR alphanumerical
-void DNR(char ch)
+void DNR(char ch, int pwm)
 {
 	unsigned long long value;
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, 1);
+	PWMUpdate(1, pwm);
 	switch(ch)
 	{
 		case 'A':
@@ -609,6 +636,7 @@ void DNR(char ch)
 	StrobefDNR();
 }
 
+//Set RGBLeds
 void rgbLed(bool topBot, enum RGB_LED rgb)
 {
 	int pinA;
@@ -649,6 +677,7 @@ void rgbLed(bool topBot, enum RGB_LED rgb)
 	}
 }
 
+//Cycle RGB color
 void RGBcycle(int speed, bool top, bool bot) {
 	for(int i = 0; i < speed; i++){
 		if(top) rgbLed(RGB_TOP, redLed);
@@ -679,6 +708,7 @@ void RGBcycle(int speed, bool top, bool bot) {
 	}
 }
 
+//Initialize the HUD
 void ledInit()
 {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, false);	//DataLow
@@ -694,13 +724,97 @@ void ledInit()
 	}
 }
 
+//Set the HUD as a clock
+void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
+{
+	bool decimal = true;
+	bool ms = decimal;
+	int counter = 1;
+	int number = 0;
+	int limit = 59;
+	char DNRcount = '0';
+	PWMUpdate(0, batPWM);	//BATPWM
+
+	for(;;)
+	{
+		rgbLed(RGB_TOP, number % 3);
+		rgbLed(RGB_BOT, (number + 1) % 3);
+		if(decimal)
+		{
+			if(number == 99 && ms)
+			{
+				number = 10;
+				ms = false;
+			}
+
+			if(number < 99 && ms)
+			{
+				sevenSeg(ms, number, segPWM);
+				Delay(CLKTIME / 10);
+			}
+			else
+			{
+				ms = false;
+				sevenSeg(ms, number, segPWM);
+				Delay(CLKTIME);
+			}
+		}
+		else
+		{
+			sevenSeg(false, number, segPWM);
+			Delay(CLKTIME);
+		}
+
+
+		if(number == limit && counter == 0)
+		{
+			DNR(DNRcount, dnrPWM);
+			DNRcount++;
+			if(DNRcount == 58)
+				DNRcount = 65;
+			else if(DNRcount == 91)
+				DNRcount = 97;
+			else if(DNRcount == 123)
+				DNRcount = 48;
+		}
+		if(number == limit && !ms)
+		{
+			BatClock(counter);
+			counter++;
+		}
+		if(counter > 10)
+		{
+			counter = 0;
+		}
+		if(DNRcount == 25)
+		{
+			DNRcount = 0;
+		}
+		number++;
+		if(number > limit && !ms)
+		{
+			number = 0;
+			ms = true;
+		}
+
+		msg_obj.msgobj = 0;
+		msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+		msg_obj.mask = 0x0;
+		msg_obj.dlc = 3;
+		msg_obj.data[0] = number;
+		msg_obj.data[1] = counter;
+		msg_obj.data[2] = DNRcount;
+		LPC_CCAN_API->can_transmit(&msg_obj);
+	}
+}
+
 int main()
 {
 	CAN_init();
 
 	SystemCoreClockUpdate();
-	//Enable and setup SysTick Timer at 1/100000 seconds
-	SysTick_Config(SystemCoreClock / 100000);
+	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
+	SysTick_Config(SystemCoreClock / 1000);
 
 	//Enable timer 0,1,2,3 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
@@ -722,11 +836,15 @@ int main()
 	Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(0));
 	Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(0));
 	Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(0));
-	//Enable interupt on MR0
+	//Enable interupt on MR0 & MR1
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 1);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 1);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 1);
 	//MR0 should not stop or clear the timer
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 0);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_1, 0);
@@ -739,18 +857,18 @@ int main()
 	Chip_TIMER_SetMatch(LPC_TIMER16_1, 1, PWM_PERIOD_COUNT);
 	//MR1 should reset the timer to restart the cycle
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
-	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER16_1, 1);
-	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_1, 1);
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER16_0, 1);
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER16_1, 1);
 	//Enable the timers
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	Chip_TIMER_Enable(LPC_TIMER32_1);
 	Chip_TIMER_Enable(LPC_TIMER16_0);
-	Chip_TIMER_Enable(LPC_TIMER16_1);
+	//Chip_TIMER_Enable(LPC_TIMER16_1);
 
-	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0
-	((LPC_TIMER_T *)LPC_TIMER16_1)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0
-	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0
+	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;// PWM mode enabled on CT32B0_MAT0
+	((LPC_TIMER_T *)LPC_TIMER32_1)->PWMC = 1;// PWM mode enabled on CT32B1_MAT0
+	((LPC_TIMER_T *)LPC_TIMER16_0)->PWMC = 1;// PWM mode enabled on CT16B0_MAT0
 	((LPC_TIMER_T *)LPC_TIMER16_1)->PWMC = 1;// PWM mode enabled on CT16B1_MAT0	
 
 	/* Enable timer interrupt */
@@ -793,60 +911,7 @@ int main()
 
 	ledInit();
 
-	bool dot = false;
-	int counter = 1;
-	int number = 0;
-	int limit = 99;
-	char DNRcount = '0';
-	int dutyCycle = 10;		//integer between 0 and 100
-	int CLKTIME = 1000;		//Time for one integer to be added on 7Seg
-
-	for (;;)
-	{		
-		//RGBcycle(500, true, true);
-		sevenSeg(dot, number);
-		PWMUpdate(0, number / 10);
-		//rgbLed(RGB_TOP, number % 3);
-		//rgbLed(RGB_BOT, number % 3);
-		//rgbLed(RGB_TOP, greenLed);
-		//BatFill(10000);
-		//rgbLed(RGB_TOP, redLed);
-		//RGBcycle(500, false, true);
-		//dimLight(dutyCycle, CLKTIME);
-		Delay(1000);
-
-		if (number == limit && counter == 0) {
-			DNR(DNRcount);
-			DNRcount++;
-			if(DNRcount == 58)
-				DNRcount = 65;
-			else if(DNRcount == 91)
-				DNRcount = 97;
-			else if(DNRcount == 123)
-				DNRcount = 48;
-		}
-		if (number == (limit)) {
-			BatClock(counter);
-			counter++;
-		}
-		if (counter > 10) {
-			counter = 0;
-		}
-		if (DNRcount == 25) {
-			DNRcount = 0;
-		}
-		number++;
-		if (number > limit)
-			number = 0;
-
-		msg_obj.msgobj = 0;
-		msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
-		msg_obj.mask = 0x0;
-		msg_obj.dlc = 3;
-		msg_obj.data[0] = number;
-		msg_obj.data[1] = counter;
-		msg_obj.data[2] = DNRcount;
-		LPC_CCAN_API->can_transmit(&msg_obj);
-	}
+	clockDemo(1000, 10, 10, 10);
+	
 	return 0;
 }
