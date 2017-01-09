@@ -38,7 +38,7 @@ void CanDialog::readFile(QString filename)
 	for(int index = 0; !in.atEnd(); index++)
 	{
 		QString line = in.readLine();
-		if(line.size() == 0)
+		if(line.size() != 0)
 		{
 			splitList = line.split(')').first().split('(');
 			canData.time = splitList.last().toLongLong();
@@ -64,11 +64,9 @@ void CanDialog::readFile(QString filename)
 				}
 			}
 
-			for(int column = 0; column < 5; ++column)
-			{
-				QStandardItem *item = new QStandardItem();
-				model->setItem(model->rowCount(), column, item);
-			}
+			QStandardItem *item = new QStandardItem();
+			model->setItem(model->rowCount(), 0, item);
+
 			QModelIndex Qindex = model->index(index, 0, QModelIndex());
 			model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
 			Qindex = model->index(index, 1, QModelIndex());
