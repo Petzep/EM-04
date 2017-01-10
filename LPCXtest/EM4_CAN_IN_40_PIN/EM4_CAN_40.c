@@ -2,8 +2,8 @@
 ===============================================================================
 Name        : EM4_CAN_IN.c
 Author      : Nephtaly Aniceta
-Version     :
-Copyright   : -
+Version     : 0.8
+Copyright   : GPLv3
 Description : Main CAN IN Function
 Inspired by work from previous years.
 Rewritten for Visual Studio and LPCOpen v2.xx
@@ -387,7 +387,7 @@ int main(void)
 				SendMsgBuf.Data[0] = 0x16;
 				SendMsgBuf.Data[1] = pin16;
 				SendMsgBuf.Data[2] = pin17;
-				SendMsgBuf.Data[3] = !pin18; //STUK
+				SendMsgBuf.Data[3] = pin18;
 				SendMsgBuf.Data[4] = pin19;
 				SendMsgBuf.Data[5] = pin20;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);

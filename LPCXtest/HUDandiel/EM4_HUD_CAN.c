@@ -2,8 +2,8 @@
 ===============================================================================
 Name        : EM4_HUD_CAN.c
 Author      : Daniel van der Klooster & Nephtaly Aniceta
-Version     :
-Copyright   : -
+Version     : 0.7
+Copyright   : GPLv3
 Description : Main HUD Function
 Controls the HUD of EM-04
 ===============================================================================
@@ -79,21 +79,28 @@ void SysTick_Handler(void)
 	SysTickCnt++;
 }
 
-
+/**
+* @brief	Updated the PWM dutycycle
+* @return	Nothing
+*/
 void PWMUpdate(int pwm, unsigned char ucPercent)
 {
 	//set match register that control duty cycle
 	switch(pwm)
 	{
+		//Battery
 		case 0:
 			Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(ucPercent));
 			break;
+		//DNR
 		case 1:
 			Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(ucPercent));
 			break;
+		//7Seg
 		case 2:
 			Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(ucPercent));
 			break;
+		//RGB
 		case 3:
 			Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(ucPercent));
 			break;
@@ -103,7 +110,7 @@ void PWMUpdate(int pwm, unsigned char ucPercent)
 }
 
 /**
-* @brief	Handle interrupt from 32-bit timer
+* @brief	Handle interrupt from 32-bit timer (Battery)
 * @return	Nothing
 */
 void TIMER32_0_IRQHandler(void)
@@ -120,6 +127,10 @@ void TIMER32_0_IRQHandler(void)
 	}
 }
 
+/**
+* @brief	Handle interrupt from 32-bit timer (DNR)
+* @return	Nothing
+*/
 void TIMER32_1_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 0))
@@ -134,6 +145,10 @@ void TIMER32_1_IRQHandler(void)
 	}
 }
 
+/**
+* @brief	Handle interrupt from 32-bit timer (7Seg)
+* @return	Nothing
+*/
 void TIMER16_0_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 0))
@@ -148,6 +163,10 @@ void TIMER16_0_IRQHandler(void)
 	}
 }
 
+/**
+* @brief	Handle interrupt from 32-bit timer (RGB)
+* @return	Nothing
+*/
 void TIMER16_1_IRQHandler(void)
 {
 	//if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 0))
@@ -798,7 +817,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
 		}
 
 		msg_obj.msgobj = 0;
-		msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 3;
 		msg_obj.data[0] = number;

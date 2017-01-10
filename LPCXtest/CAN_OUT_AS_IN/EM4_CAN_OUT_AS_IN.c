@@ -2,8 +2,8 @@
  ===============================================================================
  Name        : EM4_CAN_OUT_AS_IN.c
  Author      : Nephtaly Aniceta
- Version     :
- Copyright   : -
+ Version     : 0.5
+ Copyright   : GPLv3
  Description : CAN_OUT used as input
 	makeshift project to test the CANbus between multiple CAN_OUTs
  ===============================================================================

@@ -2,8 +2,8 @@
  ===============================================================================
  Name        : EM4_CAN_IN.c
  Author      : Nephtaly Aniceta
- Version     :
- Copyright   : -
+ Version     : 0.8
+ Copyright   : GPLv3
  Description : Main CAN IN Function
 	Inspired by work from previous years.
 	Rewritten for Visual Studio and LPCOpen v2.xx

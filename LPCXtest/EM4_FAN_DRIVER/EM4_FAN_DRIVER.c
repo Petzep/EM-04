@@ -2,8 +2,8 @@
 ===============================================================================
 Name        : EM4_CAN_OUT.c
 Author      : Nephtaly Aniceta
-Version     :
-Copyright   : -
+Version     : 1.0 Final
+Copyright   : GPLv3
 Description : Main CAN OUT Function
 Inspired by work from previous years.
 Rewritten for Visual Studio and LPCOpen v2.xx
@@ -35,6 +35,14 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define	FAN_MESSAGE			8
 #define	TOTAL_MESSAGE		9
 
+// To have the timer tick run at 100,000 Hz, the prescaler is SYSTEM CLOCK / 100,000
+#define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
+#define PWM_PRESCALER ((unsigned long)SystemCoreClock / (unsigned long)PWM_FREQ_RESHZ)
+
+#define PWM_PERIOD_HZ (1000)
+#define PWM_PERIOD_COUNT (PWM_FREQ_RESHZ / PWM_PERIOD_HZ)
+#define PWM_DC_COUNT(a) ( (((101-a) * PWM_PERIOD_COUNT) / 100) )
+
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
 #endif
@@ -48,29 +56,37 @@ volatile unsigned long SysTickCnt;
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 12000000;
 const uint32_t RTCOscRateIn = 32768;
-const int min_dutyCycle = 32;
+const int min_dutyCycle = 34;
 const int max_dutyClycle = 99;
-int dutyCycle = 32;
+int dutyCycle = 35;
 
 
 CCAN_MSG_OBJ_T msg_obj;
 
 /**
-* @brief	Handle interrupt from SysTick timer
+* @brief	Updated the PWM dutycycle
 * @return	Nothing
 */
-void SysTick_Handler(void) {
-	SysTickCnt++;
+void PWMUpdate(unsigned char ucPercent)
+{
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(ucPercent));
 }
 
 /**
-* @brief	Handle interrupt from 32-bit timer
+* @brief	Handle interrupt from 32-bit timer (Fan)
 * @return	Nothing
 */
-void TIMER32_0_IRQHandler(void) {
-	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
+void TIMER32_0_IRQHandler(void)
+{
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
 	}
 }
 
@@ -179,12 +195,14 @@ void CAN_rx(uint8_t msg_obj_num) {
 		{
 			int setting = msg_obj.data[0];
 			if (setting > 100)
-				setting = 100;
+				dutyCycle = 100;
 
 			if (setting <= 0)
-				dutyCycle = 1;
+				dutyCycle = 0;
 			else
 				dutyCycle = map(setting, 0, 100, min_dutyCycle, max_dutyClycle);
+
+			PWMUpdate(dutyCycle);
 		}
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -225,18 +243,33 @@ int main(void) {
 	CAN_init();
 
 	SystemCoreClockUpdate();
-	//Enable and setup SysTick Timer at 1/100000 seconds (100us)
-	SysTick_Config(SystemCoreClock / 100000);
+	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
+	SysTick_Config(SystemCoreClock / 1000);
 
-	//Enable timer 1 clock 
+	//Enable timer 0 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
-
-	//Timer setup for match and interrupt at 1/10 seconds (100ms)
+	//Reset any timer pending
 	Chip_TIMER_Reset(LPC_TIMER32_0);
+	//set the resolution of the ticks to the PWM timer (match register resolution)
+	Chip_TIMER_PrescaleSet(LPC_TIMER32_0, (PWM_PRESCALER - 1));
+	//Set duty cycle - MR0 default
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(0));
+	//Enable interupt on MR0 & MR1
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
-	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, (SystemCoreClock / 10));
+	//MR0 should not stop or clear the timer
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 0);
+	//Set period - MR1
+	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, PWM_PERIOD_COUNT);
+	//MR1 should reset the timer to restart the cycle
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	//Enable the timer
 	Chip_TIMER_Enable(LPC_TIMER32_0);
+	// PWM mode enabled on CT32B0_MAT0
+	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;
+	/* Enable timer interrupt */
+	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_0_IRQn);
 
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
@@ -246,13 +279,33 @@ int main(void) {
 
 	bool ledOn = true;
 	unsigned long lastSystickcnt = 0;
+	PWMUpdate(dutyCycle);
 
 	for (;;)
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, 1);
-		Delay(dutyCycle);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, 0);
-		Delay(100 - dutyCycle);
+		if((SysTickCnt - lastSystickcnt) >= 1000)
+		{
+			lastSystickcnt = SysTickCnt;
+
+			msg_obj.msgobj = 0;
+			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mask = 0x0;
+			msg_obj.dlc = 1;
+			msg_obj.data[0] = DEVICE_NR;
+			LPC_CCAN_API->can_transmit(&msg_obj);
+
+			if(ledOn)
+			{
+				ledOn = false;
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+			}
+			else
+			{
+				ledOn = true;
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+			}
+		}
+		
 	}
 	return 0;
 }
