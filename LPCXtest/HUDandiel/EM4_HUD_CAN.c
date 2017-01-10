@@ -11,7 +11,7 @@ Controls the HUD of EM-04
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0110
+#define DEVICE_NR			0b1001
 #define	EM_04_CAN_RANGE		0x100
 
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
@@ -24,8 +24,9 @@ Controls the HUD of EM-04
 #define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
 #define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
-#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -295,9 +296,60 @@ void CAN_rx(uint8_t msg_obj_num)
 	LPC_CCAN_API->can_receive(&msg_obj);
 	if(msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
+		if(msg_obj_num == WARNING_MESSAGE)
+		{
+			// led t1(red)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, msg_obj.data[0]);
+		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			int deadbeaf = 7331;
+			// led t2(green)
+			if(msg_obj.data[0] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, false);
+			else if(msg_obj.data[0] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, true);
+
+			//led t3(red)
+			if(msg_obj.data[1] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+			else if(msg_obj.data[1] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
+
+			//led t4(red)
+			if(msg_obj.data[2] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 0, false);
+			else if(msg_obj.data[2] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 0, true);
+	
+			//led t5(green)
+			if(msg_obj.data[3] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, false);
+			else if(msg_obj.data[3] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, true);
+
+			//led t6(green)
+			if(msg_obj.data[4] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, false);
+			else if(msg_obj.data[4] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, true);
+			
+			//led t7(blue)
+			if(msg_obj.data[5] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, false);
+			else if(msg_obj.data[5] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, true);
+
+			//led t8(blue)
+			if(msg_obj.data[6] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, false);
+			else if(msg_obj.data[6] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, true);
+
+			//led t9(blue)
+			if(msg_obj.data[7] == 10)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, false);
+			else if(msg_obj.data[7] == 11)
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, true);
 		}
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
@@ -316,7 +368,7 @@ void CAN_tx(uint8_t msg_obj_num)
 an error has occured on the CAN bus */
 void CAN_error(uint32_t error_info)
 {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true); //led 2 (red)
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, true); //led 2 (red)
 }
 
 //7-seg tick function
@@ -817,7 +869,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
 		}
 
 		msg_obj.msgobj = 0;
-		msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (CLOCK_ADDRES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 3;
 		msg_obj.data[0] = number;
@@ -834,6 +886,8 @@ int main()
 	SystemCoreClockUpdate();
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
+	unsigned long lastSystickcnt = 0;
+	bool ledOn = true;
 
 	//Enable timer 0,1,2,3 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
@@ -902,35 +956,106 @@ int main()
 
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 1 | 1 << 2 | 1 << 3);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 7 | 1 << 6 | 1 << 8 | 1 << 10 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 
 	//LED's off
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, 0);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, 0);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, 0);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, true);
 
-	//Output enable 7 Seg
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
 
-	//Output enable Bat
-	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 0);
+	//Output enable 7 Seg low
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
 
-	//Output enable DNR
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, 0);
+	//Output enable Bat low
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, false);
 
-	//RGB LEDS
-	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 2, 0);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, 0);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, 0);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 0);
+	//Output enable DNR low
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
+
+	//RGB LEDS low
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 2, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, false);
 
 	ledInit();
 
 	clockDemo(1000, 10, 10, 10);
+
+	//Will not execute when clockDemo is runned
+	for(;;)
+	{
+		if((SysTickCnt - lastSystickcnt) >= 1000)
+		{
+			lastSystickcnt = SysTickCnt;
+
+			msg_obj.msgobj = 0;
+			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mask = 0x0;
+			msg_obj.dlc = 1;
+			msg_obj.data[0] = DEVICE_NR;
+			LPC_CCAN_API->can_transmit(&msg_obj);
+
+			if(ledOn)
+			{
+				ledOn = false;
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
+			}
+			else
+			{
+				ledOn = true;
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
+			}
+		}
+
+	}
 	
 	return 0;
 }
+
+
+/*
+Led pins:
+-------------
+led b1 (green)	power light
+led b2 (blue)	0,7
+led t1 (red)	1,10
+led t2 (green)	2,11
+led t3 (red)	0,11
+led t4 (red)	1,0
+led t5 (green)	1,1
+led t6 (green)	1,2
+led t7 (blue)	3,0
+led t8 (blue)	2,6
+led t9 (green)	2,8
+
+DEVICE ID config:
+-------------
+
+ name ||KIPPP| out |twins|front| dec | 0b0000
+======||=====================================
+  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
+ Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
+  Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100
+  HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
+  Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
+  Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+
+*/
+/*
+int test = 0b1100
+;*/
+

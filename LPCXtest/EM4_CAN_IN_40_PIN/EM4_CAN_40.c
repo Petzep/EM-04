@@ -23,7 +23,11 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
 #define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
-#define HUD_ADDRESS			(0x006 + EM_04_CAN_RANGE)
+#define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
+#define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -166,6 +170,15 @@ int main(void)
 	bool fanOn = false;
 	int fanSetting = 0;
 
+	bool hud1On = false;
+	bool hud2On = false;
+	bool hud3On = false;
+	bool hud4On = false;
+	bool hud5On = false;
+	bool hud6On = false;
+	bool hud7On = false;
+	bool hud8On = false;
+
 	bool ledOn = false;
 	unsigned long lastSystickcnt = 0;
 
@@ -206,10 +219,18 @@ int main(void)
 		bool alarm = pin8;
 		bool lights = pin3;
 		bool wiper = pin15;
-		bool can1 = pin2;
-		bool can2 = pin4;
+		bool can1 = pin7;
+		bool can2 = pin9;
 		bool send = pin28;
-		bool fan = pin26;
+		bool fan = pin27;
+		bool hud1 = pin17;
+		bool hud2 = pin18;
+		bool hud3 = pin19;
+		bool hud4 = pin20;
+		bool hud5 = pin21;
+		bool hud6 = pin22;
+		bool hud7 = pin23;
+		bool hud8 = pin24;
 		bool click = false;
 
 		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
@@ -422,6 +443,32 @@ int main(void)
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
 			
+		}
+
+		if((hud1 != hud1On) || (hud2 != hud2On) || (hud3 != hud3On) || (hud4 != hud4On) || (hud5 != hud5On) || (hud6 != hud6On) || (hud7 != hud7On) || (hud8 != hud8On))
+		{
+			hud1On = hud1;
+			hud2On = hud2;
+			hud3On = hud3;
+			hud4On = hud4;
+			hud5On = hud5;
+			hud6On = hud6;
+			hud7On = hud7;
+			hud8On = hud8;
+
+			SendMsgBuf.ID = 0b1001 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 8;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = hud1 + 10;
+			SendMsgBuf.Data[1] = hud2 + 10;
+			SendMsgBuf.Data[2] = hud3 + 10;
+			SendMsgBuf.Data[3] = hud4 + 10;
+			SendMsgBuf.Data[4] = hud5 + 10;
+			SendMsgBuf.Data[5] = hud6 + 10;
+			SendMsgBuf.Data[6] = hud7 + 10;
+			SendMsgBuf.Data[7] = hud8 + 10;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
 

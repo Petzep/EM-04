@@ -23,6 +23,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
 #define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
+#define HUD_ADDRESS			(0x006 + EM_04_CAN_RANGE)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -326,8 +327,6 @@ Ouput pins:
 Led pins:
 -------------
 led 1 (green) power light
-led 2 (red) 2,10
-led 3 (yellow) 2,2
 led 4 (blue) 0,7
 
 DEVICE ID config:
