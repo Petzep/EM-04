@@ -804,6 +804,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
 	int number = 0;
 	int limit = 59;
 	char DNRcount = '0';
+	bool bug = false;
 	PWMUpdate(0, batPWM);	//BATPWM
 
 	for(;;)
@@ -837,7 +838,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
 		}
 
 
-		if(number == limit && counter == 0)
+		if(number == limit && counter == 0 && !ms)
 		{
 			DNR(DNRcount, dnrPWM);
 			DNRcount++;
@@ -848,7 +849,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
 			else if(DNRcount == 123)
 				DNRcount = 48;
 		}
-		if(number == limit && !ms)
+		if(number == limit && ms)
 		{
 			BatClock(counter);
 			counter++;
@@ -954,12 +955,19 @@ int main()
 	NVIC_EnableIRQ(TIMER_16_0_IRQn);
 	NVIC_EnableIRQ(TIMER_16_1_IRQn);
 
-	//setup GPIO
+	//Configure pins to GPIO (See doc talbe Table 163. p159 for which function) (these are the only pins that are not configured automaticly to GPIO )
 	Chip_GPIO_Init(LPC_GPIO);
+	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_1, IOCON_MODE_PULLUP, IOCON_FUNC1);
+	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_2, IOCON_MODE_PULLUP, IOCON_FUNC1);
+	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO0_11, IOCON_MODE_PULLUP, IOCON_FUNC1);
+	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_0, IOCON_MODE_PULLUP, IOCON_FUNC1);
+
+	//setup GPIO to Output
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 6 | 1 << 7  | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
+	
 
 	//LED's off
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
@@ -990,7 +998,7 @@ int main()
 
 	ledInit();
 
-	clockDemo(1000, 10, 10, 10);
+	clockDemo(10, 10, 10, 10);
 
 	//Will not execute when clockDemo is runned
 	for(;;)
@@ -1000,7 +1008,7 @@ int main()
 			lastSystickcnt = SysTickCnt;
 
 			msg_obj.msgobj = 0;
-			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
@@ -1044,7 +1052,7 @@ DEVICE ID config:
 
  name ||KIPPP| out |twins|front| dec | 0b0000
 ======||=====================================
-  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+  IN  ||--0--|--0--|--0--|--0--|  0  | 0b0000
 Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
  Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
   Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100

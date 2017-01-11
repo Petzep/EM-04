@@ -354,7 +354,7 @@ int main(void){
 			lastSystickcnt = SysTickCnt;
 			
 			msg_obj.msgobj = 0;
-			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
@@ -420,7 +420,7 @@ DEVICE ID config:
 
  name ||KIPPP| out |twins|front| dec | 0b0000
 ======||=====================================
-  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+  IN  ||--0--|--0--|--0--|--0--|  0  | 0b0000
 Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
  Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
   Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100

@@ -116,7 +116,7 @@ void CAN_IRQHandler(void)
 	if (IntStatus & CAN_ICR_RI)
 	{
 		Chip_CAN_Receive(LPC_CAN, &RcvMsgBuf);
-		ReplyMessage(&RcvMsgBuf);
+		//ReplyMessage(&RcvMsgBuf);
 	}
 }
 
@@ -595,7 +595,7 @@ DEVICE ID config:
 
  name ||KIPPP| out |twins|front| dec | 0b0000
 ======||=====================================
-  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+  IN  ||--0--|--0--|--0--|--0--|  0  | 0b0000
 Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
  Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
   Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100

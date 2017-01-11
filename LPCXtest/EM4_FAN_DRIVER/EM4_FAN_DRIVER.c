@@ -27,14 +27,9 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
-#define FRONT_MESSAGE		2
-#define	REAR_MESSAGE		3
-#define	LEFT_MESSAGE		4
-#define	RIGHT_MESSAGE		5
-#define	PERSNOAL_MESSAGE	6
-#define	DIM_MESSAGE			7
-#define	FAN_MESSAGE			8
-#define	TOTAL_MESSAGE		9
+#define	PERSNOAL_MESSAGE	2
+#define	FAN_MESSAGE			3
+#define	TOTAL_MESSAGE		4
 
 // To have the timer tick run at 100,000 Hz, the prescaler is SYSTEM CLOCK / 100,000
 #define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
@@ -63,6 +58,15 @@ int dutyCycle = 35;
 
 
 CCAN_MSG_OBJ_T msg_obj;
+/**
+* @brief	Handle interrupt from SysTick timer
+* @return	Nothing
+*/
+void SysTick_Handler(void)
+{
+	SysTickCnt++;
+}
+
 
 /**
 * @brief	Updated the PWM dutycycle
@@ -208,21 +212,17 @@ void CAN_rx(uint8_t msg_obj_num) {
 			PWMUpdate(dutyCycle);
 		}
 
-		if (msg_obj_num == PERSNOAL_MESSAGE)
+		/*if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			/*BLABLABLA*/
-		}
+		
+		}*/
 
-		if (msg_obj_num == ALL_MESSAGE)
+		/*if (msg_obj_num == ALL_MESSAGE)
 		{
 
-			
-		}
+		}*/
 
 		// Turn on the yellow led and Enable timer interrupt
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, msg_obj.data[0]); //led 4 (yellow)
-		NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
-		NVIC_EnableIRQ(TIMER_32_0_IRQn);
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -291,11 +291,11 @@ int main(void) {
 			lastSystickcnt = SysTickCnt;
 
 			msg_obj.msgobj = 0;
-			msg_obj.mode_id = BROADCAST_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
-			//LPC_CCAN_API->can_transmit(&msg_obj);
+			LPC_CCAN_API->can_transmit(&msg_obj);
 
 			if(ledOn)
 			{
@@ -336,7 +336,7 @@ DEVICE ID config:
 
  name ||KIPPP| out |twins|front| dec | 0b0000
 ======||=====================================
-  IN  ||--0--|--1--|--0--|--0--|  0  | 0b0000
+  IN  ||--0--|--0--|--0--|--0--|  0  | 0b0000
 Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
  Back ||--0--|--1--|--1--|--0--|  6  | 0b0110
   Mid ||--0--|--1--|--0--|--0--|  4  | 0b0100
