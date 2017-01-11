@@ -178,6 +178,7 @@ int main(void)
 	bool hud6On = false;
 	bool hud7On = false;
 	bool hud8On = false;
+	bool hudWarningOn = false;
 
 	bool ledOn = false;
 	unsigned long lastSystickcnt = 0;
@@ -231,6 +232,7 @@ int main(void)
 		bool hud6 = pin22;
 		bool hud7 = pin23;
 		bool hud8 = pin24;
+		bool hudWarning = pin16;
 		bool click = false;
 
 		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
@@ -354,6 +356,7 @@ int main(void)
 			}
 		}
 
+		//Send an overview of the inputs
 		if (send != sendOn)
 		{
 			sendOn = send;
@@ -467,6 +470,18 @@ int main(void)
 			SendMsgBuf.Data[5] = hud6 + 10;
 			SendMsgBuf.Data[6] = hud7 + 10;
 			SendMsgBuf.Data[7] = hud8 + 10;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(hudWarning != hudWarningOn)
+		{
+			hudWarningOn = hudWarning;
+			
+			SendMsgBuf.ID = WARNING_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = hudWarning;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}

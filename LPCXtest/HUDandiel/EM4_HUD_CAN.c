@@ -345,11 +345,11 @@ void CAN_rx(uint8_t msg_obj_num)
 			else if(msg_obj.data[6] == 11)
 				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, true);
 
-			//led t9(blue)
+			//led t9(green)
 			if(msg_obj.data[7] == 10)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, false);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, false);
 			else if(msg_obj.data[7] == 11)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, true);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, true);
 		}
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
@@ -958,22 +958,20 @@ int main()
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 7 | 1 << 6 | 1 << 8 | 1 << 10 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 6 | 1 << 7  | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
 
 	//LED's off
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, true);
-
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 6, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, false);
 
 	//Output enable 7 Seg low
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
@@ -1039,7 +1037,7 @@ led t5 (green)	1,1
 led t6 (green)	1,2
 led t7 (blue)	3,0
 led t8 (blue)	2,6
-led t9 (green)	2,8
+led t9 (green)	1,8
 
 DEVICE ID config:
 -------------

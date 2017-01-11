@@ -40,7 +40,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
 #define PWM_PRESCALER ((unsigned long)SystemCoreClock / (unsigned long)PWM_FREQ_RESHZ)
 
-#define PWM_PERIOD_HZ (1000)
+#define PWM_PERIOD_HZ (25000)
 #define PWM_PERIOD_COUNT (PWM_FREQ_RESHZ / PWM_PERIOD_HZ)
 #define PWM_DC_COUNT(a) ( (((101-a) * PWM_PERIOD_COUNT) / 100) )
 
@@ -57,7 +57,7 @@ volatile unsigned long SysTickCnt;
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 12000000;
 const uint32_t RTCOscRateIn = 32768;
-const int min_dutyCycle = 34;
+const int min_dutyCycle = 35;
 const int max_dutyClycle = 99;
 int dutyCycle = 35;
 
@@ -198,8 +198,10 @@ void CAN_rx(uint8_t msg_obj_num) {
 			if (setting > 100)
 				dutyCycle = 100;
 
-			if (setting <= 0)
-				dutyCycle = 0;
+			if(setting <= 0)
+			{
+				dutyCycle = min_dutyCycle;
+			}
 			else
 				dutyCycle = map(setting, 0, 100, min_dutyCycle, max_dutyClycle);
 
@@ -293,7 +295,7 @@ int main(void) {
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
-			LPC_CCAN_API->can_transmit(&msg_obj);
+			//LPC_CCAN_API->can_transmit(&msg_obj);
 
 			if(ledOn)
 			{
