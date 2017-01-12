@@ -27,6 +27,9 @@ Controls the HUD of EM-04
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
 #define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
+#define MC_ADDRESS			(0x020 + EM_04_CAN_RANGE)
+#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
+#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -288,7 +291,7 @@ a CAN message has been received */
 void CAN_rx(uint8_t msg_obj_num)
 {
 	// Disable interupts while receiving
-	//NVIC_DisableIRQ(CAN_IRQn);
+	NVIC_DisableIRQ(CAN_IRQn);
 	/* Determine which CAN message has been received */
 	msg_obj.msgobj = msg_obj_num;
 
@@ -1059,6 +1062,7 @@ Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
   HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
   Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
   Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+   MC ||--1--|--1--|--1--|--0--|  14 | 0b1110
 
 */
 /*

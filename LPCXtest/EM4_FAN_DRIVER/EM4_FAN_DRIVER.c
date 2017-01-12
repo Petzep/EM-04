@@ -23,7 +23,14 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
 #define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
-#define HUD_ADDRESS			(0x006 + EM_04_CAN_RANGE)
+#define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
+#define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
+#define MC_ADDRESS			(0x020 + EM_04_CAN_RANGE)
+#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
+#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -343,6 +350,7 @@ Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
   HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
   Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
   Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+   MC ||--1--|--1--|--1--|--0--|  14 | 0b1110
 
 */
 /*
