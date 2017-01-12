@@ -1,0 +1,55 @@
+#include <chip.h>
+
+volatile unsigned long SysTickCnt;
+
+#ifdef __cplusplus
+extern "C"
+#endif
+void SysTick_Handler(void)
+{
+	SysTickCnt++;
+}
+
+void Delay(unsigned long tick)
+{
+	unsigned long systickcnt;
+
+	systickcnt = SysTickCnt;
+	while ((SysTickCnt - systickcnt) < tick);
+}
+
+const uint32_t ExtRateIn = 0;
+const uint32_t OscRateIn = 12000000;
+const uint32_t RTCOscRateIn = 32768;
+
+#ifndef LPC_GPIO
+#define LPC_GPIO LPC_GPIO_PORT
+#endif
+
+int main()
+{
+	SystemCoreClockUpdate();
+	Chip_GPIO_Init(LPC_GPIO);
+	
+	SysTick_Config(SystemCoreClock / 1000);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 7 | 1<<6);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1<<10);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);				//Yellow LED always off
+
+	for (;;)
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 1);			//turn on blue LED
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, 1);			//Send HIGH over TX
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, 0);			//Send LOW over RX
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);			//turn red LED off
+		Delay(3000);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, 1);			//Send HIGH over RX
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 1);			//turn red LED on
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);			//turn blue LED off
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, 0);			//Send LOW over TX
+		Delay(3000);
+	}
+
+	return 0;
+}
