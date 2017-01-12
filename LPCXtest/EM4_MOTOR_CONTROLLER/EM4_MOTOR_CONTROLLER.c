@@ -197,13 +197,27 @@ void CAN_rx(uint8_t msg_obj_num)
 	{
 		if(msg_obj_num == MOTOR1_MESSAGE)
 		{
-			//THE DANIEL STUF 1
+			if (msg_obj.data[0])
+			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
+				Delay(1);
+			}
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
 			//msg_obj.data[0] = JOUW DATA (true|false)
 		}
 
 		if(msg_obj_num == MOTOR2_MESSAGE)
 		{
-			//THE DANIEL STUF 2
+			if (msg_obj.data[0])
+			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
+				Delay(1);
+			}
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
 			//msg_obj.data[0] = JOUW DATA (true|false)
 		}
 
@@ -256,19 +270,22 @@ int main()
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 7 | 1<<6);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1<<10);
 
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
+
 
 	for (;;)
 	{
 		Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);				//turn on blue LED		<CAN je deze testen?>
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, 1);			//Send HIGH over TX
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, 0);			//Send LOW over RX
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 0);			//turn red LED off
-		Delay(3000);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, 1);			//Send HIGH over RX
-		//Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, 0);		//turn blue LED off
+		msg_obj.msgobj = 0;
+		msg_obj.mode_id = (BROADCAST_ADDRESS + DEVICE_NR) | CAN_MSGOBJ_STD;
+		msg_obj.mask = 0x0;
+		msg_obj.dlc = 1;
+		msg_obj.data[0] = DEVICE_NR;
+		LPC_CCAN_API->can_transmit(&msg_obj);
+		Delay(500);
 		Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);				//Toggle
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, 0);			//Send LOW over TX
-		Delay(3000);
+		Delay(500);
 	}
 
 	return 0;
