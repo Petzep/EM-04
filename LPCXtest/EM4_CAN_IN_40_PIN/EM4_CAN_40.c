@@ -28,6 +28,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
 #define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
+#define MC_ADDRESS			(0x020 + EM_04_CAN_RANGE)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -180,6 +181,9 @@ int main(void)
 	bool hud8On = false;
 	bool hudWarningOn = false;
 
+	bool motorController1On = false;
+	bool motorController2On = false;
+
 	bool ledOn = false;
 	unsigned long lastSystickcnt = 0;
 
@@ -233,6 +237,9 @@ int main(void)
 		bool hud7 = pin23;
 		bool hud8 = pin24;
 		bool hudWarning = pin16;
+		bool motorController1 = pin25;
+		bool motorController2 = pin26;
+
 		bool click = false;
 
 		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
@@ -485,6 +492,32 @@ int main(void)
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
+
+
+		if(motorController1 != motorController1On)
+		{
+			motorController1On = motorController1;
+
+			SendMsgBuf.ID = (MC_ADDRESS + 1) | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = !motorController1;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(motorController2 != motorController2On)
+		{
+			motorController2On = motorController2;
+
+			SendMsgBuf.ID = (MC_ADDRESS + 2) | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = !motorController2;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
 
 
 		//////////////////////////////
