@@ -1,11 +1,11 @@
 /*
 ===============================================================================
-Name        : EM4_HUD_CAN.c
-Author      : Daniel van der Klooster & Nephtaly Aniceta
-Version     : 0.7
-Copyright   : GPLv3
-Description : Main HUD Function
-Controls the HUD of EM-04
+ Name        : EM4_HUD_CAN.c
+ Author      : Daniel van der Klooster & Nephtaly Aniceta
+ Version     : 0.7
+ Copyright   : GPLv3
+ Description : Main HUD Function
+				Controls the HUD of EM-04
 ===============================================================================
 */
 

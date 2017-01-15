@@ -5,8 +5,8 @@
  Version     : 0.9
  Copyright   : GPLv3
  Description : Main CAN OUT Function
-	Inspired by work from previous years.
-	Rewritten for Visual Studio and LPCOpen v2.xx
+				Inspired by work from previous years.
+				Rewritten for Visual Studio and LPCOpen v2.xx
  ===============================================================================
  */
 

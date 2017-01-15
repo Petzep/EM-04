@@ -1,13 +1,13 @@
 /*
 ===============================================================================
-Name        : EM4_MOTOR_CONTROLLER.c
-Author      : Daniël van der Klooster & Nephtaly Aniceta
-Version     : -
-Copyright   : GPLv3
-Description : Main CAN IN Function
-			Motorcontroller for EM-04
-			Uses CANBUS to receive msg and forwards it to the Atmega by
-			setting pins
+ Name        : EM4_MOTOR_CONTROLLER.c
+ Author      : Daniël van der Klooster & Nephtaly Aniceta
+ Version     : -
+ Copyright   : GPLv3
+ Description : Main CAN IN Function
+				Motorcontroller for EM-04
+				Uses CANBUS to receive msg and forwards it to the Atmega by
+				setting pins
 ===============================================================================
 */
 
@@ -228,7 +228,7 @@ void CAN_tx(uint8_t msg_obj_num)
 an error has occured on the CAN bus */
 void CAN_error(uint32_t error_info)
 {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, 1);			//turn red LED on
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);			//turn red LED on
 }
 
 
