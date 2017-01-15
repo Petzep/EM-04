@@ -342,7 +342,7 @@ void StrobefDNR() {
 }
 
 //7-seg sub function
-void sevenSegNumber(int number, bool dotOn) {
+void sevenSegNumber(int number, bool dotOn, bool mirror) {
 	unsigned long long value;
 	switch(number)
 	{
@@ -383,8 +383,11 @@ void sevenSegNumber(int number, bool dotOn) {
 
 	unsigned int count = 0;
 	
+	if(mirror)
+		value ^= 0b00111000; //mirrored bits
+
 	if(dotOn)
-		value |= 0b10000000;
+		value |= 0b10000000; //turn on the dot
 
 	for(int i = 0; i < 8; i++)
 	{
@@ -397,19 +400,19 @@ void sevenSegNumber(int number, bool dotOn) {
 }
 
 //7-seg function
-void sevenSeg(bool dotOn, int number, int pwm)
+void sevenSeg(bool dotOn, int number, int pwm, bool mirror)
 {
 	PWMUpdate(2, pwm);
 	if(dotOn)
 	{
-		sevenSegNumber(number / 10, true);
-		sevenSegNumber(number % 10, false);
+		sevenSegNumber(number / 10, true, mirror);
+		sevenSegNumber(number % 10, false, mirror);
 		Strobef();
 	}
 	else
 	{
-		sevenSegNumber(number / 10, false);
-		sevenSegNumber(number % 10, false);
+		sevenSegNumber(number / 10, false, mirror);
+		sevenSegNumber(number % 10, false, mirror);
 	}
 	Strobef();
 }
@@ -466,7 +469,7 @@ void BatClock(int counter) {
 }
 
 //DNR alphanumerical
-void DNR(char ch, int pwm)
+void DNR(char ch, int pwm, bool mirror)
 {
 	unsigned long long value;
 	PWMUpdate(1, pwm);
@@ -625,6 +628,9 @@ void DNR(char ch, int pwm)
 			break;
 	}
 
+	if(mirror)
+		value ^= 0b000001101111; //mirrored bits
+
 	unsigned int count = 0;
 	for(int i = 0; i < 12; i++)
 	{
@@ -725,7 +731,7 @@ void ledInit()
 }
 
 //Set the HUD as a clock
-void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
+void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, bool mirror)
 {
 	bool decimal = true;
 	bool ms = decimal;
@@ -749,26 +755,26 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM)
 
 			if(number < 99 && ms)
 			{
-				sevenSeg(ms, number, segPWM);
+				sevenSeg(ms, number, segPWM, mirror);
 				Delay(CLKTIME / 10);
 			}
 			else
 			{
 				ms = false;
-				sevenSeg(ms, number, segPWM);
+				sevenSeg(ms, number, segPWM, mirror);
 				Delay(CLKTIME);
 			}
 		}
 		else
 		{
-			sevenSeg(false, number, segPWM);
+			sevenSeg(false, number, segPWM, mirror);
 			Delay(CLKTIME);
 		}
 
 
 		if(number == limit && counter == 0)
 		{
-			DNR(DNRcount, dnrPWM);
+			DNR(DNRcount, dnrPWM, mirror);
 			DNRcount++;
 			if(DNRcount == 58)
 				DNRcount = 65;
@@ -911,7 +917,7 @@ int main()
 
 	ledInit();
 
-	clockDemo(1000, 10, 10, 10);
+	clockDemo(1000, 10, 10, 10, false);
 	
 	return 0;
 }
