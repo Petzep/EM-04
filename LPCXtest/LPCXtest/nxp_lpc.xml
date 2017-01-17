@@ -12,10 +12,6 @@
         <Value />
       </KeyValue>
       <KeyValue>
-        <Key>com.sysprogs.toolchainoptions.arm.compactcpp</Key>
-        <Value>compactcpp</Value>
-      </KeyValue>
-      <KeyValue>
         <Key>com.sysprogs.toolchainoptions.arm.libnosys</Key>
         <Value />
       </KeyValue>
