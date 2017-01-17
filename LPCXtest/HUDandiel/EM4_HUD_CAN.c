@@ -458,9 +458,9 @@ void sevenSegNumber(int number, bool dotOn, bool mirror) {
 	if(mirror)
 	{
 		unsigned long long mask = 0b00000000;
-		if((CHECK_BIT(value, 1) == 0) || (CHECK_BIT(value, 5) == 0))
+		if((CHECK_BIT(value, 1) == 0) ^ (CHECK_BIT(value, 5) == 0))
 			mask |= 0b00100010;
-		if((CHECK_BIT(value, 2) == 0) || (CHECK_BIT(value, 4) == 0))
+		if((CHECK_BIT(value, 2) == 0) ^ (CHECK_BIT(value, 4) == 0))
 			mask |= 0b00010100;
 		value ^= mask; //mirrored bits
 	}
@@ -726,13 +726,14 @@ void DNR(char ch, int pwm, bool mirror)
 	if(mirror)
 	{
 		unsigned long long mask = 0b000000000000;
-		if((CHECK_BIT(value, 10) == 0) || (CHECK_BIT(value, 11) == 0))
+
+		if((CHECK_BIT(value, 10) == 0) ^ (CHECK_BIT(value, 11) == 0))
 			mask |= 0b110000000000;
-		if((CHECK_BIT(value, 9) == 0) || (CHECK_BIT(value, 8) == 0))
+		if((CHECK_BIT(value, 9) == 0) ^ (CHECK_BIT(value, 8) == 0))
 			mask |= 0b001100000000;
-		if((CHECK_BIT(value, 1) == 0) || (CHECK_BIT(value, 5) == 0))
+		if((CHECK_BIT(value, 1) == 0) ^ (CHECK_BIT(value, 5) == 0))
 			mask |= 0b000000100010;
-		if((CHECK_BIT(value, 2) == 0) || (CHECK_BIT(value, 4) == 0))
+		if((CHECK_BIT(value, 2) == 0) ^ (CHECK_BIT(value, 4) == 0))
 			mask |= 0b000000010100;
 
 		value ^= mask; //mirrored bits
@@ -1040,7 +1041,7 @@ int main()
 
 	ledInit();
 
-	clockDemo(1000, 10, 10, 10);
+	clockDemo(10, 10, 10, 10, true);
 
 	//Will not execute when clockDemo is runned
 	for(;;)
