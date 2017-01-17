@@ -46,6 +46,7 @@ Controls the HUD of EM-04
 #define PWM_PERIOD_COUNT (PWM_FREQ_RESHZ / PWM_PERIOD_HZ)
 #define PWM_DC_COUNT(a) ( (((101-a) * PWM_PERIOD_COUNT) / 100) )
 
+#define CHECK_BIT(var,pos) ((var) & (1 << (pos)))
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -384,7 +385,14 @@ void sevenSegNumber(int number, bool dotOn, bool mirror) {
 	unsigned int count = 0;
 	
 	if(mirror)
-		value ^= 0b00111000; //mirrored bits
+	{
+		unsigned long long mask = 0b00000000;
+		if((CHECK_BIT(value, 1) == 0) || (CHECK_BIT(value, 5) == 0))
+			mask |= 0b00100010;
+		if((CHECK_BIT(value, 2) == 0) || (CHECK_BIT(value, 4) == 0))
+			mask |= 0b00010100;
+		value ^= mask; //mirrored bits
+	}
 
 	if(dotOn)
 		value |= 0b10000000; //turn on the dot
@@ -405,14 +413,30 @@ void sevenSeg(bool dotOn, int number, int pwm, bool mirror)
 	PWMUpdate(2, pwm);
 	if(dotOn)
 	{
-		sevenSegNumber(number / 10, true, mirror);
-		sevenSegNumber(number % 10, false, mirror);
+		if(mirror)
+		{
+			sevenSegNumber(number % 10, true, mirror);
+			sevenSegNumber(number / 10, false, mirror);
+		}
+		else
+		{
+			sevenSegNumber(number / 10, true, mirror);
+			sevenSegNumber(number % 10, false, mirror);
+		}
 		Strobef();
 	}
 	else
 	{
-		sevenSegNumber(number / 10, false, mirror);
-		sevenSegNumber(number % 10, false, mirror);
+		if(mirror)
+		{
+			sevenSegNumber(number % 10, false, mirror);
+			sevenSegNumber(number / 10, false, mirror);
+		}
+		else
+		{
+			sevenSegNumber(number % 10, false, mirror);
+			sevenSegNumber(number / 10, false, mirror);
+		}
 	}
 	Strobef();
 }
@@ -629,7 +653,19 @@ void DNR(char ch, int pwm, bool mirror)
 	}
 
 	if(mirror)
-		value ^= 0b000001101111; //mirrored bits
+	{
+		unsigned long long mask = 0b000000000000;
+		if((CHECK_BIT(value, 10) == 0) || (CHECK_BIT(value, 11) == 0))
+			mask |= 0b110000000000;
+		if((CHECK_BIT(value, 9) == 0) || (CHECK_BIT(value, 8) == 0))
+			mask |= 0b001100000000;
+		if((CHECK_BIT(value, 1) == 0) || (CHECK_BIT(value, 5) == 0))
+			mask |= 0b000000100010;
+		if((CHECK_BIT(value, 2) == 0) || (CHECK_BIT(value, 4) == 0))
+			mask |= 0b000000010100;
+
+		value ^= mask; //mirrored bits
+	}
 
 	unsigned int count = 0;
 	for(int i = 0; i < 12; i++)
@@ -917,7 +953,7 @@ int main()
 
 	ledInit();
 
-	clockDemo(1000, 10, 10, 10, false);
+	clockDemo(1000, 10, 10, 10, true);
 	
 	return 0;
 }
