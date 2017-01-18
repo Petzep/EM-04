@@ -119,12 +119,12 @@ void TIMER32_0_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
 	}
 	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
 	}
 }
@@ -137,12 +137,12 @@ void TIMER32_1_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 0))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 1, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 0);
 	}
 	else if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 1))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 1, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 1);
 	}
 }
@@ -155,12 +155,12 @@ void TIMER16_0_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 0))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 0);
 	}
 	else if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 1))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 1);
 	}
 }
@@ -171,8 +171,16 @@ void TIMER16_0_IRQHandler(void)
 */
 void TIMER16_1_IRQHandler(void)
 {
-	//if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 0))
-		//Chip_GPIO_SetPinToggle(LPC_GPIO, 7, 0);
+	if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 0))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 1);
+	}
 }
 /**
 * @brief	Delay function in (SysTick / x) (default x = 1000, Delay in ms)
@@ -312,9 +320,9 @@ void CAN_rx(uint8_t msg_obj_num)
 
 			//led t3(red)
 			if(msg_obj.data[1] == 10)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
 			else if(msg_obj.data[1] == 11)
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);
 
 			//led t4(red)
 			if(msg_obj.data[2] == 10)
@@ -389,23 +397,21 @@ void TickDNR() {
 }
 
 void DataHighBat() {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, true);
 }
 
 void DataLowBat() {
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
 }
 
 void Strobef() {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, true);
-	
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, false);	//7Seg
-
 }
 
 void StrobefBat(){
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);	//Bat
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, false);	//Bat
 }
 
 void StrobefDNR() {
@@ -452,8 +458,6 @@ void sevenSegNumber(int number, bool dotOn, bool mirror) {
 			value = NULL;
 			break;
 	}
-
-	unsigned int count = 0;
 	
 	if(mirror)
 	{
@@ -471,7 +475,7 @@ void sevenSegNumber(int number, bool dotOn, bool mirror) {
 	for(int i = 0; i < 8; i++)
 	{
 		unsigned long long bit = value & 0b10000000;
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, bit);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, bit); //write data
 		Tick();
 		value <<= 1;
 	}
@@ -520,11 +524,11 @@ void BatFill(int speed) {
 		StrobefBat();
 		for (int j = 0; j < speed; j++) {
 			if ((j % 25) == 1) {
-				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 1);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, true);
 				Delay(1);
 			}
 			else {
-				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 0);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
 				Delay(1);
 			}
 		}
@@ -537,11 +541,11 @@ void BatFill(int speed) {
 		StrobefBat();
 		for (int j = 0; j < speed; j++) {
 			if ((j % 20) == 1) {
-				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 1);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, true);
 				Delay(1);
 			}
 			else {
-				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, 0);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
 				Delay(1);
 			}
 		}
@@ -571,152 +575,190 @@ void DNR(char ch, int pwm, bool mirror)
 	switch(ch)
 	{
 		case 'A':
+			value = 0b0000001111101101;
+			break;
 		case 'a':
-			value = 0b000001110111;
+			value = 0b1001100110000000;
 			break;
 		case 'B':
-			value = 0b011000111001;
+			value = 0b0011111001001101;
 			break;
 		case 'b':
-			value = 0b000001111100;
+			value = 0b0001100110100000;
 			break;
 		case 'C':
+			value = 0b0011000100101100;
+			break;
 		case 'c':
-			value = 0b000000111001;
+			value = 0b0001000110000000;
 			break;
 		case 'D':
-			value = 0b000010001111;
+			value = 0b0011111001001100;
 			break;
 		case 'd':
-			value = 0b000001011110;
+			value = 0b0001110110000000;
 			break;
 		case 'E':
+			value = 0b0011000110101100;
+			break;
 		case 'e':
-			value = 0b000001111001;
+			value = 0b0111000110000000;
 			break;
 		case 'F':
+			value = 0b0000000110101100;
+			break;
 		case 'f':
-			value = 0b000001110001;
+			value = 0b0000110010001001;
 			break;
 		case 'G':
+			value = 0b0011001100101101;
+			break;
 		case 'g':
-			value = 0b010000111001;
+			value = 0b0001110010100100;
 			break;
 		case 'H':
-			value = 0b000001110110;
+			value = 0b0000001111100001;
 			break;
 		case 'h':
-			value = 0b00001110100;
+			value = 0b0000100110100000;
 			break;
 		case 'I':
-			value = 0b000010001001;
+			value = 0b0011110000001100;
 			break;
 		case 'i':
-			value = 0b000010000000;
+			value = 0b0000100000000000;
 			break;
 		case 'J':
-			value = 0b000000011110;
+			value = 0b0011001101000000;
 			break;
 		case 'j':
-			value = 0b100000001110;
+			value = 0b0001110100000000;
 			break;
 		case 'K':
-			value = 0b011001110000;
+			value = 0b1000000110100010;
 			break;
 		case 'k':
-			value = 0b011010000000;
+			value = 0b1000110000000010;
 			break;
 		case 'L':
+			value = 0b0011000100100000;
+			break;
 		case 'l':
-			value = 0b000000111000;
+			value = 0b0010110000000000;
 			break;
 		case 'M':
+			value = 0b0000001101110010;
+			break;
 		case 'm':
-			value = 0b001100110110;
+			value = 0b0000101110000001;
 			break;
 		case 'N':
+			value = 0b1000001101110000;
+			break;
 		case 'n':
-			value = 0b010100110110;
+			value = 0b0000100110000000;
 			break;
 		case 'O':
+			value = 0b0011001101101100;
+			break;
 		case 'o':
-			value = 0b000000111111;
+			value = 0b0001100110000000;
+			break;
+		case 'P':
+			value = 0b0000000111101101;
 			break;
 		case 'p':
-		case 'P':
-			value = 0b000001110011;
+			value = 0b0000010110100100;
 			break;
 		case 'Q':
+			value = 0b1011001101101100;
+			break;
 		case 'q':
-			value = 0b010000111111;
+			value = 0b0000110010100100;
 			break;
 		case 'R':
+			value = 0b1000000111101101;
+			break;
 		case 'r':
-			value = 0b010001110011;
+			value = 0b0000000110000000;
 			break;
 		case 'S':
+			value = 0b0011001010101101;
+			break;
 		case 's':
-			value = 0b000001101101;
+			value = 0b0001100010100100;
 			break;
 		case 'T':
+			value = 0b0000110000001100;
+			break;
 		case 't':
-			value = 0b000010000001;
+			value = 0b0001110010000001;
 			break;
 		case 'U':
+			value = 0b0011001101100000;
+			break;
 		case 'u':
-			value = 0b000000111110;
+			value = 0b0001100100000000;
 			break;
 		case 'V':
-			value = 0b101000110000;
+			value = 0b0100000100100010;
 			break;
 		case 'v':
-			value = 0b001100000000;
+			value = 0b0100000100000000;
 			break;
 		case 'W':
+			value = 0b1100001101100000;
+			break;
 		case 'w':
-			value = 0b110000110110;
+			value = 0b1100001100000000;
 			break;
 		case 'X':
+			value = 0b1100000000010010;
+			break;
 		case 'x':
-			value = 0b111100000000;
+			value = 0b1100000000010010;
 			break;
 		case 'Y':
+			value = 0b0000100011100001;
+			break;
 		case 'y':
-			value = 0b001110000000;
+			value = 0b0000100000010010;
 			break;
 		case 'Z':
+			value = 0b0111000000001110;
+			break;
 		case 'z':
-			value = 0b101001001001;
+			value = 0b0101000010000000;
 			break;
 		case '0':
-			value = 0b000000111111;
+			value = 0b0011001101101100;
 			break;
 		case '1':
-			value = 0b001000000110;
+			value = 0b0000001001000010;
 			break;
 		case '2':
-			value = 0b000001011011;
+			value = 0b0011000111001101;
 			break;
 		case '3':
-			value = 0b000001001111;
+			value = 0b0011001001001101;
 			break;
 		case '4':
-			value = 0b000001100110;
+			value = 0b0000001011100001;
 			break;
 		case '5':
-			value = 0b000001101101;
+			value = 0b0011001010101101;
 			break;
 		case '6':
-			value = 0b000001111101;
+			value = 0b0011001110101101;
 			break;
 		case '7':
-			value = 0b000000000111;
+			value = 0b0000001001001100;
 			break;
 		case '8':
-			value = 0b000001111111;
+			value = 0b0011001111101101;
 			break;
 		case '9':
-			value = 0b000001101111;
+			value = 0b0011001011101101;
 			break;
 		default:
 			value = NULL;
@@ -725,27 +767,31 @@ void DNR(char ch, int pwm, bool mirror)
 
 	if(mirror)
 	{
-		unsigned long long mask = 0b000000000000;
+		unsigned long long mask = 0b0000000000000000;
 
-		if((CHECK_BIT(value, 10) == 0) ^ (CHECK_BIT(value, 11) == 0))
-			mask |= 0b110000000000;
-		if((CHECK_BIT(value, 9) == 0) ^ (CHECK_BIT(value, 8) == 0))
-			mask |= 0b001100000000;
-		if((CHECK_BIT(value, 1) == 0) ^ (CHECK_BIT(value, 5) == 0))
-			mask |= 0b000000100010;
-		if((CHECK_BIT(value, 2) == 0) ^ (CHECK_BIT(value, 4) == 0))
-			mask |= 0b000000010100;
+		if((CHECK_BIT(value, 12) == 0) ^ (CHECK_BIT(value, 13) == 0))
+			mask |= 0b0011000000000000;
+		if((CHECK_BIT(value, 8) == 0) ^ (CHECK_BIT(value, 9) == 0))
+			mask |= 0b1100000000000000;
+		if((CHECK_BIT(value, 14) == 0) ^ (CHECK_BIT(value, 15) == 0))
+			mask |= 0b0000001100000000;
+		if((CHECK_BIT(value, 7) == 0) ^ (CHECK_BIT(value, 0) == 0))
+			mask |= 0b0000000010000001;
+		if((CHECK_BIT(value, 5) == 0) ^ (CHECK_BIT(value, 6) == 0))
+			mask |= 0b0000000001100000;
+		if((CHECK_BIT(value, 4) == 0) ^ (CHECK_BIT(value, 1) == 0))
+			mask |= 0b0000000000010010;
+		if((CHECK_BIT(value, 2) == 0) ^ (CHECK_BIT(value, 3) == 0))
+			mask |= 0b0000000000001100;
 
 		value ^= mask; //mirrored bits
 	}
-
-	unsigned int count = 0;
-	for(int i = 0; i < 12; i++)
+	for(int i = 0; i < 16; i++)
 	{
-		unsigned long long bit = value & 0b100000000000;
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, bit);
+		unsigned long long bit = value & 1;
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, bit); //data to write
 		TickDNR();
-		value <<= 1;
+		value >>= 1;
 	}
 	StrobefDNR();
 }
@@ -767,10 +813,10 @@ void rgbLed(bool topBot, enum RGB_LED rgb)
 	}
 	else if(topBot == RGB_BOT)
 	{
-		portA = 3;
-		portB = 1;
-		pinA = 1;
-		pinB = 11;
+		portA = 1;
+		portB = 3;
+		pinA = 11;
+		pinB = 1;
 	}
 	switch(rgb)
 	{
@@ -826,11 +872,11 @@ void RGBcycle(int speed, bool top, bool bot) {
 void ledInit()
 {
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, false);	//DataLow
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);	//DataLowBat
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);	//DataLowBat
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, false);	//DataLowDNR
 
 	//Flush shift registers
-	for(int i = 0; i < 16; i++)
+	for(int i = 0; i < 17; i++)
 	{
 		Tick();
 		TickBat();
@@ -839,7 +885,7 @@ void ledInit()
 }
 
 //Set the HUD as a clock
-void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, bool mirror)
+void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool mirror)
 {
 	bool decimal = true;
 	bool ms = decimal;
@@ -849,6 +895,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, bool mirror)
 	char DNRcount = '0';
 	bool bug = false;
 	PWMUpdate(0, batPWM);	//BATPWM
+	PWMUpdate(3, rgbPWM);	//BATPWM
 
 	for(;;)
 	{
@@ -981,7 +1028,7 @@ int main()
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	Chip_TIMER_Enable(LPC_TIMER32_1);
 	Chip_TIMER_Enable(LPC_TIMER16_0);
-	//Chip_TIMER_Enable(LPC_TIMER16_1);
+	Chip_TIMER_Enable(LPC_TIMER16_1);
 
 	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;// PWM mode enabled on CT32B0_MAT0
 	((LPC_TIMER_T *)LPC_TIMER32_1)->PWMC = 1;// PWM mode enabled on CT32B1_MAT0
@@ -1006,7 +1053,7 @@ int main()
 	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_0, IOCON_MODE_PULLUP, IOCON_FUNC1);
 
 	//setup GPIO to Output
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 0 << 1 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 6 | 1 << 7  | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
@@ -1015,9 +1062,9 @@ int main()
 	//LED's off
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, false);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, false);
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 0, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, false);
@@ -1025,23 +1072,24 @@ int main()
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, false);
 
 	//Output enable 7 Seg low
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
 
 	//Output enable Bat low
-	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
 
 	//Output enable DNR low
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 1, false);
 
 	//RGB LEDS low
 	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 2, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, false);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, false);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);	//pwm low
 
 	ledInit();
 
-	clockDemo(1000, 10, 20, 8, false);
+	clockDemo(1, 10, 20, 8, 10, false);
 
 	//Will not execute when clockDemo is runned
 	for(;;)
