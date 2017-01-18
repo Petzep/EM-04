@@ -1089,7 +1089,7 @@ int main()
 
 	ledInit();
 
-	clockDemo(1, 10, 20, 8, 10, false);
+	clockDemo(1000, 10, 20, 8, 10, false);
 
 	//Will not execute when clockDemo is runned
 	for(;;)
