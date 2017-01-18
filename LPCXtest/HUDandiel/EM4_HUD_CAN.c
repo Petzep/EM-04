@@ -505,8 +505,8 @@ void sevenSeg(bool dotOn, int number, int pwm, bool mirror)
 		}
 		else
 		{
-			sevenSegNumber(number % 10, false, mirror);
 			sevenSegNumber(number / 10, false, mirror);
+			sevenSegNumber(number % 10, false, mirror);
 		}
 	}
 	Strobef();
@@ -892,7 +892,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, bool mirror)
 			else if(DNRcount == 123)
 				DNRcount = 48;
 		}
-		if(number == limit && ms)
+		if(number == limit && !ms)
 		{
 			BatClock(counter);
 			counter++;
@@ -1041,7 +1041,7 @@ int main()
 
 	ledInit();
 
-	clockDemo(10, 10, 10, 10, true);
+	clockDemo(1000, 10, 20, 8, false);
 
 	//Will not execute when clockDemo is runned
 	for(;;)
