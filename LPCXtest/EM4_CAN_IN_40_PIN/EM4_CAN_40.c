@@ -26,8 +26,10 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
-#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
-#define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
+#define SPEED_ADDRESS		(0x003 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
+#define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
 #define MC_ADDRESS			(0x020 + EM_04_CAN_RANGE)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
@@ -58,6 +60,7 @@ const uint32_t OscRateIn = 24000000;
 const uint32_t RTCOscRateIn = 32768;
 
 CAN_MSG_T SendMsgBuf;
+static ADC_CLOCK_SETUP_T ADCSetup;
 
 /**
 * @brief	Handle interrupt from SysTick timer
@@ -73,6 +76,11 @@ void Delay(unsigned long tick) {
 	systickcnt = SysTickCnt;
 	while ((SysTickCnt - systickcnt) < tick)
 		;
+}
+
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 //TODO
@@ -138,6 +146,8 @@ int main(void)
 {
 	CAN_BUFFER_ID_T TxBuf;//select buffer
 	CAN_MSG_T SendMsgBuf;//send message
+	uint16_t dataADC1; //ADCdata1
+	uint16_t dataADC2; //ADCdata2
 
 	SystemCoreClockUpdate();
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
@@ -154,6 +164,12 @@ int main(void)
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 4, 1 << 28 | 1 << 29);
 
+	//Setup ADC
+	Chip_IOCON_PinMuxSet(LPC_IOCON, 0, 25, FUNC1);
+	Chip_IOCON_PinMuxSet(LPC_IOCON, 0, 3, FUNC2);
+	Chip_ADC_Init(LPC_ADC, &ADCSetup);
+	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH2, ENABLE);
+	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH6, ENABLE);
 
 	bool blinkLeftOn = false;
 	bool blinkLeftState = false;
@@ -218,6 +234,17 @@ int main(void)
 		bool pin26 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);
 		bool pin27 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 9);
 		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
+
+		//Start A/D conversion
+		Chip_ADC_SetStartMode(LPC_ADC, ADC_START_NOW, ADC_TRIGGERMODE_RISING);
+
+		//Waiting for A/D conversion complete [todo optimasation without waiting]
+		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH2, ADC_DR_DONE_STAT) != SET) { }
+		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH6, ADC_DR_DONE_STAT) != SET) { }
+
+		//Read ADC value
+		Chip_ADC_ReadValue(LPC_ADC, ADC_CH2, &dataADC1);
+		Chip_ADC_ReadValue(LPC_ADC, ADC_CH6, &dataADC2);
 
 		bool blinkLeft = pin1;
 		bool blinkRight = pin5;
@@ -599,6 +626,28 @@ int main(void)
 				ledOn = true;
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
 			}
+		}
+
+		//
+		//adc
+		//
+		if((LoopTick - lastSystickcnt) >= 100)
+		{
+			lastSystickcnt = SysTickCnt;
+
+			SendMsgBuf.ID = DIMMER_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = map(dataADC1, 0, 4095, 0, 100);
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			SendMsgBuf.ID = SPEED_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = map(dataADC2, 0, 4095, 0, 100);
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 	}
 	return 0;

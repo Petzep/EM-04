@@ -25,8 +25,11 @@ Controls the HUD of EM-04
 #define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
-#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
-#define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
+#define SPEED_ADDRESS		(0x003 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
+#define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
+#define MC_ADDRESS			(0x020 + EM_04_CAN_RANGE)
 #define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -34,7 +37,9 @@ Controls the HUD of EM-04
 #define	SPEED_MESSAGE		3
 #define BATTERY_MESSAGE		4
 #define WARNING_MESSAGE		5
-#define	TOTAL_MESSAGE		6
+#define DIMMER_MESSAGE		6
+#define SPEED_MESSAGE		7
+#define	TOTAL_MESSAGE		8
 
 #define RGB_TOP 1
 #define RGB_BOT 0
@@ -43,7 +48,7 @@ Controls the HUD of EM-04
 #define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
 #define PWM_PRESCALER ((unsigned long)SystemCoreClock / (unsigned long)PWM_FREQ_RESHZ)
 
-#define PWM_PERIOD_HZ (1000)
+#define PWM_PERIOD_HZ (200)
 #define PWM_PERIOD_COUNT (PWM_FREQ_RESHZ / PWM_PERIOD_HZ)
 #define PWM_DC_COUNT(a) ( (((101-a) * PWM_PERIOD_COUNT) / 100) )
 
@@ -64,6 +69,8 @@ const uint32_t OscRateIn = 12000000;
 const uint32_t RTCOscRateIn = 32768;
 
 CCAN_MSG_OBJ_T msg_obj;
+
+int HUDdimmer = 0;
 
 enum RGB_LED
 {
@@ -277,6 +284,16 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = DIMMER_MESSAGE;
+	msg_obj.mode_id = DIMMER_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = SPEED_MESSAGE;
+	msg_obj.mode_id = SPEED_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	msg_obj.msgobj = WARNING_MESSAGE;
 	msg_obj.mode_id = WARNING_ADDRESS;
 	msg_obj.mask = 0xFFF;
@@ -309,6 +326,14 @@ void CAN_rx(uint8_t msg_obj_num)
 		{
 			// led t1(red)
 			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, msg_obj.data[0]);
+		}
+		if(msg_obj_num == DIMMER_MESSAGE)
+		{
+			HUDdimmer = msg_obj.data[0];
+			PWMUpdate(0, HUDdimmer);	//BATPWM
+			PWMUpdate(1, HUDdimmer);	//RGBPWM
+			PWMUpdate(2, HUDdimmer);	//RGBPWM
+			PWMUpdate(3, HUDdimmer);	//RGBPWM
 		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
 		{
@@ -483,9 +508,8 @@ void sevenSegNumber(int number, bool dotOn, bool mirror) {
 }
 
 //7-seg function
-void sevenSeg(bool dotOn, int number, int pwm, bool mirror)
+void sevenSeg(bool dotOn, int number, bool mirror)
 {
-	PWMUpdate(2, pwm);
 	if(dotOn)
 	{
 		if(mirror)
@@ -568,10 +592,9 @@ void BatClock(int counter) {
 }
 
 //DNR alphanumerical
-void DNR(char ch, int pwm, bool mirror)
+void DNR(char ch, bool mirror)
 {
 	unsigned long long value;
-	PWMUpdate(1, pwm);
 	switch(ch)
 	{
 		case 'A':
@@ -895,7 +918,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 	char DNRcount = '0';
 	bool bug = false;
 	PWMUpdate(0, batPWM);	//BATPWM
-	PWMUpdate(3, rgbPWM);	//BATPWM
+	PWMUpdate(3, rgbPWM);	//RGBPWM
 
 	for(;;)
 	{
@@ -911,26 +934,26 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 
 			if(number < 99 && ms)
 			{
-				sevenSeg(ms, number, segPWM, mirror);
+				sevenSeg(ms, number, mirror);
 				Delay(CLKTIME / 10);
 			}
 			else
 			{
 				ms = false;
-				sevenSeg(ms, number, segPWM, mirror);
+				sevenSeg(ms, number, mirror);
 				Delay(CLKTIME);
 			}
 		}
 		else
 		{
-			sevenSeg(false, number, segPWM, mirror);
+			sevenSeg(false, number, mirror);
 			Delay(CLKTIME);
 		}
 
 
 		if(number == limit && counter == 0 && !ms)
 		{
-			DNR(DNRcount, dnrPWM, mirror);
+			DNR(DNRcount, mirror);
 			DNRcount++;
 			if(DNRcount == 58)
 				DNRcount = 65;
