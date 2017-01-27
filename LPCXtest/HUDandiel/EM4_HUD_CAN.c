@@ -183,10 +183,22 @@ void TIMER16_1_IRQHandler(void)
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 0);
 	}
-	else if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 1))
+	if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 1))
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 1);
+	}
+	if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 2))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 2);
+	}
+	if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 3))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 3);
 	}
 }
 /**
@@ -333,7 +345,7 @@ void CAN_rx(uint8_t msg_obj_num)
 			PWMUpdate(0, HUDdimmer);	//BATPWM
 			PWMUpdate(1, HUDdimmer);	//RGBPWM
 			PWMUpdate(2, HUDdimmer);	//RGBPWM
-			PWMUpdate(3, HUDdimmer);	//RGBPWM
+			//PWMUpdate(3, HUDdimmer);	//RGBPWM
 		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
 		{
@@ -1001,7 +1013,6 @@ int main()
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
 	unsigned long lastSystickcnt = 0;
-	bool ledOn = true;
 
 	//Enable timer 0,1,2,3 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
@@ -1032,11 +1043,15 @@ int main()
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 1);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 1);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 1);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 2);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 3);
 	//MR0 should not stop or clear the timer
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 0);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_1, 0);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_0, 0);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_1, 0);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_1, 2);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_1, 3);
 	//Set period - MR1
 	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, PWM_PERIOD_COUNT);
 	Chip_TIMER_SetMatch(LPC_TIMER32_1, 1, PWM_PERIOD_COUNT);
@@ -1111,12 +1126,13 @@ int main()
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);	//pwm low
 
 	ledInit();
-
+	
 	clockDemo(1000, 10, 20, 8, 10, false);
 
 	//Will not execute when clockDemo is runned
+	int i = 0;
 	for(;;)
-	{
+	{		
 		if((SysTickCnt - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;
@@ -1127,23 +1143,32 @@ int main()
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
 			LPC_CCAN_API->can_transmit(&msg_obj);
-
-			if(ledOn)
-			{
-				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-			}
-			else
-			{
-				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-			}
+			
+			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);	//led 3 (blue)
+			
 		}
 
 	}
 	
 	return 0;
 }
+
+//Color loop
+/*
+if(((SysTickCnt - loopSystickcnt) >= 100))
+{
+loopSystickcnt = SysTickCnt;
+Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT(100));
+Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(i));
+int test = PWM_DC_COUNT(100);
+if(UP)
+i++;
+else
+i--;
+
+if(i > 100 || i < 0)
+UP = !UP;
+}*/
 
 
 /*
