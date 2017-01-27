@@ -25,7 +25,7 @@ Controls the HUD of EM-04
 #define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
-#define SPEED_ADDRESS		(0x003 + HUD_ADDRESS)
+#define TEMPERATURE_ADDRESS	(0x003 + HUD_ADDRESS)
 #define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
 #define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
@@ -39,7 +39,8 @@ Controls the HUD of EM-04
 #define WARNING_MESSAGE		5
 #define DIMMER_MESSAGE		6
 #define SPEED_MESSAGE		7
-#define	TOTAL_MESSAGE		8
+#define TEMPERATURE_MESSAGE	8
+#define	TOTAL_MESSAGE		9
 
 #define RGB_TOP 1
 #define RGB_BOT 0
@@ -311,6 +312,11 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = TEMPERATURE_MESSAGE;
+	msg_obj.mode_id = TEMPERATURE_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	msg_obj.msgobj = PERSNOAL_MESSAGE;
 	msg_obj.mode_id = DEVICE_NR;
 	msg_obj.mask = 0xFFF;
@@ -343,9 +349,27 @@ void CAN_rx(uint8_t msg_obj_num)
 		{
 			HUDdimmer = msg_obj.data[0];
 			PWMUpdate(0, HUDdimmer);	//BATPWM
-			PWMUpdate(1, HUDdimmer);	//RGBPWM
-			PWMUpdate(2, HUDdimmer);	//RGBPWM
+			PWMUpdate(1, HUDdimmer);	//7SEGPWM
+			PWMUpdate(2, HUDdimmer);	//DNRPWM
 			//PWMUpdate(3, HUDdimmer);	//RGBPWM
+		}
+		if(msg_obj_num == TEMPERATURE_MESSAGE)
+		{
+			//set the greenness of the temperature
+			int temp = msg_obj.data[0];
+			int tempinv = 50-(temp-51);
+
+			if(temp <= 50)
+			{
+				Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT(100));
+				Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(temp*2));
+			}
+			else
+			{
+				Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT((tempinv)*2));
+				Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(100));
+			}
+
 		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
 		{
@@ -1127,10 +1151,9 @@ int main()
 
 	ledInit();
 	
-	clockDemo(1000, 10, 20, 8, 10, false);
-
+	//clockDemo(1000, 10, 20, 8, 10, false);
+	PWMUpdate(3, 100);
 	//Will not execute when clockDemo is runned
-	int i = 0;
 	for(;;)
 	{		
 		if((SysTickCnt - lastSystickcnt) >= 1000)
