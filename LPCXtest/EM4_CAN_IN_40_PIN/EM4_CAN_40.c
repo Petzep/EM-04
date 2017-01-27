@@ -26,7 +26,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
-#define SPEED_ADDRESS		(0x003 + HUD_ADDRESS)
+#define TEMPERATURE_ADDRESS	(0x003 + HUD_ADDRESS)
 #define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
 #define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
@@ -158,16 +158,17 @@ int main(void)
 
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 <<  10| 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 15 | 1 << 16 | 1 << 17 | 1 << 18 | 1 << 22);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 4 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 14 | 1 << 15);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 4, 1 << 28 | 1 << 29);
 
 	//Setup ADC
-	Chip_IOCON_PinMuxSet(LPC_IOCON, 0, 25, FUNC1);
-	Chip_IOCON_PinMuxSet(LPC_IOCON, 0, 3, FUNC2);
 	Chip_ADC_Init(LPC_ADC, &ADCSetup);
+	Chip_ADC_SetBurstCmd(LPC_ADC, true);
+	Chip_IOCON_PinMux(LPC_IOCON, 0, 25, IOCON_MODE_INACT, IOCON_FUNC1);
+	Chip_IOCON_PinMux(LPC_IOCON, 0, 3, IOCON_MODE_INACT, IOCON_FUNC2);
 	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH2, ENABLE);
 	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH6, ENABLE);
 
@@ -235,10 +236,7 @@ int main(void)
 		bool pin27 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 9);
 		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
 
-		//Start A/D conversion
-		Chip_ADC_SetStartMode(LPC_ADC, ADC_START_NOW, ADC_TRIGGERMODE_RISING);
-
-		//Waiting for A/D conversion complete [todo optimasation without waiting]
+		//Waiting for A/D conversion complete
 		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH2, ADC_DR_DONE_STAT) != SET) { }
 		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH6, ADC_DR_DONE_STAT) != SET) { }
 
@@ -642,7 +640,7 @@ int main(void)
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			SendMsgBuf.ID = SPEED_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.ID = TEMPERATURE_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.Type = 0;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Data[0] = map(dataADC2, 0, 4095, 0, 100);
