@@ -106,11 +106,11 @@ void PWMUpdate(int pwm, unsigned char ucPercent)
 		case 1:
 			Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(ucPercent));
 			break;
-		//7Seg
+		//RGB
 		case 2:
 			Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(ucPercent));
 			break;
-		//RGB
+		//7seg + RGBcolor
 		case 3:
 			Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(ucPercent));
 			break;
@@ -163,12 +163,12 @@ void TIMER16_0_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 0))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 0);
 	}
 	else if(Chip_TIMER_MatchPending(LPC_TIMER16_0, 1))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 1);
 	}
 }
@@ -181,12 +181,12 @@ void TIMER16_1_IRQHandler(void)
 {
 	if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 0))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 0);
 	}
 	if(Chip_TIMER_MatchPending(LPC_TIMER16_1, 1))
 	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, false);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 1, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER16_1, 1);
@@ -351,7 +351,7 @@ void CAN_rx(uint8_t msg_obj_num)
 			PWMUpdate(0, HUDdimmer);	//BATPWM
 			PWMUpdate(1, HUDdimmer);	//7SEGPWM
 			PWMUpdate(2, HUDdimmer);	//DNRPWM
-			//PWMUpdate(3, HUDdimmer);	//RGBPWM
+			PWMUpdate(3, HUDdimmer);	//RGBPWM
 		}
 		if(msg_obj_num == TEMPERATURE_MESSAGE)
 		{
@@ -954,7 +954,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 	char DNRcount = '0';
 	bool bug = false;
 	PWMUpdate(0, batPWM);	//BATPWM
-	PWMUpdate(3, rgbPWM);	//RGBPWM
+	PWMUpdate(2, rgbPWM);	//RGBPWM
 
 	for(;;)
 	{
@@ -1051,7 +1051,7 @@ int main()
 	//set the resolution of the ticks to the PWM timer (match register resolution)
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_0, (PWM_PRESCALER - 1));
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_1, (PWM_PRESCALER - 1));
-	Chip_TIMER_PrescaleSet(LPC_TIMER16_0, (PWM_PRESCALER - 1));
+	Chip_TIMER_PrescaleSet(LPC_TIMER16_0, (PWM_PRESCALER - 1)/10); //takes controll of the RGB PWM 10x resolution of the normal PWM
 	Chip_TIMER_PrescaleSet(LPC_TIMER16_1, (PWM_PRESCALER - 1));
 	//Set duty cycle - MR0 default
 	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(0));
@@ -1151,8 +1151,7 @@ int main()
 
 	ledInit();
 	
-	//clockDemo(1000, 10, 20, 8, 10, false);
-	PWMUpdate(3, 100);
+	clockDemo(1000, 10, 20, 8, 10, false);
 	//Will not execute when clockDemo is runned
 	for(;;)
 	{		
