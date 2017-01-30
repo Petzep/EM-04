@@ -72,6 +72,8 @@ const uint32_t RTCOscRateIn = 32768;
 CCAN_MSG_OBJ_T msg_obj;
 
 int HUDdimmer = 0;
+bool CLOCK_DEMO = false;
+bool CLOCK_MIRROR = false;
 
 enum RGB_LED
 {
@@ -98,7 +100,7 @@ void PWMUpdate(int pwm, unsigned char ucPercent)
 	//set match register that control duty cycle
 	switch(pwm)
 	{
-		//Battery
+		//Battery + RGBcolor (top)
 		case 0:
 			Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(ucPercent));
 			break;
@@ -110,7 +112,7 @@ void PWMUpdate(int pwm, unsigned char ucPercent)
 		case 2:
 			Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(ucPercent));
 			break;
-		//7seg + RGBcolor
+		//7seg + RGBcolor(bot)
 		case 3:
 			Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(ucPercent));
 			break;
@@ -120,7 +122,7 @@ void PWMUpdate(int pwm, unsigned char ucPercent)
 }
 
 /**
-* @brief	Handle interrupt from 32-bit timer (Battery)
+* @brief	Handle interrupt from 32-bit timer (Battery + RGBcolor_top)
 * @return	Nothing
 */
 void TIMER32_0_IRQHandler(void)
@@ -133,7 +135,19 @@ void TIMER32_0_IRQHandler(void)
 	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 2, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+	}
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 2))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 3, 2, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 2);
+	}
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 3))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 3, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 3);
 	}
 }
 
@@ -156,7 +170,7 @@ void TIMER32_1_IRQHandler(void)
 }
 
 /**
-* @brief	Handle interrupt from 32-bit timer (7Seg)
+* @brief	Handle interrupt from 32-bit timer (7Seg + DNRcolor_bot)
 * @return	Nothing
 */
 void TIMER16_0_IRQHandler(void)
@@ -353,7 +367,7 @@ void CAN_rx(uint8_t msg_obj_num)
 			PWMUpdate(2, HUDdimmer);	//DNRPWM
 			PWMUpdate(3, HUDdimmer);	//RGBPWM
 		}
-		if(msg_obj_num == TEMPERATURE_MESSAGE)
+		if(msg_obj_num == TEMPERATURE_MESSAGE && !CLOCK_DEMO)
 		{
 			//set the greenness of the temperature
 			int temp = msg_obj.data[0];
@@ -363,16 +377,32 @@ void CAN_rx(uint8_t msg_obj_num)
 			{
 				Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT(100));
 				Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(temp*2));
+				Chip_TIMER_SetMatch(LPC_TIMER32_0, 2, PWM_DC_COUNT(100));
+				Chip_TIMER_SetMatch(LPC_TIMER32_0, 3, PWM_DC_COUNT(temp * 2));
 			}
 			else
 			{
 				Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT((tempinv)*2));
 				Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(100));
+				Chip_TIMER_SetMatch(LPC_TIMER32_0, 2, PWM_DC_COUNT((tempinv) * 2));
+				Chip_TIMER_SetMatch(LPC_TIMER32_0, 3, PWM_DC_COUNT(100));
 			}
 
 		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
 		{
+			// CLOCK_DEMO_CONTROLL
+			if(msg_obj.data[0] == 0xdd)
+			{
+				CLOCK_DEMO = true;
+				CLOCK_MIRROR = msg_obj.data[1];
+			}
+			else if(msg_obj.data[0] == 0xff)
+			{
+				CLOCK_DEMO = false;
+				sevenSeg(msg_obj.data[2], msg_obj.data[1], msg_obj.data[3]);
+			}
+
 			// led t2(green)
 			if(msg_obj.data[0] == 10)
 				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, false);
@@ -856,43 +886,34 @@ void DNR(char ch, bool mirror)
 }
 
 //Set RGBLeds
-void rgbLed(bool topBot, enum RGB_LED rgb)
+void rgbLed(bool topBot, int rgb)
 {
-	int pinA;
-	int pinB;
-	int portA;
-	int portB;
-
+	int rgbinv = 50 - (rgb - 51);
 	if(topBot == RGB_TOP)
 	{
-		portA = 3;
-		portB = 2;
-		pinA = 2;
-		pinB = 3;
+		if(rgb <= 50)
+		{
+			Chip_TIMER_SetMatch(LPC_TIMER32_0, 2, PWM_DC_COUNT(100));
+			Chip_TIMER_SetMatch(LPC_TIMER32_0, 3, PWM_DC_COUNT(rgb * 2));
+		}
+		else
+		{
+			Chip_TIMER_SetMatch(LPC_TIMER32_0, 2, PWM_DC_COUNT((rgbinv) * 2));
+			Chip_TIMER_SetMatch(LPC_TIMER32_0, 3, PWM_DC_COUNT(100));
+		}
 	}
 	else if(topBot == RGB_BOT)
 	{
-		portA = 1;
-		portB = 3;
-		pinA = 11;
-		pinB = 1;
-	}
-	switch(rgb)
-	{
-		case redLed:
-			Chip_GPIO_WritePortBit(LPC_GPIO, portA, pinA, true);
-			Chip_GPIO_WritePortBit(LPC_GPIO, portB, pinB, false);
-			break;
-		case greenLed:
-			Chip_GPIO_WritePortBit(LPC_GPIO, portA, pinA, true);
-			Chip_GPIO_WritePortBit(LPC_GPIO, portB, pinB, true);
-			break;
-		case blueLed:
-			Chip_GPIO_WritePortBit(LPC_GPIO, portA, pinA, false);
-			Chip_GPIO_WritePortBit(LPC_GPIO, portB, pinB, true);
-			break;
-		default:
-			break;
+		if(rgb <= 50)
+		{
+			Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT(100));
+			Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(rgb * 2));
+		}
+		else
+		{
+			Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT((rgbinv) * 2));
+			Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(100));
+		}
 	}
 }
 
@@ -943,9 +964,17 @@ void ledInit()
 	}
 }
 
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+
 //Set the HUD as a clock
 void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool mirror)
 {
+	CLOCK_DEMO = true;
+	CLOCK_MIRROR = mirror;
 	bool decimal = true;
 	bool ms = decimal;
 	int counter = 1;
@@ -956,10 +985,19 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 	PWMUpdate(0, batPWM);	//BATPWM
 	PWMUpdate(2, rgbPWM);	//RGBPWM
 
-	for(;;)
+
+	while(CLOCK_DEMO)
 	{
-		rgbLed(RGB_TOP, number % 3);
-		rgbLed(RGB_BOT, (number + 1) % 3);
+		if(ms)
+		{
+			rgbLed(RGB_BOT, number);
+			rgbLed(RGB_TOP, number);
+		}
+		else
+		{
+			rgbLed(RGB_BOT, map(number, 0, limit, 0, 100));
+			rgbLed(RGB_TOP, map(number, 0, limit, 0, 100));
+		}
 		if(decimal)
 		{
 			if(number == 99 && ms)
@@ -1060,6 +1098,8 @@ int main()
 	Chip_TIMER_SetMatch(LPC_TIMER16_1, 0, PWM_DC_COUNT(0));
 	//Enable interupt on MR0 & MR1
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 2);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 3);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 0);
@@ -1071,6 +1111,8 @@ int main()
 	Chip_TIMER_MatchEnableInt(LPC_TIMER16_1, 3);
 	//MR0 should not stop or clear the timer
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 0);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 2);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 3);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_1, 0);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_0, 0);
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_1, 0);
@@ -1154,7 +1196,9 @@ int main()
 	clockDemo(1000, 10, 20, 8, 10, false);
 	//Will not execute when clockDemo is runned
 	for(;;)
-	{		
+	{	
+		if(CLOCK_DEMO)
+			clockDemo(1000, 10, 20, 8, 10, CLOCK_MIRROR);
 		if((SysTickCnt - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;
