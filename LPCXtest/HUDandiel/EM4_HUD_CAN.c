@@ -861,9 +861,9 @@ void DNR(char ch, bool mirror)
 		if((CHECK_BIT(value, 12) == 0) ^ (CHECK_BIT(value, 13) == 0))
 			mask |= 0b0011000000000000;
 		if((CHECK_BIT(value, 8) == 0) ^ (CHECK_BIT(value, 9) == 0))
-			mask |= 0b1100000000000000;
-		if((CHECK_BIT(value, 14) == 0) ^ (CHECK_BIT(value, 15) == 0))
 			mask |= 0b0000001100000000;
+		if((CHECK_BIT(value, 14) == 0) ^ (CHECK_BIT(value, 15) == 0))
+			mask |= 0b1100000000000000;
 		if((CHECK_BIT(value, 7) == 0) ^ (CHECK_BIT(value, 0) == 0))
 			mask |= 0b0000000010000001;
 		if((CHECK_BIT(value, 5) == 0) ^ (CHECK_BIT(value, 6) == 0))
@@ -1060,10 +1060,10 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 		msg_obj.mode_id = (CLOCK_ADDRES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 3;
-		msg_obj.data[0] = number;
-		msg_obj.data[1] = counter;
-		msg_obj.data[2] = DNRcount;
-		LPC_CCAN_API->can_transmit(&msg_obj);
+		msg_obj.data[0] = (int)(number / 10) * 6 + number;
+		msg_obj.data[1] = (int)(counter / 10) * 6 + counter;
+		msg_obj.data[2] = (int)(DNRcount / 10) * 6 + DNRcount;
+		//LPC_CCAN_API->can_transmit(&msg_obj);
 	}
 }
 
@@ -1157,7 +1157,7 @@ int main()
 	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_0, IOCON_MODE_PULLUP, IOCON_FUNC1);
 
 	//setup GPIO to Output
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 0 << 1 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 1 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 6 | 1 << 7  | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3);
@@ -1193,7 +1193,7 @@ int main()
 
 	ledInit();
 	
-	clockDemo(1000, 10, 20, 8, 10, false);
+	clockDemo(1, 10, 20, 8, 10, !false);
 	//Will not execute when clockDemo is runned
 	for(;;)
 	{	
