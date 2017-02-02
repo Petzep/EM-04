@@ -7,6 +7,7 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qstringlist.h>
+#include <qfilesystemwatcher.h>
 
 struct CanLogMsg
 {
@@ -23,14 +24,18 @@ class CanDialog : public QDialog, public Ui::CanDialog
 public:
 	CanDialog(QWidget *parent = Q_NULLPTR);
 	~CanDialog();
+	void initTable();
 	void readFile(QString filename);
 	void dataToTable(CanLogMsg data);
 
 private:
 	QStandardItemModel *model;
+	QFileSystemWatcher watcher;
+	QString fileName;
 
 public slots:
 	void on_refreshButton_clicked(void);
 	void on_clearButton_clicked(void);
 	void on_saveButton_clicked(void);
+	void handleFileChanged(const QString&);
 };

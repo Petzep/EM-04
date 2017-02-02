@@ -13,7 +13,7 @@ TEMPLATE = app
 
 SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp NorwegianWoodStyle.cpp StyleDialog.cpp CanDialog.cpp main.cpp
 HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h NorwegianWoodStyle.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h GeneratedFiles/ui_StyleDialog.h StyleDialog.h GeneratedFiles/ui_CanDialog.h CanDialog.h
-FORMS     += TUIcomotive.ui TestDialog.ui AddDialog.ui MenuDialog.ui StyleDialog.ui
+FORMS     += TUIcomotive.ui TestDialog.ui AddDialog.ui MenuDialog.ui StyleDialog.ui CanDialog.ui
 RESOURCES += TUIcomotive.qrc
 
 include($$lower($$join(CONFIGNAME,,,.pro)))
