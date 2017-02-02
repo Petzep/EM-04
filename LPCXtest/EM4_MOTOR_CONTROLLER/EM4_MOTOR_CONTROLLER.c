@@ -89,7 +89,7 @@ void TIMER32_0_IRQHandler(void)
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
 	{
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 4 (yellow)
 	}
 }
 
@@ -272,28 +272,28 @@ void CAN_rx(uint8_t msg_obj_num)
 	{
 		if(msg_obj_num == MOTOR1_MESSAGE)
 		{
-			if (msg_obj.data[0])
+			if(msg_obj.data == true)
 			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
-				Delay(1);
+				/* Transmit and receive buffers */
+				static I2C_XFER_T xfer;
+				static uint8_t tx[I2C_SRB_SIZE], rx[I2C_SRB_SIZE];
+
+				tx[0] = 'S';
+				tx[1] = 'T';
+				tx[2] = 'A';
+				tx[3] = 'R';
+				tx[4] = 'T';
+
+				xfer.slaveAddr = 5;
+				xfer.txBuff = &tx[0];
+				xfer.txSz = 2;
+				Chip_I2C_MasterSend(i2cDev, xfer.slaveAddr, xfer.txBuff, xfer.txSz);
 			}
-			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
-			//msg_obj.data[0] = JOUW DATA (true|false)
 		}
 
 		if(msg_obj_num == MOTOR2_MESSAGE)
 		{
-			if (msg_obj.data[0])
-			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
-				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 1);
-				Delay(1);
-			}
-			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, 0);
-			//msg_obj.data[0] = JOUW DATA (true|false)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, msg_obj.data[0]);
 		}
 
 		// Turn on the yellow led and Enable timer interrupt
@@ -309,7 +309,9 @@ void CAN_rx(uint8_t msg_obj_num)
 a CAN message has been transmitted */
 void CAN_tx(uint8_t msg_obj_num)
 {
-
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);	//Yellow led
+	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_0_IRQn);
 }
 
 /*	CAN error callback */
