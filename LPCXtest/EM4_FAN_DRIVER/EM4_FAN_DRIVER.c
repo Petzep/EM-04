@@ -16,15 +16,26 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define	EM_04_CAN_RANGE		0x100
 
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
-#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
-#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
-#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
-#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
-#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
-#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
-#define HUD_ADDRESS			(0x006 + EM_04_CAN_RANGE)
-#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x001 + COUT_ADDRESS)
+#define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
+#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
+#define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
+#define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
+#define WHIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
+#define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
+#define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
+#define TEMPERATURE_ADDRESS	(0x003 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
+#define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
+#define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
+#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
+#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
+#define MC_I2C				(0x003 + MC_ADDRESS)
+#define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define	PERSNOAL_MESSAGE	2
@@ -282,7 +293,6 @@ int main(void) {
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 6 | 1 << 7);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1 << 10);
 
-	bool ledOn = true;
 	unsigned long lastSystickcnt = 0;
 	PWMUpdate(dutyCycle);
 
@@ -336,6 +346,7 @@ Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
   HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
   Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
   Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+   MC ||--1--|--1--|--1--|--0--|  14 | 0b1110
 
 */
 /*

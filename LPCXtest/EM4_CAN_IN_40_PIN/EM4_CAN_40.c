@@ -16,22 +16,26 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define	EM_04_CAN_RANGE		0x100
 
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
-#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
-#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
-#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
-#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
-#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
-#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
-#define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x001 + COUT_ADDRESS)
+#define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
+#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
+#define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
+#define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
+#define WHIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
 #define TEMPERATURE_ADDRESS	(0x003 + HUD_ADDRESS)
 #define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
 #define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
-#define MC_ADDRESS			(0x020 + EM_04_CAN_RANGE)
-#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
+#define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
+#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
+#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
+#define MC_I2C				(0x003 + MC_ADDRESS)
+#define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -178,6 +182,7 @@ int main(void)
 	bool blinkRightState = false;
 
 	bool lightsOn = false;
+	bool frontOn = false;
 	bool alarmOn = false;
 	bool wiperOn = false;
 
@@ -185,8 +190,7 @@ int main(void)
 	bool can1On = false;
 	bool can2On = false;
 
-	bool fanOn = false;
-	int fanSetting = 0;
+	bool testOn = false;
 
 	bool hud1On = false;
 	bool hud2On = false;
@@ -201,7 +205,6 @@ int main(void)
 	bool motorController1On = false;
 	bool motorController2On = false;
 
-	bool ledOn = false;
 	unsigned long lastSystickcnt = 0;
 
 
@@ -246,13 +249,14 @@ int main(void)
 
 		bool blinkLeft = pin1;
 		bool blinkRight = pin5;
-		bool alarm = pin8;
+		bool alarm = pin2;
 		bool lights = pin3;
+		bool front = pin8;
 		bool wiper = pin15;
 		bool can1 = pin7;
 		bool can2 = pin9;
 		bool send = pin28;
-		bool fan = pin27;
+		bool test = pin27;
 		bool hud1 = pin17;
 		bool hud2 = pin18;
 		bool hud3 = pin19;
@@ -284,8 +288,6 @@ int main(void)
 
 		if (alarm != alarmOn)
 		{
-			blinkLeftOn = alarm;
-			blinkRightOn = alarm;
 			alarmOn = alarm;
 		}
 
@@ -301,9 +303,20 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if (can1 != can1On)
+		if(front != frontOn)
 		{
 			//Toggle DIM_LIGHTS head and rear
+			frontOn = front;
+			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = frontOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+		if (can1 != can1On)
+		{
+			//Test can2
 			can1On = can1;
 			SendMsgBuf.ID = 0b0111 | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 1;
@@ -315,9 +328,9 @@ int main(void)
 
 		if (can2 != can2On)
 		{
-			//Toggle DIM_LIGHTS head and rear
+			//Test can1
 			can2On = can2;
-			SendMsgBuf.ID = 0b0100 | CAN_MSGOBJ_STD;
+			SendMsgBuf.ID = 0b0110 | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Type = 0;
 			SendMsgBuf.Data[0] = can2On;
@@ -325,22 +338,37 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if(fan != fanOn)
+		if(test != testOn)
 		{
-			fanOn = fan;
-			if(fan)
-			{
-				fanSetting += 10;
-				if(fanSetting > 100)
-					fanSetting = 0;
+			testOn = test;
 
-				SendMsgBuf.ID = FAN_ADDRESS | CAN_MSGOBJ_STD;
-				SendMsgBuf.DLC = 1;
-				SendMsgBuf.Type = 0;
-				SendMsgBuf.Data[0] = fanSetting;
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-			}
+			SendMsgBuf.ID = 0b0111 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 8;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = !test;
+			SendMsgBuf.Data[1] = !test;
+			SendMsgBuf.Data[2] = !test;
+			SendMsgBuf.Data[3] = !test;
+			SendMsgBuf.Data[4] = !test;
+			SendMsgBuf.Data[5] = !test;
+			SendMsgBuf.Data[6] = !test;
+			SendMsgBuf.Data[7] = !test;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			SendMsgBuf.ID = 0b0110 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 8;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = !test;
+			SendMsgBuf.Data[1] = !test;
+			SendMsgBuf.Data[2] = !test;
+			SendMsgBuf.Data[3] = !test;
+			SendMsgBuf.Data[4] = !test;
+			SendMsgBuf.Data[5] = !test;
+			SendMsgBuf.Data[6] = !test;
+			SendMsgBuf.Data[7] = !test;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
 		if (wiper != wiperOn)
@@ -554,10 +582,10 @@ int main(void)
 		if ((blinkLeftOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
-			SendMsgBuf.ID = LEFT_DEVICES + DIM_ADDRESS;
+			SendMsgBuf.ID = LEFT_ADDRESS;
 			SendMsgBuf.DLC = 1;
 			//Turn on if there is no blink and (left_blinker or Alarm is on)
-			if (!blinkLeftState)
+			if (!blinkLeftState && (blinkLeftOn || alarmOn))
 			{
 				blinkLeftState = true;
 				SendMsgBuf.Data[0] = true;
@@ -579,9 +607,9 @@ int main(void)
 		if ((blinkRightOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ)) //TODO: check if blinkRightState has to be included
 		{
 			click = true;
-			SendMsgBuf.ID = RIGHT_DEVICES + DIM_ADDRESS;
+			SendMsgBuf.ID =RIGHT_ADDRESS;
 			SendMsgBuf.DLC = 1;
-			if (!blinkRightState)
+			if (!blinkRightState && (blinkRightOn || alarmOn))
 			{
 				blinkRightState = true;
 				SendMsgBuf.Data[0] = true;
@@ -603,7 +631,7 @@ int main(void)
 		//
 		//heartbeat
 		//
-		if ((LoopTick - lastSystickcnt) >= 1000)
+		if((LoopTick - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;
 
@@ -614,16 +642,7 @@ int main(void)
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			if (ledOn)
-			{
-				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-			}
-			else
-			{
-				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-			}
+			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);	//led 3 (blue)
 		}
 
 		//
@@ -643,6 +662,13 @@ int main(void)
 			SendMsgBuf.ID = TEMPERATURE_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.Type = 0;
 			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = map(dataADC2, 0, 4095, 0, 100);
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			SendMsgBuf.ID = FAN_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
 			SendMsgBuf.Data[0] = map(dataADC2, 0, 4095, 0, 100);
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
@@ -682,6 +708,7 @@ Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
   HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
   Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
   Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+   MC ||--1--|--1--|--1--|--0--|  14 | 0b1110
 
 */
 /*

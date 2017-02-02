@@ -16,19 +16,26 @@
 #define	EM_04_CAN_RANGE		0x100
 
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x008 + EM_04_CAN_RANGE)
-#define FRONT_DEVICES		(0x000 + EM_04_CAN_RANGE)
-#define REAR_DEVICES		(0x001 + EM_04_CAN_RANGE)
-#define LEFT_DEVICES		(0x002 + EM_04_CAN_RANGE)
-#define RIGHT_DEVICES		(0x003 + EM_04_CAN_RANGE)
-#define WHIPER_ADDRESS		(0x004 + EM_04_CAN_RANGE)
-#define FAN_ADDRESS			(0x005 + EM_04_CAN_RANGE)
-#define HUD_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
+#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
+#define DIM_ADDRESS			(0x001 + COUT_ADDRESS)
+#define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
+#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
+#define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
+#define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
+#define WHIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
-#define BATTERY_ADDRESS		(0x003 + HUD_ADDRESS)
-#define CLOCK_ADDRES		(0x004 + HUD_ADDRESS)
-#define BROADCAST_ADDRESS	(0x030 + EM_04_CAN_RANGE)
+#define TEMPERATURE_ADDRESS	(0x003 + HUD_ADDRESS)
+#define BATTERY_ADDRESS		(0x004 + HUD_ADDRESS)
+#define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
+#define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
+#define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
+#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
+#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
+#define MC_I2C				(0x003 + MC_ADDRESS)
+#define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
 #define FRONT_MESSAGE		2
@@ -70,7 +77,7 @@ void SysTick_Handler(void) {
 void TIMER32_0_IRQHandler(void){
 	if (Chip_TIMER_MatchPending(LPC_TIMER32_0, 1)) {
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);	//led 4 (yellow)
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (yellow)
 	}
 }
 
@@ -153,18 +160,18 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	if (DEVICE_NR & 0b0011) //Select only the front bit of the twins
+	if (DEVICE_NR & 0b0001) //Select only the front bit of the twins [bug for mid, solve by shifting]
 	{
 		msg_obj.msgobj = FRONT_MESSAGE;
-		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS;
+		msg_obj.mode_id = FRONT_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
-	if (!(DEVICE_NR & 0b0011)) //Select only the rear bit (=not front bit) of the twins
+	if (!(DEVICE_NR & 0b0001)) //Select only the rear bit (=not front bit) of the twins [bug for mid, solve by shifting]
 	{
 		msg_obj.msgobj = REAR_MESSAGE;
-		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; 
+		msg_obj.mode_id = REAR_ADDRESS; 
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
@@ -172,12 +179,12 @@ void CAN_init() {
 	if (DEVICE_NR & 0b0010)  //Select only the twin bit
 	{
 		msg_obj.msgobj = LEFT_MESSAGE;
-		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS;
+		msg_obj.mode_id = LEFT_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
 		msg_obj.msgobj = RIGHT_MESSAGE;
-		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS;
+		msg_obj.mode_id = RIGHT_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
@@ -238,17 +245,14 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			if (msg_obj.data[0])
-			{
-				setPort(0, msg_obj.data[0]);
-				setPort(1, msg_obj.data[1]);
-				setPort(2, msg_obj.data[2]);
-				setPort(3, msg_obj.data[3]);
-				setPort(4, msg_obj.data[4]);
-				setPort(5, msg_obj.data[5]);
-				setPort(6, msg_obj.data[6]);
-				setPort(7, msg_obj.data[7]);
-			}
+			setPort(0, msg_obj.data[0]);
+			setPort(1, msg_obj.data[1]);
+			setPort(2, msg_obj.data[2]);
+			setPort(3, msg_obj.data[3]);
+			setPort(4, msg_obj.data[4]);
+			setPort(5, msg_obj.data[5]);
+			setPort(6, msg_obj.data[6]);
+			setPort(7, msg_obj.data[7]);
 		}
 
 		if (msg_obj_num == ALL_MESSAGE)
@@ -278,7 +282,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		}
 		// Turn on the yellow led and Enable timer interrupt
-		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, msg_obj.data[0]); //led 4 (yellow)
+		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true); //led 2 (yellow)
 		NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
 		NVIC_EnableIRQ(TIMER_32_0_IRQn);
 	}
@@ -289,14 +293,16 @@ void CAN_rx(uint8_t msg_obj_num) {
 /*	Function is executed by the Callback handler after
  a CAN message has been transmitted */
 void CAN_tx(uint8_t msg_obj_num){
-
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true); //led 2 (yellow)
+	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_0_IRQn);
 }
 
 /*	CAN error callback */
 /*	Function is executed by the Callback handler after
  an error has occured on the CAN bus */
 void CAN_error(uint32_t error_info){
-	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true); //led 2 (red)
+	Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 3 (red)
 }
 
 void setPort(int port, bool onoff){
@@ -333,11 +339,19 @@ int main(void){
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 7);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 7 | 1 << 10);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 5 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 5 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 3);
 	
-	bool ledOn = true;
 	unsigned long lastSystickcnt = 0;
+
+	setPort(0, false);
+	setPort(1, false);
+	setPort(2, false);
+	setPort(3, false);
+	setPort(4, false);
+	setPort(5, false);
+	setPort(6, false);
+	setPort(7, false);
 
 	for (;;)
 	{
@@ -352,36 +366,7 @@ int main(void){
 			msg_obj.data[0] = DEVICE_NR;
 			LPC_CCAN_API->can_transmit(&msg_obj);
 
-			if (ledOn)
-			{
-				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-				/*
-				setPort(0, true);
-				setPort(1, true);
-				setPort(2, true);
-				setPort(3, true);
-				setPort(4, true);
-				setPort(5, true);
-				setPort(6, true);
-				setPort(7, true);
-				*/
-			}
-			else 
-			{
-				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-				/*
-				setPort(0, false);
-				setPort(1, false);
-				setPort(2, false);
-				setPort(3, false);
-				setPort(4, false);
-				setPort(5, false);
-				setPort(6, false);
-				setPort(7, false);
-				/*/
-			}
+			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);	//led 4 (blue)
 		}
 	}
 	return 0;
@@ -402,10 +387,10 @@ Ouput pins:
 
 Led pins:
 -------------
-led 1 (green) power light
-led 2 (red) 2,10
-led 3 (yellow) 2,2
-led 4 (blue) 0,7
+led 1 (green)	power light
+led 2 (yellow)	2,10
+led 3 (red)		2,2
+led 4 (blue)	0,7
 
 DEVICE ID config:
 -------------
@@ -419,6 +404,7 @@ Front ||--0--|--1--|--1--|--1--|  7  | 0b0111
   HUD ||--1--|--0--|--0--|--1--|  9  | 0b1001
   Tor ||--1--|--0--|--0--|--0--|  8  | 0b1000
   Fan ||--1--|--1--|--0--|--0--|  12 | 0b1100
+   MC ||--1--|--1--|--1--|--0--|  14 | 0b1110
 
 */
 /*
