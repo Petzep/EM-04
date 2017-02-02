@@ -87,6 +87,8 @@ void CanDialog::dataToTable(CanLogMsg data)
 
 void CanDialog::on_refreshButton_clicked(void)
 {
+	model->clear();
+	initTable();
 	readFile("canout.txt");
 }
 

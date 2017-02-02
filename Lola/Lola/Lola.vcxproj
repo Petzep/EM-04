@@ -95,7 +95,10 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_AddDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_CanDialog.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_CanDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CustomClock.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
