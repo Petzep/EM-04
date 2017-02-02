@@ -401,6 +401,8 @@ void CAN_rx(uint8_t msg_obj_num)
 			{
 				CLOCK_DEMO = false;
 				sevenSeg(msg_obj.data[2], msg_obj.data[1], msg_obj.data[3]);
+				DNR(msg_obj.data[4], msg_obj.data[3]);
+				BatClock(msg_obj.data[5]);
 			}
 
 			// led t2(green)
@@ -1063,7 +1065,7 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 		msg_obj.data[0] = (int)(number / 10) * 6 + number;
 		msg_obj.data[1] = (int)(counter / 10) * 6 + counter;
 		msg_obj.data[2] = (int)(DNRcount / 10) * 6 + DNRcount;
-		//LPC_CCAN_API->can_transmit(&msg_obj);
+		LPC_CCAN_API->can_transmit(&msg_obj);
 	}
 }
 
@@ -1193,7 +1195,7 @@ int main()
 
 	ledInit();
 	
-	clockDemo(1, 10, 20, 8, 10, !false);
+	clockDemo(1000, 10, 20, 8, 10, !false);
 	//Will not execute when clockDemo is runned
 	for(;;)
 	{	
