@@ -86,11 +86,13 @@ void TIMER32_0_IRQHandler(void)
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
 	}
 	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
 	}
 }
@@ -277,7 +279,7 @@ int main(void) {
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 6);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 6 | 1 << 7);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1 << 10);
 
 	bool ledOn = true;
@@ -297,16 +299,7 @@ int main(void) {
 			msg_obj.data[0] = DEVICE_NR;
 			LPC_CCAN_API->can_transmit(&msg_obj);
 
-			if(ledOn)
-			{
-				ledOn = false;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);	//led 3 (blue)
-			}
-			else
-			{
-				ledOn = true;
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);	//led 3 (blue)
-			}
+			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);	//led 3 (blue)
 		}
 		
 	}

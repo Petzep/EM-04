@@ -212,24 +212,22 @@ void CAN_rx(uint8_t msg_obj_num) {
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
 		if (msg_obj_num == FRONT_MESSAGE)
 		{
-			setPort(1, msg_obj.data[0]);
-			setPort(2, msg_obj.data[1]);
+			setPort(0, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == REAR_MESSAGE)
 		{
-			setPort(6, msg_obj.data[0]);
-			setPort(5, msg_obj.data[1]);
+			setPort(0, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == LEFT_MESSAGE)
 		{
-			setPort(0, msg_obj.data[0]);
+			setPort(1, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == RIGHT_MESSAGE)
 		{
-			setPort(7, msg_obj.data[0]);
+			setPort(2, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == DIM_MESSAGE)
@@ -240,15 +238,22 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
-			/*setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
-			setPort(6, msg_obj.data[6]);
-			setPort(7, msg_obj.data[7]);*/
 			if (msg_obj.data[0])
+			{
+				setPort(0, msg_obj.data[0]);
+				setPort(1, msg_obj.data[1]);
+				setPort(2, msg_obj.data[2]);
+				setPort(3, msg_obj.data[3]);
+				setPort(4, msg_obj.data[4]);
+				setPort(5, msg_obj.data[5]);
+				setPort(6, msg_obj.data[6]);
+				setPort(7, msg_obj.data[7]);
+			}
+		}
+
+		if (msg_obj_num == ALL_MESSAGE)
+		{
+			if(msg_obj.data[0])
 			{
 				setPort(0, true);
 				setPort(1, true);
@@ -270,21 +275,8 @@ void CAN_rx(uint8_t msg_obj_num) {
 				setPort(6, false);
 				setPort(7, false);
 			}
-		}
 
-		if (msg_obj_num == ALL_MESSAGE)
-		{
-			
-			setPort(0, msg_obj.data[0]);
-			setPort(1, msg_obj.data[1]);
-			setPort(2, msg_obj.data[2]);
-			setPort(3, msg_obj.data[3]);
-			setPort(4, msg_obj.data[4]);
-			setPort(5, msg_obj.data[5]);
-			setPort(6, msg_obj.data[6]);
-			setPort(7, msg_obj.data[7]);
 		}
-		
 		// Turn on the yellow led and Enable timer interrupt
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, msg_obj.data[0]); //led 4 (yellow)
 		NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
@@ -314,8 +306,8 @@ void setPort(int port, bool onoff){
 	if (port == 3) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, onoff);
 	if (port == 4) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
 	if (port == 5) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
-	if (port == 6) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 4, onoff);
-	if (port == 7) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 5, onoff);
+	if (port == 6) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, onoff);
+	if (port == 7) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, onoff);
 }
 
 
@@ -339,9 +331,9 @@ int main(void){
 	
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 4 | 1 << 5  | 1 << 7);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 7);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 7 | 1 << 8 | 1 << 10);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 7);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 7 | 1 << 10);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 5 | 1 << 7 | 1 << 8 | 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 3, 1 << 3);
 	
 	bool ledOn = true;
@@ -388,7 +380,7 @@ int main(void){
 				setPort(5, false);
 				setPort(6, false);
 				setPort(7, false);
-				*/
+				/*/
 			}
 		}
 	}
