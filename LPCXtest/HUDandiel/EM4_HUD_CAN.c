@@ -36,6 +36,16 @@ Controls the HUD of EM-04
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
+#define NFC_ADDRESS			0x5ca
+#define NFC_NEPHTALY		0x0476280ada328000
+#define NFC_LINDSEY			0x047b5a02da328000
+#define NFC_ROEL			0x04213d929e318000
+#define NFC_THOM			0x046d89929e318000
+#define NFC_DANIEL			0x047c7a72f93b8000
+#define NFC_QUINTEN			0xdeadbeefb00b1355
+#define NFC_LOES			0x044d6d0a07348000
+
+
 #define	ALL_MESSAGE			1
 #define	PERSNOAL_MESSAGE	2
 #define	SPEED_MESSAGE		3
@@ -43,7 +53,8 @@ Controls the HUD of EM-04
 #define WARNING_MESSAGE		5
 #define DIMMER_MESSAGE		6
 #define TEMPERATURE_MESSAGE	7
-#define	TOTAL_MESSAGE		8
+#define	NFC_MESSAGE			8
+#define	TOTAL_MESSAGE		9
 
 #define RGB_TOP 1
 #define RGB_BOT 0
@@ -339,6 +350,11 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = NFC_MESSAGE;
+	msg_obj.mode_id = NFC_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -372,24 +388,7 @@ void CAN_rx(uint8_t msg_obj_num)
 		}
 		if(msg_obj_num == TEMPERATURE_MESSAGE && !CLOCK_DEMO)
 		{
-			//set the greenness of the temperature
-			int temp = 100 - msg_obj.data[0];
-			int tempinv = 50-(temp-51);
-
-			if(temp <= 50)
-			{
-				Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT(100));
-				Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(temp*2));
-				Chip_TIMER_SetMatch(LPC_TIMER32_0, 2, PWM_DC_COUNT(100));
-				Chip_TIMER_SetMatch(LPC_TIMER32_0, 3, PWM_DC_COUNT(temp * 2));
-			}
-			else
-			{
-				Chip_TIMER_SetMatch(LPC_TIMER16_1, 2, PWM_DC_COUNT((tempinv)*2));
-				Chip_TIMER_SetMatch(LPC_TIMER16_1, 3, PWM_DC_COUNT(100));
-				Chip_TIMER_SetMatch(LPC_TIMER32_0, 2, PWM_DC_COUNT((tempinv) * 2));
-				Chip_TIMER_SetMatch(LPC_TIMER32_0, 3, PWM_DC_COUNT(100));
-			}
+			rgbLed(RGB_BOT, msg_obj.data[0]);
 
 		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
@@ -455,6 +454,41 @@ void CAN_rx(uint8_t msg_obj_num)
 				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, false);
 			else if(msg_obj.data[7] == 11)
 				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, true);
+		}
+		if(msg_obj_num == NFC_MESSAGE)
+		{
+			uint8_t id[8] = { msg_obj.data[7], msg_obj.data[6], msg_obj.data[5], msg_obj.data[4], msg_obj.data[3], msg_obj.data[2], msg_obj.data[1],msg_obj.data[0] };
+			uint64_t totalID = 0;
+			memcpy(&totalID, &id, 8 * sizeof(uint8_t));
+
+			if(totalID == NFC_NEPHTALY)
+			{
+				rgbLed(RGB_TOP, 100);
+			}
+			if(totalID == NFC_THOM)
+			{
+				rgbLed(RGB_TOP, 75);
+			}
+			if(totalID == NFC_DANIEL)
+			{
+				rgbLed(RGB_TOP, 28);
+			}
+			if(totalID == NFC_LINDSEY)
+			{
+				rgbLed(RGB_TOP, 0);
+			}
+			if(totalID == NFC_ROEL)
+			{
+				rgbLed(RGB_TOP, 12);
+			}
+			if(totalID == NFC_QUINTEN)
+			{
+				rgbLed(RGB_TOP, 50);
+			}
+			if(totalID == NFC_LOES)
+			{
+				rgbLed(RGB_TOP, 59);
+			}
 		}
 	}
 	NVIC_EnableIRQ(CAN_IRQn);

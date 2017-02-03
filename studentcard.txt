@@ -1,0 +1,5 @@
+04 76 28 0a da 32 80 00 [Nephtaly][blauw]
+04 7b 5a 02 da 32 80 00 [Lindsey][rood]
+[Quinten] [Groen]
+[Daniël] [Geel]
+04 21 3d 92 9e 31 80 00[Roel] [Oranje]

@@ -39,6 +39,8 @@
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
+#define NFC_ADDRESS			0x5ca
+
 #define	ALL_MESSAGE			1
 #define	PERSNOAL_MESSAGE	2
 #define	MOTOR1_MESSAGE		3
