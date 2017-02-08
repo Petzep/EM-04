@@ -83,9 +83,13 @@ void SysTick_Handler(void)
 * @brief	Updated the PWM dutycycle
 * @return	Nothing
 */
-void PWMUpdate(unsigned char ucPercent)
+void PWMUpdate(int fan, unsigned char ucPercent)
 {
-	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(ucPercent));
+	if(fan == 0)
+		Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(ucPercent));
+	else if(fan == 1)
+		Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(ucPercent));
+
 }
 
 /**
@@ -97,14 +101,26 @@ void TIMER32_0_IRQHandler(void)
 	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, true);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
 	}
 	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 6, false);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
 		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+	}
+}
+
+void TIMER32_1_IRQHandler(void)
+{
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 0))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER32_1, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_1, 1);
 	}
 }
 
@@ -211,7 +227,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 	{
 		if (msg_obj_num == FAN_MESSAGE)
 		{
-			int setting = msg_obj.data[0];
+			int setting = msg_obj.data[1];
 			if (setting > 100)
 				dutyCycle = 100;
 
@@ -222,7 +238,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 			else
 				dutyCycle = map(setting, 0, 100, min_dutyCycle, max_dutyClycle);
 
-			PWMUpdate(dutyCycle);
+			PWMUpdate(msg_obj.data[0], dutyCycle);
 		}
 
 		/*if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -262,30 +278,43 @@ int main(void) {
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
 	SysTick_Config(SystemCoreClock / 1000);
 
-	//Enable timer 0 clock 
+	//Enable timer 0 & 1 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
+	Chip_TIMER_Init(LPC_TIMER32_1);
 	//Reset any timer pending
 	Chip_TIMER_Reset(LPC_TIMER32_0);
+	Chip_TIMER_Reset(LPC_TIMER32_1);
 	//set the resolution of the ticks to the PWM timer (match register resolution)
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_0, (PWM_PRESCALER - 1));
+	Chip_TIMER_PrescaleSet(LPC_TIMER32_1, (PWM_PRESCALER - 1));
 	//Set duty cycle - MR0 default
 	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(0));
+	Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(0));
 	//Enable interupt on MR0 & MR1
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 0);
 	Chip_TIMER_MatchEnableInt(LPC_TIMER32_0, 1);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER32_1, 1);
 	//MR0 should not stop or clear the timer
 	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_0, 0);
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER32_1, 0);
 	//Set period - MR1
 	Chip_TIMER_SetMatch(LPC_TIMER32_0, 1, PWM_PERIOD_COUNT);
+	Chip_TIMER_SetMatch(LPC_TIMER32_1, 1, PWM_PERIOD_COUNT);
 	//MR1 should reset the timer to restart the cycle
 	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_0, 1);
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER32_1, 1);
 	//Enable the timer
 	Chip_TIMER_Enable(LPC_TIMER32_0);
+	Chip_TIMER_Enable(LPC_TIMER32_1);
 	// PWM mode enabled on CT32B0_MAT0
 	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;
+	((LPC_TIMER_T *)LPC_TIMER32_1)->PWMC = 1;
 	/* Enable timer interrupt */
 	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_ClearPendingIRQ(TIMER_32_1_IRQn);
 	NVIC_EnableIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_1_IRQn);
 
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
@@ -294,7 +323,8 @@ int main(void) {
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 2 | 1 << 10);
 
 	unsigned long lastSystickcnt = 0;
-	PWMUpdate(dutyCycle);
+	PWMUpdate(0, dutyCycle);
+	PWMUpdate(1, dutyCycle);
 
 	for (;;)
 	{
