@@ -12,7 +12,7 @@
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0110
+#define DEVICE_NR			0b0111
 #define	EM_04_CAN_RANGE		0x100
 
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)

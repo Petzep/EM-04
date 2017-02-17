@@ -152,6 +152,7 @@ int main(void)
 	CAN_MSG_T SendMsgBuf;//send message
 	uint16_t dataADC1; //ADCdata1
 	uint16_t dataADC2; //ADCdata2
+	uint16_t dataADC3; //ADCdata2
 
 	SystemCoreClockUpdate();
 	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
@@ -164,7 +165,7 @@ int main(void)
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 15 | 1 << 16 | 1 << 17 | 1 << 18 | 1 << 22);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 4 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 14 | 1 << 15);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 4 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 14 | 1 << 15 | 1 << 31);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 4, 1 << 28 | 1 << 29);
 
@@ -173,8 +174,10 @@ int main(void)
 	Chip_ADC_SetBurstCmd(LPC_ADC, true);
 	Chip_IOCON_PinMux(LPC_IOCON, 0, 25, IOCON_MODE_INACT, IOCON_FUNC1);
 	Chip_IOCON_PinMux(LPC_IOCON, 0, 3, IOCON_MODE_INACT, IOCON_FUNC2);
+	Chip_IOCON_PinMux(LPC_IOCON, 1, 31, IOCON_MODE_INACT, IOCON_FUNC2);
 	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH2, ENABLE);
 	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH6, ENABLE);
+	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH5, ENABLE);
 
 	bool blinkLeftOn = false;
 	bool blinkLeftState = false;
@@ -242,11 +245,13 @@ int main(void)
 		//Waiting for A/D conversion complete
 		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH2, ADC_DR_DONE_STAT) != SET) { }
 		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH6, ADC_DR_DONE_STAT) != SET) { }
+		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH5, ADC_DR_DONE_STAT) != SET) { }
 
 		//Read ADC value
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH2, &dataADC1);
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH6, &dataADC2);
-
+		Chip_ADC_ReadValue(LPC_ADC, ADC_CH5, &dataADC3);
+			
 		bool blinkLeft = pin1;
 		bool blinkRight = pin5;
 		bool alarm = pin2;
@@ -667,9 +672,10 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
 			SendMsgBuf.ID = FAN_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
+			SendMsgBuf.DLC = 2;
 			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = map(dataADC2, 0, 4095, 0, 100);
+			SendMsgBuf.Data[0] = 0;
+			SendMsgBuf.Data[1] = map(dataADC3, 0, 4095, 0, 100);
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}

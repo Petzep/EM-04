@@ -385,25 +385,22 @@ int main()
 
 	for (;;)
 	{
-		Chip_I2C_MasterSend(i2cDev, xfer.slaveAddr, xfer.txBuff, xfer.txSz);
-		if((SysTickCnt - loopTickcnt) >= 501)
+		if((SysTickCnt - loopTickcnt) >= 500)
 		{
 			loopTickcnt = SysTickCnt;
 			xfer.rxBuff = &rx[0];
 			xfer.rxSz = 11;
 			Chip_I2C_MasterRead(i2cDev, xfer.slaveAddr, xfer.rxBuff, xfer.rxSz);
 
-			firstDigit = rx[6] - 48;
-			secondDigit = rx[7] - 48;
-			firstDecimal = rx[9] - 48;
-			if(48 < rx[10] < 57)
-			{
-				secondDecimal = rx[10] - 48;
-			}
+			firstDigit = rx[6] - '0';
+			secondDigit = rx[7] - '0';
+			firstDecimal = rx[9] - '0';
+
+			if('0' < rx[10] < '9')
+				secondDecimal = rx[10] - '0';
 			else
-			{
 				secondDecimal = 0;
-			}
+
 
 			temperatureDecimalLead = firstDigit * 10 + secondDigit;
 			temperatureDecimalFollow = firstDecimal * 10 + secondDecimal;
@@ -415,6 +412,7 @@ int main()
 			msg_obj.mode_id = MC_I2C | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 2;
+
 			msg_obj.data[0] = temperatureHexLead;
 			msg_obj.data[1] = temperatureHexFollow;
 			LPC_CCAN_API->can_transmit(&msg_obj);
@@ -430,6 +428,8 @@ int main()
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = DEVICE_NR;
 			LPC_CCAN_API->can_transmit(&msg_obj);
+			
+			Chip_I2C_MasterSend(i2cDev, xfer.slaveAddr, xfer.txBuff, xfer.txSz);
 
 			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);				//Toggle blue led
 		}
