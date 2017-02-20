@@ -10,6 +10,7 @@ CanDialog::CanDialog(QWidget *parent)
 	fileName = "canout.txt";
 
 	watcher.addPath(QString(QCoreApplication::applicationDirPath() + "/" + fileName));
+
 	QObject::connect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
 }
 
@@ -85,15 +86,38 @@ void CanDialog::dataToTable(CanLogMsg data)
 
 }
 
+bool CanDialog::initCan(int can)
+{
+	if(QCanBus::instance()->plugins().contains(QStringLiteral("socketcan").toUtf8()))
+	{
+		canDevice = QCanBus::instance()->createDevice(QStringLiteral("socketcan").toUtf8(), QStringLiteral("can").append(can + 'a'));
+		canDevice->connectDevice();
+
+		QCanBusFrame frame;
+		frame.setFrameId(0x001);
+		QByteArray payload("A36E");
+		frame.setPayload(payload);
+		canDevice->writeFrame(frame);
+		
+		return true;
+	}
+	else
+		return false;
+}
+
 void CanDialog::on_refreshButton_clicked(void)
 {
 	model->clear();
 	initTable();
-	readFile("canout.txt");
+	if(radioCan->isChecked())
+		initCan(0);
+	else
+		readFile("canout.txt");
 }
 
 void CanDialog::on_clearButton_clicked(void)
 {
+	QObject::disconnect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
 	model->clear();
 	initTable();
 }
@@ -105,6 +129,16 @@ void CanDialog::on_saveButton_clicked(void)
 		QStandardItem *item = new QStandardItem();
 		model->setItem(model->rowCount(), column, item);
 	}
+}
+
+void CanDialog::on_radioFile_clicked(void)
+{
+	radioCan->setChecked(false);
+}
+
+void CanDialog::on_radioCan_clicked(void)
+{
+	radioFile->setChecked(false);
 }
 
 void CanDialog::handleFileChanged(const QString &)

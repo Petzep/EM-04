@@ -15,9 +15,11 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
@@ -33,11 +35,16 @@ public:
     QLabel *tableLable;
     QSpacerItem *horizontalSpacer;
     QTableView *canTable;
-    QWidget *widget;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout;
     QPushButton *refreshButton;
     QPushButton *clearButton;
     QPushButton *saveButton;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout_2;
+    QVBoxLayout *verticalLayout_2;
+    QRadioButton *radioCan;
+    QRadioButton *radioFile;
 
     void setupUi(QDialog *CanDialog)
     {
@@ -68,28 +75,53 @@ public:
 
         gridLayout->addWidget(canTable, 1, 0, 1, 2);
 
-        widget = new QWidget(CanDialog);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(990, 10, 77, 83));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget1 = new QWidget(CanDialog);
+        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
+        layoutWidget1->setGeometry(QRect(990, 10, 77, 83));
+        verticalLayout = new QVBoxLayout(layoutWidget1);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        refreshButton = new QPushButton(widget);
+        refreshButton = new QPushButton(layoutWidget1);
         refreshButton->setObjectName(QStringLiteral("refreshButton"));
 
         verticalLayout->addWidget(refreshButton);
 
-        clearButton = new QPushButton(widget);
+        clearButton = new QPushButton(layoutWidget1);
         clearButton->setObjectName(QStringLiteral("clearButton"));
 
         verticalLayout->addWidget(clearButton);
 
-        saveButton = new QPushButton(widget);
+        saveButton = new QPushButton(layoutWidget1);
         saveButton->setObjectName(QStringLiteral("saveButton"));
 
         verticalLayout->addWidget(saveButton);
+
+        groupBox = new QGroupBox(CanDialog);
+        groupBox->setObjectName(QStringLiteral("groupBox"));
+        groupBox->setGeometry(QRect(990, 110, 85, 75));
+        gridLayout_2 = new QGridLayout(groupBox);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        radioCan = new QRadioButton(groupBox);
+        radioCan->setObjectName(QStringLiteral("radioCan"));
+        radioCan->setCheckable(true);
+        radioCan->setChecked(true);
+
+        verticalLayout_2->addWidget(radioCan);
+
+        radioFile = new QRadioButton(groupBox);
+        radioFile->setObjectName(QStringLiteral("radioFile"));
+
+        verticalLayout_2->addWidget(radioFile);
+
+
+        gridLayout_2->addLayout(verticalLayout_2, 0, 0, 1, 1);
 
 
         retranslateUi(CanDialog);
@@ -104,6 +136,9 @@ public:
         refreshButton->setText(QApplication::translate("CanDialog", "&Refresh", 0));
         clearButton->setText(QApplication::translate("CanDialog", "&Clear", 0));
         saveButton->setText(QApplication::translate("CanDialog", "&Save", 0));
+        groupBox->setTitle(QApplication::translate("CanDialog", "Load from:", 0));
+        radioCan->setText(QApplication::translate("CanDialog", "CANBUS", 0));
+        radioFile->setText(QApplication::translate("CanDialog", "File", 0));
     } // retranslateUi
 
 };
