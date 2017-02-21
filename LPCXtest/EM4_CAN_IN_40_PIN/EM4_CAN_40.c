@@ -209,6 +209,8 @@ int main(void)
 	bool motorController2On = false;
 
 	unsigned long lastSystickcnt = 0;
+	unsigned long lastADCtickcnt = 0;
+	unsigned long LoopTick = 0;
 
 
 	for (;;) //infinite loop
@@ -276,7 +278,7 @@ int main(void)
 
 		bool click = false;
 
-		unsigned long LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
+		LoopTick = SysTickCnt;		//Ensure there are no count "jumps" during the loop
 
 		//////////////////////////////
 		////////BUTTON HANDLER////////
@@ -653,9 +655,9 @@ int main(void)
 		//
 		//adc
 		//
-		if((LoopTick - lastSystickcnt) >= 100)
+		if((LoopTick - lastADCtickcnt) >= 100)
 		{
-			lastSystickcnt = SysTickCnt;
+			lastADCtickcnt = SysTickCnt;
 
 			SendMsgBuf.ID = DIMMER_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.Type = 0;
