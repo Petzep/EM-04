@@ -219,6 +219,9 @@
     <None Include="raspberrypi.pro">
       <Filter>QMake Project files</Filter>
     </None>
+    <None Include="linuxvm.pro">
+      <Filter>QMake Project files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\canout.txt">

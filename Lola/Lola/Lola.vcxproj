@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="LinuxVM|x64">
+      <Configuration>LinuxVM</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="RaspberryPi|x64">
       <Configuration>RaspberryPi</Configuration>
       <Platform>x64</Platform>
@@ -32,6 +36,10 @@
     <ConfigurationType>Makefile</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared" />
@@ -51,9 +59,21 @@
     <IncludePath />
     <ReferencePath />
     <LibraryPath />
-    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0004\linux-g++;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtWidgets;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtGui;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtCore;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\c++\4.9;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\c++\4.9;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\c++\4.9\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0005\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0006\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0004\linux-g++;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtSerialBus;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtWidgets;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtGui;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtCore;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\c++\4.9;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\c++\4.9;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\c++\4.9\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0005\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0003\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0006\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.2.100\0000\include\arm-linux-gnueabihf\qt5\QtSerialBus;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_RaspberryPi.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakePreprocessorDefinitions>__VisualGDB_CFG_RaspberryPi;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
+    <NMakeOutput>$(ProjectDir)Lola-LinuxVM.vgdbsettings</NMakeOutput>
+    <IncludePath />
+    <ReferencePath />
+    <LibraryPath />
+    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0003\linux-g++-64;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\qt5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\qt5\QtWidgets;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\qt5\QtGui;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\qt5\QtCore;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\c++\5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\c++\5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\c++\5\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0004\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include;LinuxVM;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(ProjectDir)\gcc_LinuxVM.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakePreprocessorDefinitions>__VisualGDB_CFG_LinuxVM;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -322,6 +342,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <None Include="linuxvm.pro" />
     <None Include="raspberrypi.pro" />
     <CustomBuild Include="StyleDialog.ui">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>

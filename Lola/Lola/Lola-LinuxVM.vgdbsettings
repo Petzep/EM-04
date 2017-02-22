@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <VisualGDBProjectSettings2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConfigurationName>RaspberryPi</ConfigurationName>
+  <ConfigurationName>LinuxVM</ConfigurationName>
   <Project xsi:type="com.visualgdb.project.linux">
     <CustomSourceDirectories>
       <Directories />
       <PathStyle>MinGWUnixSlash</PathStyle>
     </CustomSourceDirectories>
     <BuildHost>
-      <HostName>192.168.2.100</HostName>
+      <HostName>192.168.56.101</HostName>
       <Transport>SSH</Transport>
-      <UserName>infot</UserName>
+      <UserName>computation</UserName>
     </BuildHost>
     <MainSourceTransferCommand>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <RemoteHost>
-        <HostName>192.168.2.100</HostName>
+        <HostName>192.168.56.101</HostName>
         <Transport>SSH</Transport>
-        <UserName>infot</UserName>
+        <UserName>computation</UserName>
       </RemoteHost>
       <LocalDirectory>$(ProjectDir)</LocalDirectory>
       <RemoteDirectory>/tmp/VisualGDB/$(ProjectDirUnixStyle)</RemoteDirectory>
@@ -29,12 +29,9 @@
         <string>*.qml</string>
         <string>qmldir</string>
         <string>*.js</string>
-        <string>*.png</string>
-        <string>*.txt</string>
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>
-      <SelectedDirectories />
     </MainSourceTransferCommand>
     <AllowChangingHostForMainCommands>false</AllowChangingHostForMainCommands>
     <SkipBuildIfNoSourceFilesChanged>false</SkipBuildIfNoSourceFilesChanged>
@@ -45,9 +42,9 @@
   </Project>
   <Build xsi:type="com.visualgdb.build.qmake">
     <MakeFilePathRelativeToSourceDir>TUIcomotive.pro</MakeFilePathRelativeToSourceDir>
-    <MakeConfigurationName>RaspberryPi</MakeConfigurationName>
+    <MakeConfigurationName>LinuxVM</MakeConfigurationName>
     <Toolchain>
-      <Name>Default GCC toolchain on 192.168.2.100</Name>
+      <Name>Default GCC toolchain on 192.168.56.101</Name>
       <UniqueID>com.sysprogs.toolchain.default-gcc</UniqueID>
       <UnixSystem>true</UnixSystem>
       <GCC>gcc</GCC>
@@ -79,11 +76,6 @@
     </Toolchain>
     <MakeCommandTemplate>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
-      <RemoteHost>
-        <HostName>192.168.2.100</HostName>
-        <Transport>SSH</Transport>
-        <UserName>infot</UserName>
-      </RemoteHost>
       <Command>make</Command>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
@@ -97,19 +89,13 @@
     </MakeCommandTemplate>
     <QMakeCommand>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
-      <RemoteHost>
-        <HostName>192.168.2.100</HostName>
-        <Transport>SSH</Transport>
-        <UserName>infot</UserName>
-      </RemoteHost>
       <Command>qtchooser</Command>
-      <Arguments>-run-tool=qmake -qt=qt5 TUIcomotive.pro CONFIGNAME=$(ConfigurationName)  </Arguments>
+      <Arguments>-run-tool=qmake -qt=qt5 TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records />
       </Environment>
     </QMakeCommand>
-    <QMakeAdditionalArguments />
     <UpdateSourcesInQmakeFile>true</UpdateSourcesInQmakeFile>
     <GeneratedFilesFolder>GeneratedFiles</GeneratedFilesFolder>
     <QtSettings>
@@ -186,12 +172,8 @@
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
-  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
-    <CFLAGS />
-    <CXXFLAGS />
-    <ExternalSourceFileList />
     <ExtraSettings>
       <HideErrorsInSystemHeaders>true</HideErrorsInSystemHeaders>
     </ExtraSettings>

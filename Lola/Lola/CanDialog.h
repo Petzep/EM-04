@@ -8,7 +8,7 @@
 #include <qtextstream.h>
 #include <qstringlist.h>
 #include <qfilesystemwatcher.h>
-#include <qcanbus.h>
+#include <QCanBus>
 
 struct CanLogMsg
 {
