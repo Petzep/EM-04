@@ -164,7 +164,7 @@ int main(void)
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 10 | 1 << 11);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 15 | 1 << 16 | 1 << 17 | 1 << 18 | 1 << 22);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 15 | 1 << 16 | 1 << 17 | 1 << 18 | 1 << 22);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 4 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 14 | 1 << 15 | 1 << 31);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 4, 1 << 28 | 1 << 29);
@@ -286,16 +286,47 @@ int main(void)
 		if (blinkLeft != blinkLeftOn)
 		{
 			blinkLeftOn = blinkLeft;
+			if(!blinkLeft)
+			{
+				blinkLeftState = false;
+				SendMsgBuf.ID = LEFT_ADDRESS;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Data[0] = false;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
 		}
 
 		if (blinkRight != blinkRightOn)
 		{
 			blinkRightOn = blinkRight;
+			if(!blinkRight)
+			{
+				blinkRightState = false;
+				SendMsgBuf.ID = RIGHT_ADDRESS;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Data[0] = false;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
 		}
 
 		if (alarm != alarmOn)
 		{
 			alarmOn = alarm;
+			blinkLeftState = false;
+			SendMsgBuf.ID = LEFT_ADDRESS;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = false;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			blinkRightState = false;
+			SendMsgBuf.ID = RIGHT_ADDRESS;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = false;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
 		if (lights != lightsOn)
@@ -374,6 +405,20 @@ int main(void)
 			SendMsgBuf.Data[5] = !test;
 			SendMsgBuf.Data[6] = !test;
 			SendMsgBuf.Data[7] = !test;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			SendMsgBuf.ID = 0b1001 | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 8;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = !test + 10;
+			SendMsgBuf.Data[1] = !test + 10;
+			SendMsgBuf.Data[2] = !test + 10;
+			SendMsgBuf.Data[3] = !test + 10;
+			SendMsgBuf.Data[4] = !test + 10;
+			SendMsgBuf.Data[5] = !test + 10;
+			SendMsgBuf.Data[6] = !test + 10;
+			SendMsgBuf.Data[7] = !test + 10;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
@@ -649,7 +694,7 @@ int main(void)
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 7);	//led 3 (blue)
+			Chip_GPIO_SetPinToggle(LPC_GPIO, 0, 10);	//led 3 (blue)
 		}
 
 		//

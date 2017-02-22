@@ -54,7 +54,11 @@ Controls the HUD of EM-04
 #define DIMMER_MESSAGE		6
 #define TEMPERATURE_MESSAGE	7
 #define	NFC_MESSAGE			8
-#define	TOTAL_MESSAGE		9
+#define	LEFT_MESSAGE		10
+#define	RIGHT_MESSAGE		11
+#define DIM_MESSAGE			12
+#define FRONT_MESSAGE		13
+#define	TOTAL_MESSAGE		14
 
 #define RGB_TOP 1
 #define RGB_BOT 0
@@ -355,6 +359,26 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = LEFT_MESSAGE;
+	msg_obj.mode_id = LEFT_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = RIGHT_MESSAGE;
+	msg_obj.mode_id = RIGHT_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = DIM_MESSAGE;
+	msg_obj.mode_id = DIM_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = FRONT_MESSAGE;
+	msg_obj.mode_id = FRONT_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -489,6 +513,26 @@ void CAN_rx(uint8_t msg_obj_num)
 			{
 				rgbLed(RGB_TOP, 59);
 			}
+		}
+		if(msg_obj_num == RIGHT_MESSAGE)
+		{
+			//led t9(green)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, msg_obj.data[0]);
+		}
+		if(msg_obj_num == LEFT_MESSAGE)
+		{
+			//led t2(green)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, msg_obj.data[0]);
+		}
+		if(msg_obj_num == DIM_MESSAGE)
+		{
+			//led t6(green)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, msg_obj.data[0]);
+		}
+		if(msg_obj_num == FRONT_MESSAGE)
+		{
+			//led t7(blue)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[0]);
 		}
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
