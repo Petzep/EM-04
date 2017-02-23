@@ -770,7 +770,7 @@ int main(void)
 			SendMsgBuf.DLC = 2;
 			SendMsgBuf.Type = 0;
 			SendMsgBuf.Data[0] = 0;
-			SendMsgBuf.Data[1] = map(dataADC3, 0, 4095, 0, 100);
+			SendMsgBuf.Data[1] = map(dataADC3, 0, 19, 0, 100);
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
