@@ -23,7 +23,8 @@
 #define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
-#define WHIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define BLOWER_ADDRESS		(0x007 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -44,7 +45,9 @@
 #define	RIGHT_MESSAGE		5
 #define	PERSNOAL_MESSAGE	6
 #define	DIM_MESSAGE			7
-#define	TOTAL_MESSAGE		8
+#define WIPER_MESSAGE		8
+#define BLOWER_MESSAGE		9
+#define	TOTAL_MESSAGE		10
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -160,6 +163,18 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	if(DEVICE_NR == 0b0111) // Front/Mid
+	{
+		msg_obj.msgobj = WIPER_MESSAGE;
+		msg_obj.mode_id = WIPER_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = BLOWER_MESSAGE;
+		msg_obj.mode_id = BLOWER_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
 	if (DEVICE_NR & 0b0001) //Select only the front bit of the twins [bug for mid, solve by shifting]
 	{
 		msg_obj.msgobj = FRONT_MESSAGE;
@@ -241,6 +256,16 @@ void CAN_rx(uint8_t msg_obj_num) {
 		{
 			//Toggle DIM_lights (Head and rear)
 			setPort(3, msg_obj.data[0]);
+		}
+
+		if(msg_obj_num == WIPER_MESSAGE)
+		{
+			setPort(6, msg_obj.data[0]);
+		}
+
+		if(msg_obj_num == BLOWER_MESSAGE)
+		{
+			setPort(7, msg_obj.data[0]);
 		}
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)

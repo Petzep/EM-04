@@ -23,7 +23,8 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
-#define WHIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define BLOWER_ADDRESS		(0x007 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -183,11 +184,13 @@ int main(void)
 	bool blinkLeftState = false;
 	bool blinkRightOn = false;
 	bool blinkRightState = false;
+	bool wiperState = false;
 
 	bool lightsOn = false;
 	bool frontOn = false;
 	bool alarmOn = false;
 	bool wiperOn = false;
+	bool blowerOn = false;
 
 	bool sendOn = false;
 	bool can1On = false;
@@ -210,6 +213,7 @@ int main(void)
 
 	unsigned long lastSystickcnt = 0;
 	unsigned long lastADCtickcnt = 0;
+	unsigned long lastWipertickcnt = 0;
 	unsigned long LoopTick = 0;
 
 
@@ -255,11 +259,12 @@ int main(void)
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH5, &dataADC3);
 			
 		bool blinkLeft = pin1;
-		bool blinkRight = pin5;
 		bool alarm = pin2;
 		bool lights = pin3;
+		bool wiper = pin4;
+		bool blinkRight = pin5;
+		bool blower = pin6;
 		bool front = pin8;
-		bool wiper = pin15;
 		bool can1 = pin7;
 		bool can2 = pin9;
 		bool send = pin28;
@@ -283,7 +288,18 @@ int main(void)
 		//////////////////////////////
 		////////BUTTON HANDLER////////
 		//////////////////////////////
-		if (blinkLeft != blinkLeftOn)
+		if(blower != blowerOn)
+		{
+			blowerOn = blower;
+
+			SendMsgBuf.ID = BLOWER_ADDRESS;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = blowerOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if (blinkLeft != blinkLeftOn && !alarm)
 		{
 			blinkLeftOn = blinkLeft;
 			if(!blinkLeft)
@@ -297,7 +313,7 @@ int main(void)
 			}
 		}
 
-		if (blinkRight != blinkRightOn)
+		if (blinkRight != blinkRightOn && !alarm)
 		{
 			blinkRightOn = blinkRight;
 			if(!blinkRight)
@@ -314,19 +330,25 @@ int main(void)
 		if (alarm != alarmOn)
 		{
 			alarmOn = alarm;
-			blinkLeftState = false;
-			SendMsgBuf.ID = LEFT_ADDRESS;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Data[0] = false;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-
-			blinkRightState = false;
-			SendMsgBuf.ID = RIGHT_ADDRESS;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Data[0] = false;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			if(blinkLeftState)
+			{
+				blinkLeftState = false;
+				SendMsgBuf.ID = LEFT_ADDRESS;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Data[0] = false;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+			
+			if(blinkRightState)
+			{
+				blinkRightState = false;
+				SendMsgBuf.ID = RIGHT_ADDRESS;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Data[0] = false;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
 		}
 
 		if (lights != lightsOn)
@@ -428,8 +450,9 @@ int main(void)
 			//Toggle whiper, send to personal adress from whiper
 			wiperOn = wiper;
 
-			SendMsgBuf.ID = WHIPER_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 5;
+			/*// OLD-WHIPER CODE
+			SendMsgBuf.ID = WIPER_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 2;
 			SendMsgBuf.Data[0] = 0;
 			SendMsgBuf.Data[1] = 0;
 			SendMsgBuf.Data[2] = 0;
@@ -465,7 +488,7 @@ int main(void)
 				Delay(100);
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-			}
+			}*/
 		}
 
 		//Send an overview of the inputs
@@ -679,6 +702,31 @@ int main(void)
 
 		if (click)
 			lastClick = SysTickCnt;
+
+		//
+		//Wiper
+		//
+		if(wiperOn && ((LoopTick - lastWipertickcnt) >= 300))
+		{
+			lastWipertickcnt = SysTickCnt;
+
+			SendMsgBuf.ID = WIPER_ADDRESS;
+			SendMsgBuf.DLC = 1;
+			if(!wiperState && wiperOn)
+			{
+				wiperState = true;
+				SendMsgBuf.Data[0] = true;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+			else
+			{
+				wiperState = false;
+				SendMsgBuf.Data[0] = false;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+		}
 
 		//
 		//heartbeat

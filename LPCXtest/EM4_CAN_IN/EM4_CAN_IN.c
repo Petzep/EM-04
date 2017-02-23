@@ -20,7 +20,7 @@
 #define REAR_DEVICES		0x001
 #define LEFT_DEVICES		0x002
 #define RIGHT_DEVICES		0x003
-#define WHIPER_ADDRESS		0x012
+#define WIPER_ADDRESS		0x012
 #define BROADCAST_ADDRESS	0x030
 
 #define	ALL_MESSAGE			1
@@ -295,7 +295,7 @@ int main(void) {
 			//Toggle whiper, send to personal adress from whiper
 			wiperOn = wiper;
 			msg_obj.msgobj = __COUNTER__;
-			msg_obj.mode_id = WHIPER_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = WIPER_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 5;
 			msg_obj.data[0] = 0;
