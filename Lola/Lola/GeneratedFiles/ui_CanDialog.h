@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
@@ -45,6 +46,7 @@ public:
     QVBoxLayout *verticalLayout_2;
     QRadioButton *radioCan;
     QRadioButton *radioFile;
+    QCheckBox *checkUpdate;
 
     void setupUi(QDialog *CanDialog)
     {
@@ -100,7 +102,7 @@ public:
 
         groupBox = new QGroupBox(CanDialog);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(990, 110, 85, 75));
+        groupBox->setGeometry(QRect(990, 110, 85, 111));
         gridLayout_2 = new QGridLayout(groupBox);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -123,6 +125,11 @@ public:
 
         gridLayout_2->addLayout(verticalLayout_2, 0, 0, 1, 1);
 
+        checkUpdate = new QCheckBox(groupBox);
+        checkUpdate->setObjectName(QStringLiteral("checkUpdate"));
+
+        gridLayout_2->addWidget(checkUpdate, 1, 0, 1, 1);
+
 
         retranslateUi(CanDialog);
 
@@ -139,6 +146,7 @@ public:
         groupBox->setTitle(QApplication::translate("CanDialog", "Load from:", 0));
         radioCan->setText(QApplication::translate("CanDialog", "CANBUS", 0));
         radioFile->setText(QApplication::translate("CanDialog", "File", 0));
+        checkUpdate->setText(QApplication::translate("CanDialog", "Update", 0));
     } // retranslateUi
 
 };

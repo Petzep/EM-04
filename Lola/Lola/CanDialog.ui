@@ -94,7 +94,7 @@
      <x>990</x>
      <y>110</y>
      <width>85</width>
-     <height>75</height>
+     <height>111</height>
     </rect>
    </property>
    <property name="title">
@@ -124,6 +124,13 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QCheckBox" name="checkUpdate">
+      <property name="text">
+       <string>Update</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

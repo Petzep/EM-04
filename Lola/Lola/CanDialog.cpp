@@ -110,14 +110,24 @@ void CanDialog::on_refreshButton_clicked(void)
 	model->clear();
 	initTable();
 	if(radioCan->isChecked())
-		initCan(0);
+	{
+		if(!initCan(0))
+		{
+			QMessageBox::StandardButton warningBox;
+			warningBox = QMessageBox::warning(this, "CANerror", "Could not initialze CANBUS, defaulting to file modus");
+			radioFile->setChecked(true);
+			radioCan->setChecked(false);
+			radioCan->setDisabled(true);
+		}
+
+	}
 	else
-		readFile("canout.txt");
+		readFile(fileName);
 }
 
 void CanDialog::on_clearButton_clicked(void)
 {
-	QObject::disconnect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
+	checkUpdate->setChecked(false);
 	model->clear();
 	initTable();
 }
@@ -131,14 +141,24 @@ void CanDialog::on_saveButton_clicked(void)
 	}
 }
 
-void CanDialog::on_radioFile_clicked(void)
+void CanDialog::on_radioFile_toggled(bool checked)
 {
-	radioCan->setChecked(false);
+	if(checked)
+		radioCan->setChecked(false);
 }
 
-void CanDialog::on_radioCan_clicked(void)
+void CanDialog::on_radioCan_toggled(bool checked)
 {
-	radioFile->setChecked(false);
+	if(checked)
+		radioFile->setChecked(false);
+}
+
+void CanDialog::on_checkUpdate_toggled(bool checked)
+{
+	if(checked)
+		QObject::connect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
+	else
+		QObject::disconnect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
 }
 
 void CanDialog::handleFileChanged(const QString &)

@@ -9,6 +9,7 @@
 #include <qstringlist.h>
 #include <qfilesystemwatcher.h>
 #include <QCanBus>
+#include <QMessageBox>
 
 struct CanLogMsg
 {
@@ -40,7 +41,8 @@ public slots:
 	void on_refreshButton_clicked(void);
 	void on_clearButton_clicked(void);
 	void on_saveButton_clicked(void);
-	void on_radioFile_clicked(void);
-	void on_radioCan_clicked(void);
+	void on_radioFile_toggled(bool);
+	void on_radioCan_toggled(bool);
+	void on_checkUpdate_toggled(bool);
 	void handleFileChanged(const QString&);
 };

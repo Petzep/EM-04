@@ -29,6 +29,8 @@
         <string>*.qml</string>
         <string>qmldir</string>
         <string>*.js</string>
+        <string>*.png</string>
+        <string>*.txt</string>
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>
@@ -89,8 +91,8 @@
     </MakeCommandTemplate>
     <QMakeCommand>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
-      <Command>qtchooser</Command>
-      <Arguments>-run-tool=qmake -qt=qt5 TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
+      <Command>/home/computation/Qt5.7.0/5.7/gcc_64/bin/qmake</Command>
+      <Arguments> TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records />
@@ -99,7 +101,10 @@
     <UpdateSourcesInQmakeFile>true</UpdateSourcesInQmakeFile>
     <GeneratedFilesFolder>GeneratedFiles</GeneratedFilesFolder>
     <QtSettings>
-      <QtVersion>Qt5</QtVersion>
+      <QtVersion>Manual</QtVersion>
+      <CustomQMakeCommand>/home/computation/Qt5.7.0/5.7/gcc_64/bin/qmake</CustomQMakeCommand>
+      <CustomQMakeArgs />
+      <CustomQMakeEnvironment />
     </QtSettings>
   </Build>
   <Debug xsi:type="com.visualgdb.debug.remote">
