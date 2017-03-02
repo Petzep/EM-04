@@ -10,6 +10,7 @@ CanDialog::CanDialog(QWidget *parent)
 	fileName = "canout.txt";
 
 	watcher.addPath(QString(QCoreApplication::applicationDirPath() + "/" + fileName));
+
 	QObject::connect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
 }
 
@@ -85,15 +86,48 @@ void CanDialog::dataToTable(CanLogMsg data)
 
 }
 
+bool CanDialog::initCan(int can)
+{
+	if(QCanBus::instance()->plugins().contains(QStringLiteral("socketcan").toUtf8()))
+	{
+		canDevice = QCanBus::instance()->createDevice(QStringLiteral("socketcan").toUtf8(), QStringLiteral("can").append(can + 'a'));
+		canDevice->connectDevice();
+
+		QCanBusFrame frame;
+		frame.setFrameId(0x001);
+		QByteArray payload("A36E");
+		frame.setPayload(payload);
+		canDevice->writeFrame(frame);
+		
+		return true;
+	}
+	else
+		return false;
+}
+
 void CanDialog::on_refreshButton_clicked(void)
 {
 	model->clear();
 	initTable();
-	readFile("canout.txt");
+	if(radioCan->isChecked())
+	{
+		if(!initCan(0))
+		{
+			QMessageBox::StandardButton warningBox;
+			warningBox = QMessageBox::warning(this, "CANerror", "Could not initialze CANBUS, defaulting to file modus");
+			radioFile->setChecked(true);
+			radioCan->setChecked(false);
+			radioCan->setDisabled(true);
+		}
+
+	}
+	else
+		readFile(fileName);
 }
 
 void CanDialog::on_clearButton_clicked(void)
 {
+	checkUpdate->setChecked(false);
 	model->clear();
 	initTable();
 }
@@ -105,6 +139,26 @@ void CanDialog::on_saveButton_clicked(void)
 		QStandardItem *item = new QStandardItem();
 		model->setItem(model->rowCount(), column, item);
 	}
+}
+
+void CanDialog::on_radioFile_toggled(bool checked)
+{
+	if(checked)
+		radioCan->setChecked(false);
+}
+
+void CanDialog::on_radioCan_toggled(bool checked)
+{
+	if(checked)
+		radioFile->setChecked(false);
+}
+
+void CanDialog::on_checkUpdate_toggled(bool checked)
+{
+	if(checked)
+		QObject::connect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
+	else
+		QObject::disconnect(&watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(handleFileChanged(const QString&)));
 }
 
 void CanDialog::handleFileChanged(const QString &)

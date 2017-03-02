@@ -1145,6 +1145,7 @@
 // --- Include directories begin --- //
 ///usr/lib/arm-linux-gnueabihf/qt5/mkspecs/linux-g++
 //.
+///usr/include/arm-linux-gnueabihf/qt5/QtSerialBus
 ///usr/include/arm-linux-gnueabihf/qt5
 ///usr/include/arm-linux-gnueabihf/qt5/QtWidgets
 ///usr/include/arm-linux-gnueabihf/qt5/QtGui
@@ -1157,6 +1158,7 @@
 ///usr/lib/gcc/arm-linux-gnueabihf/4.9/include-fixed
 ///usr/include/arm-linux-gnueabihf
 ///usr/include
+///usr/include/arm-linux-gnueabihf/qt5/QtSerialBus
 // --- Include directories end --- //
 
 
