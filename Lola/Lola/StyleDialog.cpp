@@ -51,7 +51,9 @@
 #include <QtWidgets>
 
 #include "NorwegianWoodStyle.h"
+#include "SieFlyStyle.h"
 #include "StyleDialog.h"
+#include "ProtoStyle.h"
 
 StyleDialog::StyleDialog(QWidget *parent)
 	: QDialog(parent)
@@ -59,6 +61,8 @@ StyleDialog::StyleDialog(QWidget *parent)
 	originalPalette = QApplication::palette();
 
 	styleComboBox = new QComboBox;
+	styleComboBox->addItem("SieFly");
+	styleComboBox->addItem("Proto");
 	styleComboBox->addItem("NorwegianWood");
 	styleComboBox->addItems(QStyleFactory::keys());
 
@@ -110,7 +114,7 @@ StyleDialog::StyleDialog(QWidget *parent)
 	setLayout(mainLayout);
 
 	setWindowTitle(tr("Styles"));
-	changeStyle("NorwegianWood");
+	changeStyle("SieFly");
 }
 
 void StyleDialog::changeStyle(const QString &styleName)
@@ -118,6 +122,10 @@ void StyleDialog::changeStyle(const QString &styleName)
 	if (styleName == "NorwegianWood") {
 		QApplication::setStyle(new NorwegianWoodStyle);
 	}
+	else if(styleName == "SieFly")
+		QApplication::setStyle(new SieFlyStyle);
+	else if(styleName == "Proto")
+		QApplication::setStyle(new ProtoStyle);
 	else {
 		QApplication::setStyle(QStyleFactory::create(styleName));
 	}

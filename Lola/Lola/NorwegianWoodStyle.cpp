@@ -82,7 +82,7 @@ void NorwegianWoodStyle::polish(QPalette &palette)
 	setTexture(palette, QPalette::Mid, midImage);
 	setTexture(palette, QPalette::Window, backgroundImage);
 
-	QBrush brush = palette.background();
+	QBrush brush = palette.window();
 	brush.setColor(brush.color().dark());
 
 	palette.setBrush(QPalette::Disabled, QPalette::WindowText, brush);
