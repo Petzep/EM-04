@@ -152,6 +152,12 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_ProtoStyle.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="DarkWoodStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DarkWoodStyle.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="TUIcomotive.h">
@@ -209,6 +215,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ProtoStyle.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DarkWoodStyle.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

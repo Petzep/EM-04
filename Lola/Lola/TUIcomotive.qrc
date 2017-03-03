@@ -21,5 +21,9 @@
     <qresource prefix="/">
         <file>images/woodbackground.png</file>
         <file>images/woodbutton.png</file>
+        <file>images/carbonH.png</file>
+        <file>images/carbonV.png</file>
+        <file>images/carbon.png</file>
+        <file>images/carbonBack.png</file>
     </qresource>
 </RCC>

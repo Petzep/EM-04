@@ -54,6 +54,7 @@
 #include "SieFlyStyle.h"
 #include "StyleDialog.h"
 #include "ProtoStyle.h"
+#include "DarkWoodStyle.h"
 
 StyleDialog::StyleDialog(QWidget *parent)
 	: QDialog(parent)
@@ -63,6 +64,7 @@ StyleDialog::StyleDialog(QWidget *parent)
 	styleComboBox = new QComboBox;
 	styleComboBox->addItem("SieFly");
 	styleComboBox->addItem("Proto");
+	styleComboBox->addItem("DarkWood");
 	styleComboBox->addItem("NorwegianWood");
 	styleComboBox->addItems(QStyleFactory::keys());
 
@@ -126,6 +128,8 @@ void StyleDialog::changeStyle(const QString &styleName)
 		QApplication::setStyle(new SieFlyStyle);
 	else if(styleName == "Proto")
 		QApplication::setStyle(new ProtoStyle);
+	else if(styleName == "DarkWood")
+		QApplication::setStyle(new DarkWoodStyle);
 	else {
 		QApplication::setStyle(QStyleFactory::create(styleName));
 	}
