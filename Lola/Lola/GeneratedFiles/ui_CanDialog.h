@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'CanDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -138,15 +138,15 @@ public:
 
     void retranslateUi(QDialog *CanDialog)
     {
-        CanDialog->setWindowTitle(QApplication::translate("CanDialog", "CanDialog", 0));
-        tableLable->setText(QApplication::translate("CanDialog", "CAN BUS table", 0));
-        refreshButton->setText(QApplication::translate("CanDialog", "&Refresh", 0));
-        clearButton->setText(QApplication::translate("CanDialog", "&Clear", 0));
-        saveButton->setText(QApplication::translate("CanDialog", "&Save", 0));
-        groupBox->setTitle(QApplication::translate("CanDialog", "Load from:", 0));
-        radioCan->setText(QApplication::translate("CanDialog", "CANBUS", 0));
-        radioFile->setText(QApplication::translate("CanDialog", "File", 0));
-        checkUpdate->setText(QApplication::translate("CanDialog", "Update", 0));
+        CanDialog->setWindowTitle(QApplication::translate("CanDialog", "CanDialog", Q_NULLPTR));
+        tableLable->setText(QApplication::translate("CanDialog", "CAN BUS table", Q_NULLPTR));
+        refreshButton->setText(QApplication::translate("CanDialog", "&Refresh", Q_NULLPTR));
+        clearButton->setText(QApplication::translate("CanDialog", "&Clear", Q_NULLPTR));
+        saveButton->setText(QApplication::translate("CanDialog", "&Save", Q_NULLPTR));
+        groupBox->setTitle(QApplication::translate("CanDialog", "Load from:", Q_NULLPTR));
+        radioCan->setText(QApplication::translate("CanDialog", "CANBUS", Q_NULLPTR));
+        radioFile->setText(QApplication::translate("CanDialog", "File", Q_NULLPTR));
+        checkUpdate->setText(QApplication::translate("CanDialog", "Update", Q_NULLPTR));
     } // retranslateUi
 
 };

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'AddDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -102,10 +102,10 @@ public:
 
     void retranslateUi(QDialog *AddDialog)
     {
-        AddDialog->setWindowTitle(QApplication::translate("AddDialog", "AddDialog", 0));
-        okButton->setText(QApplication::translate("AddDialog", "OK", 0));
-        nameText->setText(QApplication::translate("AddDialog", "Name:", 0));
-        emailText->setText(QApplication::translate("AddDialog", "E-mail:", 0));
+        AddDialog->setWindowTitle(QApplication::translate("AddDialog", "AddDialog", Q_NULLPTR));
+        okButton->setText(QApplication::translate("AddDialog", "OK", Q_NULLPTR));
+        nameText->setText(QApplication::translate("AddDialog", "Name:", Q_NULLPTR));
+        emailText->setText(QApplication::translate("AddDialog", "E-mail:", Q_NULLPTR));
     } // retranslateUi
 
 };

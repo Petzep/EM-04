@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'StyleDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -35,7 +35,7 @@ public:
 
     void retranslateUi(QDialog *StyleDialog)
     {
-        StyleDialog->setWindowTitle(QApplication::translate("StyleDialog", "StyleDialog", 0));
+        StyleDialog->setWindowTitle(QApplication::translate("StyleDialog", "StyleDialog", Q_NULLPTR));
     } // retranslateUi
 
 };
