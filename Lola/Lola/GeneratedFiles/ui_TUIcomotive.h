@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TUIcomotive.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -145,15 +145,15 @@ public:
 
     void retranslateUi(QMainWindow *TUIcomotiveClass)
     {
-        TUIcomotiveClass->setWindowTitle(QApplication::translate("TUIcomotiveClass", "TUIcomotive", 0));
-        label->setText(QApplication::translate("TUIcomotiveClass", "Banga list", 0));
-        addButton->setText(QApplication::translate("TUIcomotiveClass", "skADDje", 0));
-        deleteButton->setText(QApplication::translate("TUIcomotiveClass", "sletXIT", 0));
-        testButton->setText(QApplication::translate("TUIcomotiveClass", "UI Test", 0));
-        menuButton->setText(QApplication::translate("TUIcomotiveClass", "Menu Button", 0));
-        styleButton->setText(QApplication::translate("TUIcomotiveClass", "Style Test", 0));
-        canButton->setText(QApplication::translate("TUIcomotiveClass", "CAN test", 0));
-        nameLabel->setText(QApplication::translate("TUIcomotiveClass", "<No item selected>", 0));
+        TUIcomotiveClass->setWindowTitle(QApplication::translate("TUIcomotiveClass", "TUIcomotive", Q_NULLPTR));
+        label->setText(QApplication::translate("TUIcomotiveClass", "Banga list", Q_NULLPTR));
+        addButton->setText(QApplication::translate("TUIcomotiveClass", "skADDje", Q_NULLPTR));
+        deleteButton->setText(QApplication::translate("TUIcomotiveClass", "sletXIT", Q_NULLPTR));
+        testButton->setText(QApplication::translate("TUIcomotiveClass", "UI Test", Q_NULLPTR));
+        menuButton->setText(QApplication::translate("TUIcomotiveClass", "Menu Button", Q_NULLPTR));
+        styleButton->setText(QApplication::translate("TUIcomotiveClass", "Style Test", Q_NULLPTR));
+        canButton->setText(QApplication::translate("TUIcomotiveClass", "CAN test", Q_NULLPTR));
+        nameLabel->setText(QApplication::translate("TUIcomotiveClass", "<No item selected>", Q_NULLPTR));
         emailLabel->setText(QString());
     } // retranslateUi
 

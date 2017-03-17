@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'TestDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -124,11 +124,11 @@ public:
 
     void retranslateUi(QDialog *TestDialog)
     {
-        TestDialog->setWindowTitle(QApplication::translate("TestDialog", "TestDialog", 0));
-        pushButton->setText(QApplication::translate("TestDialog", "PushButton", 0));
-        checkBox->setText(QApplication::translate("TestDialog", "CheckBox", 0));
-        checkBox_2->setText(QApplication::translate("TestDialog", "DANIEL ARROW!!!!!", 0));
-        label->setText(QApplication::translate("TestDialog", "TextLabel", 0));
+        TestDialog->setWindowTitle(QApplication::translate("TestDialog", "TestDialog", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("TestDialog", "PushButton", Q_NULLPTR));
+        checkBox->setText(QApplication::translate("TestDialog", "CheckBox", Q_NULLPTR));
+        checkBox_2->setText(QApplication::translate("TestDialog", "DANIEL ARROW!!!!!", Q_NULLPTR));
+        label->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
     } // retranslateUi
 
 };

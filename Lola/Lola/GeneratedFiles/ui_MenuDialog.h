@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MenuDialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -391,8 +391,8 @@ public:
 
     void retranslateUi(QDialog *MenuDialog)
     {
-        MenuDialog->setWindowTitle(QApplication::translate("MenuDialog", "MenuDialog", 0));
-        groupBox_2->setTitle(QApplication::translate("MenuDialog", "Controls", 0));
+        MenuDialog->setWindowTitle(QApplication::translate("MenuDialog", "MenuDialog", Q_NULLPTR));
+        groupBox_2->setTitle(QApplication::translate("MenuDialog", "Controls", Q_NULLPTR));
         textBrowser->setHtml(QApplication::translate("MenuDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -400,34 +400,34 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Left:    [4]	Select:    [5]</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Right:  [6]	Back:      [7]</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">	Home:     [0]</p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", 0));
-        controllerBox->setTitle(QApplication::translate("MenuDialog", "Controller", 0));
-        homeButton->setText(QApplication::translate("MenuDialog", "&Home", 0));
-        okButton->setText(QApplication::translate("MenuDialog", "&OK", 0));
-        backButton->setText(QApplication::translate("MenuDialog", "&Back", 0));
-        groupBox->setTitle(QApplication::translate("MenuDialog", "Debug info:", 0));
-        label_2->setText(QApplication::translate("MenuDialog", "Item Number:", 0));
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", Q_NULLPTR));
+        controllerBox->setTitle(QApplication::translate("MenuDialog", "Controller", Q_NULLPTR));
+        homeButton->setText(QApplication::translate("MenuDialog", "&Home", Q_NULLPTR));
+        okButton->setText(QApplication::translate("MenuDialog", "&OK", Q_NULLPTR));
+        backButton->setText(QApplication::translate("MenuDialog", "&Back", Q_NULLPTR));
+        groupBox->setTitle(QApplication::translate("MenuDialog", "Debug info:", Q_NULLPTR));
+        label_2->setText(QApplication::translate("MenuDialog", "Item Number:", Q_NULLPTR));
         label_3->setText(QString());
-        debugCheckBox->setText(QApplication::translate("MenuDialog", "DebugControlers", 0));
-        label->setText(QApplication::translate("MenuDialog", "Test Text", 0));
-        pushButton_13->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_14->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_2->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_3->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_4->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_5->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_6->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        selectionLabel->setText(QApplication::translate("MenuDialog", "EM-04", 0));
-        pushButton_12->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_9->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_7->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_10->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_8->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        pushButton_11->setText(QApplication::translate("MenuDialog", "PushButton", 0));
-        label_4->setText(QApplication::translate("MenuDialog", "Bass", 0));
-        label_5->setText(QApplication::translate("MenuDialog", "Trebble", 0));
-        label_6->setText(QApplication::translate("MenuDialog", "Volume", 0));
+        debugCheckBox->setText(QApplication::translate("MenuDialog", "DebugControlers", Q_NULLPTR));
+        label->setText(QApplication::translate("MenuDialog", "Test Text", Q_NULLPTR));
+        pushButton_13->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_14->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_2->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_3->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_4->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_5->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_6->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        selectionLabel->setText(QApplication::translate("MenuDialog", "EM-04", Q_NULLPTR));
+        pushButton_12->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_9->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_7->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_10->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_8->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        pushButton_11->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        label_4->setText(QApplication::translate("MenuDialog", "Bass", Q_NULLPTR));
+        label_5->setText(QApplication::translate("MenuDialog", "Trebble", Q_NULLPTR));
+        label_6->setText(QApplication::translate("MenuDialog", "Volume", Q_NULLPTR));
     } // retranslateUi
 
 };

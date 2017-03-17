@@ -10,8 +10,10 @@ QtPieMenu::QtPieMenu(QWidget *parent)
 	m_SelectionRadius = 5.0;
 	m_GradientRadius = 2.0;
 	m_MenuColor = Qt::black;
-	m_SelectionInnerColor = Qt::white;
-	m_SelectionOuterColor = Qt::green;
+	m_SelectionOuterColor = palette().color(QPalette::Highlight);
+	m_SelectionInnerColor = palette().color(QPalette::Highlight).lighter();
+	m_SelectionOuterColor.setAlpha(128);
+	m_SelectionInnerColor.setAlpha(200);
 	m_SelectionColor = QColor(144, 0, 0);
 	m_DanielArrow = false;
 	loadIcons();
