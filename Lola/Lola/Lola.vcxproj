@@ -163,6 +163,8 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_TUIcomotive.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_TUIcomotive.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -190,6 +192,8 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_TUIcomotive.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuDialog.cpp" />
@@ -388,6 +392,13 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <None Include="linuxvm.pro" />
+    <None Include="qml\dashboard.qml" />
+    <None Include="qml\DashboardGaugeStyle.qml" />
+    <None Include="qml\IconGaugeStyle.qml" />
+    <None Include="qml\LightIndicator.qml" />
+    <None Include="qml\TachometerStyle.qml" />
+    <None Include="qml\TurnIndicator.qml" />
+    <None Include="qml\ValueSource.qml" />
     <None Include="raspberrypi.pro" />
     <CustomBuild Include="StyleDialog.ui">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>

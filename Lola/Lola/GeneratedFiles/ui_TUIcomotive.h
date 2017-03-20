@@ -43,6 +43,7 @@ public:
     QPushButton *menuButton;
     QPushButton *styleButton;
     QPushButton *canButton;
+    QPushButton *dashboardButton;
     QSpacerItem *verticalSpacer;
     QLabel *nameLabel;
     QLabel *emailLabel;
@@ -60,7 +61,7 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 10, 341, 232));
+        layoutWidget->setGeometry(QRect(10, 10, 341, 245));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -109,6 +110,11 @@ public:
 
         verticalLayout_2->addWidget(canButton);
 
+        dashboardButton = new QPushButton(layoutWidget);
+        dashboardButton->setObjectName(QStringLiteral("dashboardButton"));
+
+        verticalLayout_2->addWidget(dashboardButton);
+
         verticalSpacer = new QSpacerItem(20, 128, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_2->addItem(verticalSpacer);
@@ -153,6 +159,7 @@ public:
         menuButton->setText(QApplication::translate("TUIcomotiveClass", "Menu Button", Q_NULLPTR));
         styleButton->setText(QApplication::translate("TUIcomotiveClass", "Style Test", Q_NULLPTR));
         canButton->setText(QApplication::translate("TUIcomotiveClass", "CAN test", Q_NULLPTR));
+        dashboardButton->setText(QApplication::translate("TUIcomotiveClass", "Dashboard", Q_NULLPTR));
         nameLabel->setText(QApplication::translate("TUIcomotiveClass", "<No item selected>", Q_NULLPTR));
         emailLabel->setText(QString());
     } // retranslateUi

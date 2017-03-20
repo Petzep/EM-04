@@ -51,6 +51,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="QML">
+      <UniqueIdentifier>{d8be07bd-ea43-433b-a53e-3ca0cb7fbd0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -248,6 +251,27 @@
     </None>
     <None Include="linuxvm.pro">
       <Filter>QMake Project files</Filter>
+    </None>
+    <None Include="qml\dashboard.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\DashboardGaugeStyle.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\IconGaugeStyle.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\TachometerStyle.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\TurnIndicator.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\ValueSource.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\LightIndicator.qml">
+      <Filter>QML</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

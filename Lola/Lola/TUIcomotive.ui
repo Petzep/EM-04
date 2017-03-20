@@ -23,7 +23,7 @@
       <x>10</x>
       <y>10</y>
       <width>341</width>
-      <height>232</height>
+      <height>245</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -78,6 +78,13 @@
         <widget class="QPushButton" name="canButton">
          <property name="text">
           <string>CAN test</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="dashboardButton">
+         <property name="text">
+          <string>Dashboard</string>
          </property>
         </widget>
        </item>
