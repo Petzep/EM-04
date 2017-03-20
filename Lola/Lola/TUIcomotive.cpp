@@ -68,14 +68,6 @@ void TUIcomotive::on_dashboardButton_clicked(void)
 	
 	rootObject->setProperty("visibility", "Windowed");
 	qmlObject->setProperty("temperature", 0.8);
-	
-	rootObject->dumpObjectInfo();
-	rootObject->dumpObjectTree();
-	qmlObject->dumpObjectInfo();
-	qmlObject->dumpObjectTree();
-	qDebug() << rootObject->property("visible");
-	qDebug() << rootObject->property("width");
-	qDebug() << rootObject->property("title");
 }
 
 void TUIcomotive::on_bangaList_currentItemChanged()
