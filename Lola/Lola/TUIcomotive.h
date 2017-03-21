@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include <QtQuick\QtQuick>
+#include <QtQuick/QtQuick>
 #include <QtQml/QtQml>
 #include "AddDialog.h"
 #include "TestDialog.h"

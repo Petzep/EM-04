@@ -2,7 +2,7 @@
 #Feel free to modify any flags you want.
 #Visit http://visualgdb.com/makefiles for more details.
 
-QT       += core gui serialbus
+QT       += core gui serialbus qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,8 +11,8 @@ TEMPLATE = app
 
 #By default the following file lists are updated automatically by VisualGDB.
 
-SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp NorwegianWoodStyle.cpp StyleDialog.cpp CanDialog.cpp main.cpp
-HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h NorwegianWoodStyle.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h GeneratedFiles/ui_StyleDialog.h StyleDialog.h GeneratedFiles/ui_CanDialog.h CanDialog.h
+SOURCES   += QtPieMenu.cpp CustomClock.cpp StackSlide.cpp TUIcomotive.cpp TestDialog.cpp AddDialog.cpp MenuDialog.cpp NorwegianWoodStyle.cpp ProtoStyle.cpp DarkWoodStyle.cpp SieFlyStyle.cpp StyleDialog.cpp CanDialog.cpp main.cpp
+HEADERS   += QtPieMenu.h CustomClock.h StackSlide.h MenuDialog.h TUIcomotive.h TestDialog.h AddDialog.h NorwegianWoodStyle.h DarkWoodStyle.h ProtoStyle.h SieFlyStyle.h GeneratedFiles/ui_AddDialog.h GeneratedFiles/ui_TestDialog.h GeneratedFiles/ui_TUIcomotive.h GeneratedFiles/ui_MenuDialog.h GeneratedFiles/ui_StyleDialog.h StyleDialog.h GeneratedFiles/ui_CanDialog.h CanDialog.h
 FORMS     += TUIcomotive.ui TestDialog.ui AddDialog.ui MenuDialog.ui StyleDialog.ui CanDialog.ui
 RESOURCES += TUIcomotive.qrc
 

@@ -55,6 +55,15 @@ Window {
 						on: true
 					}
 
+					Text {
+						id: dnrText
+						text: valueSource.gear
+						color: "white"
+						font.family: "Helvetica"
+						font.pointSize: 24
+						antialiasing: true
+					}
+
 					LightIndicator {
 						id: fullIndicator
 						anchors.verticalCenter: parent.verticalCenter
@@ -106,7 +115,7 @@ Window {
 						style: IconGaugeStyle {
 							id: fuelGaugeStyle
 
-							icon: "qrc:/images/fuel-icon.png"
+							icon: "qrc:/images/elec-icon.png"
 							minWarningColor: Qt.rgba(0.5, 0, 0, 1)
 
 							tickmarkLabel: Text {
@@ -143,7 +152,7 @@ Window {
 
 				CircularGauge {
 					id: speedometer
-					value: valueSource.kph
+					value: Math.abs(valueSource.kph)
 					anchors.verticalCenter: parent.verticalCenter
 					maximumValue: 120
 					// We set the width to the height, because the height will always be
@@ -163,7 +172,7 @@ Window {
 					width: height
 					height: container.height * 0.25 - gaugeRow.spacing
 					value: valueSource.rpm
-					maximumValue: 8
+					maximumValue: 160
 					anchors.verticalCenter: parent.verticalCenter
 
 					style: TachometerStyle {}

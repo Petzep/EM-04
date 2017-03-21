@@ -126,6 +126,7 @@ DashboardGaugeStyle {
             anchors.bottom: parent.verticalCenter
             anchors.bottomMargin: toPixels(0.3)
             anchors.horizontalCenter: parent.horizontalCenter
+			antialiasing: true
             width: toPixels(0.3)
             height: width
             fillMode: Image.PreserveAspectFit
