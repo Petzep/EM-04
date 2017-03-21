@@ -396,6 +396,8 @@
     <None Include="qml\DashboardGaugeStyle.qml" />
     <None Include="qml\IconGaugeStyle.qml" />
     <None Include="qml\LightIndicator.qml" />
+    <None Include="qml\LightSmallIndicator.qml" />
+    <None Include="qml\StatIndicator.qml" />
     <None Include="qml\TachometerStyle.qml" />
     <None Include="qml\TurnIndicator.qml" />
     <None Include="qml\ValueSource.qml" />

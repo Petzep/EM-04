@@ -196,9 +196,6 @@
     <CustomBuild Include="StackSlide.h">
       <Filter>Custom Plugins</Filter>
     </CustomBuild>
-    <CustomBuild Include="TUIcomotive.qrc">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="StyleDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -222,6 +219,9 @@
     </CustomBuild>
     <CustomBuild Include="DarkWoodStyle.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TUIcomotive.qrc">
+      <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +271,12 @@
       <Filter>QML</Filter>
     </None>
     <None Include="qml\LightIndicator.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\StatIndicator.qml">
+      <Filter>QML</Filter>
+    </None>
+    <None Include="qml\LightSmallIndicator.qml">
       <Filter>QML</Filter>
     </None>
   </ItemGroup>

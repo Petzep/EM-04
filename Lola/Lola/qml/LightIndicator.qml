@@ -4,6 +4,7 @@ Item {
     property bool dim: true
     property bool on: true
 
+	//lampjes
     function paintOutlinePathFill(ctx) {
        ctx.beginPath();
 		ctx.moveTo(width * 0.5, height * 0.23);
@@ -36,6 +37,7 @@ Item {
 		ctx.lineTo(width * 0.5, height * 0.77);
     }
 
+	//Streepjes
 	 function paintLightlinePath(ctx) {
 		ctx.beginPath();
 
@@ -66,15 +68,6 @@ Item {
 		ctx.lineTo(width * 0.4, height * 0.78);
     }
 
-	/*{
-        ctx.beginPath();
-        ctx.moveTo(width, height * 0.5);
-        ctx.arcTo(width, height * 0.5, width * 0.5, height * 0.25, width);
-		ctx.arcTo(width, height * 0.5, width * 0.5, height * 0.75, width);
-        ctx.arcTo(width * 0.5, height * 0.25, width * 0.5, height * 0.75, width);
-    }*/
-
-
     Canvas {
         id: backgroundCanvas
         anchors.fill: parent
@@ -91,20 +84,4 @@ Item {
             ctx.stroke();
         }
     }
-
-    /*Canvas {
-        id: foregroundCanvas
-        anchors.fill: parent
-        visible: on
-
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.reset();
-
-            paintOutlinePathFill(ctx);
-
-            ctx.fillStyle === dim? "green" : "blue"
-            ctx.fill();
-        }
-    }*/
 }

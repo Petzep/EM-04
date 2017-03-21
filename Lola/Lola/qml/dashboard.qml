@@ -36,7 +36,6 @@ Window {
 				spacing: container.width * 0.02
 				anchors.horizontalCenter: parent.horizontalCenter
 				anchors.verticalCenter: parent.verticalCenter + 0.5 * parent.height
-
 					LightIndicator {
 						id: dimIndicator
 						anchors.verticalCenter: parent.verticalCenter
@@ -47,6 +46,15 @@ Window {
 						on: valueSource.dimOn
 					}
 
+					LightSmallIndicator {
+						id: smallIndicator
+						anchors.verticalCenter: parent.verticalCenter
+						width: height
+						height: container.height * 0.1 - gaugeRow.spacing
+
+						on: true
+					}
+
 					LightIndicator {
 						id: fullIndicator
 						anchors.verticalCenter: parent.verticalCenter
@@ -55,6 +63,15 @@ Window {
 
 						dim: false
 						on: valueSource.fullOn
+					}
+
+					StatIndicator {
+						id: batIndicator
+						anchors.verticalCenter: parent.verticalCenter
+						width: height
+						height: container.height * 0.1 - gaugeRow.spacing
+
+						on: true
 					}
 				}
 			Row {
@@ -161,32 +178,6 @@ Window {
 					direction: Qt.RightArrow
 					on: valueSource.turnSignal == Qt.RightArrow
 				}
-
-				/*Row {
-					id: lightRow
-					spacing: container.width * 0.02
-					anchors.centerIn: parent
-
-					LightIndicator {
-						id: dimIndicator
-						anchors.verticalCenter: parent.verticalCenter
-						width: height
-						height: container.height * 0.1 - gaugeRow.spacing
-
-						dim: true
-						on: valueSource.dimOn
-					}
-
-					LightIndicator {
-						id: fullIndicator
-						anchors.verticalCenter: parent.verticalCenter
-						width: height
-						height: container.height * 0.1 - gaugeRow.spacing
-
-						dim: false
-						on: valueSource.fullOn
-					}
-				}*/
 			}
 
         }

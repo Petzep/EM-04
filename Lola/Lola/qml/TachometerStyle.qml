@@ -108,17 +108,17 @@ DashboardGaugeStyle {
             readonly property int rpmInt: valueSource.rpm
         }
         Text {
-            text: "x1000"
+            text: "Power"
             color: "white"
-            font.pixelSize: tachometerStyle.toPixels(0.1)
+            font.pixelSize: tachometerStyle.toPixels(0.15)
             anchors.top: parent.top
             anchors.topMargin: parent.height / 4
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Text {
-            text: "RPM"
+            text: "[Amps]"
             color: "white"
-            font.pixelSize: tachometerStyle.toPixels(0.1)
+            font.pixelSize: tachometerStyle.toPixels(0.12)
             anchors.top: rpmText.bottom
             anchors.horizontalCenter: parent.horizontalCenter
         }
