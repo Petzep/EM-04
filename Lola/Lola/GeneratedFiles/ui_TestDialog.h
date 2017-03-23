@@ -13,111 +13,136 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
-#include "CustomClock.h"
 #include "QtPieMenu.h"
+#include "StackSlide.h"
 
 QT_BEGIN_NAMESPACE
 
 class Ui_TestDialog
 {
 public:
-    QPushButton *pushButton;
-    QtPieMenu *qtPieMenu;
-    QCheckBox *checkBox;
-    QDial *dial;
-    CustomClock *customClock;
-    QCheckBox *checkBox_2;
-    QLabel *label;
-    QWidget *widget;
     QGridLayout *gridLayout;
-    QDial *dial_4;
-    QDial *dial_5;
-    QDial *dial_2;
-    QDial *dial_3;
+    StackSlide *stackSlide;
+    QWidget *page;
+    QHBoxLayout *horizontalLayout;
+    QGridLayout *gridLayout_2;
+    QLabel *label_2;
+    QSpacerItem *horizontalSpacer;
+    QLabel *label_3;
+    QSpacerItem *verticalSpacer;
+    QSpacerItem *verticalSpacer_2;
+    QLabel *label;
+    QSpacerItem *horizontalSpacer_2;
+    QLabel *label_4;
+    QWidget *page_2;
+    QSplitter *splitter_2;
+    QDial *dial;
+    QLabel *label_5;
+    QLCDNumber *lcdNumber;
+    QSplitter *splitter;
+    QtPieMenu *qtPieMenu;
 
     void setupUi(QDialog *TestDialog)
     {
         if (TestDialog->objectName().isEmpty())
             TestDialog->setObjectName(QStringLiteral("TestDialog"));
-        TestDialog->resize(899, 562);
-        pushButton = new QPushButton(TestDialog);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(0, 60, 75, 23));
-        qtPieMenu = new QtPieMenu(TestDialog);
-        qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
-        qtPieMenu->setGeometry(QRect(290, 40, 281, 341));
-        qtPieMenu->setItemNumbers(20);
-        qtPieMenu->setSelectionColor(QColor(144, 0, 0));
-        qtPieMenu->setSelectionInnerColor(QColor(255, 255, 255));
-        qtPieMenu->setSelectionOuterColor(QColor(0, 255, 0));
-        qtPieMenu->setProperty("ToggleSecondHand", QVariant(true));
-        qtPieMenu->setProperty("colorSecondHand", QVariant(QColor(45, 130, 0)));
-        checkBox = new QCheckBox(TestDialog);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(10, 10, 70, 17));
-        dial = new QDial(TestDialog);
-        dial->setObjectName(QStringLiteral("dial"));
-        dial->setGeometry(QRect(0, 80, 50, 64));
-        dial->setMinimum(1);
-        dial->setMaximum(20);
-        dial->setPageStep(10);
-        dial->setInvertedAppearance(true);
-        dial->setWrapping(true);
-        customClock = new CustomClock(TestDialog);
-        customClock->setObjectName(QStringLiteral("customClock"));
-        customClock->setGeometry(QRect(20, 170, 161, 141));
-        customClock->setProperty("ToggleSecondHand", QVariant(true));
-        customClock->setColorMinuteHand(QColor(255, 0, 0, 191));
-        checkBox_2 = new QCheckBox(TestDialog);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setGeometry(QRect(10, 30, 121, 17));
-        label = new QLabel(TestDialog);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(400, 30, 47, 311));
-        widget = new QWidget(TestDialog);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(580, 330, 208, 208));
-        gridLayout = new QGridLayout(widget);
+        TestDialog->resize(1280, 720);
+        gridLayout = new QGridLayout(TestDialog);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        gridLayout->setContentsMargins(0, 0, 0, 0);
-        dial_4 = new QDial(widget);
-        dial_4->setObjectName(QStringLiteral("dial_4"));
+        stackSlide = new StackSlide(TestDialog);
+        stackSlide->setObjectName(QStringLiteral("stackSlide"));
+        page = new QWidget();
+        page->setObjectName(QStringLiteral("page"));
+        horizontalLayout = new QHBoxLayout(page);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        label_2 = new QLabel(page);
+        label_2->setObjectName(QStringLiteral("label_2"));
 
-        gridLayout->addWidget(dial_4, 1, 0, 1, 1);
+        gridLayout_2->addWidget(label_2, 0, 0, 1, 1);
 
-        dial_5 = new QDial(widget);
-        dial_5->setObjectName(QStringLiteral("dial_5"));
+        horizontalSpacer = new QSpacerItem(688, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        gridLayout->addWidget(dial_5, 1, 1, 1, 1);
+        gridLayout_2->addItem(horizontalSpacer, 0, 1, 1, 1);
 
-        dial_2 = new QDial(widget);
-        dial_2->setObjectName(QStringLiteral("dial_2"));
+        label_3 = new QLabel(page);
+        label_3->setObjectName(QStringLiteral("label_3"));
 
-        gridLayout->addWidget(dial_2, 0, 0, 1, 1);
+        gridLayout_2->addWidget(label_3, 0, 2, 1, 2);
 
-        dial_3 = new QDial(widget);
-        dial_3->setObjectName(QStringLiteral("dial_3"));
+        verticalSpacer = new QSpacerItem(20, 448, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addWidget(dial_3, 0, 1, 1, 1);
+        gridLayout_2->addItem(verticalSpacer, 1, 0, 1, 1);
+
+        verticalSpacer_2 = new QSpacerItem(20, 418, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        gridLayout_2->addItem(verticalSpacer_2, 1, 3, 1, 1);
+
+        label = new QLabel(page);
+        label->setObjectName(QStringLiteral("label"));
+
+        gridLayout_2->addWidget(label, 2, 0, 1, 1);
+
+        horizontalSpacer_2 = new QSpacerItem(698, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout_2->addItem(horizontalSpacer_2, 2, 1, 1, 2);
+
+        label_4 = new QLabel(page);
+        label_4->setObjectName(QStringLiteral("label_4"));
+
+        gridLayout_2->addWidget(label_4, 2, 3, 1, 1);
+
+
+        horizontalLayout->addLayout(gridLayout_2);
+
+        stackSlide->addWidget(page);
+        page_2 = new QWidget();
+        page_2->setObjectName(QStringLiteral("page_2"));
+        splitter_2 = new QSplitter(page_2);
+        splitter_2->setObjectName(QStringLiteral("splitter_2"));
+        splitter_2->setGeometry(QRect(10, 0, 1231, 61));
+        splitter_2->setOrientation(Qt::Horizontal);
+        dial = new QDial(splitter_2);
+        dial->setObjectName(QStringLiteral("dial"));
+        splitter_2->addWidget(dial);
+        label_5 = new QLabel(splitter_2);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        splitter_2->addWidget(label_5);
+        lcdNumber = new QLCDNumber(splitter_2);
+        lcdNumber->setObjectName(QStringLiteral("lcdNumber"));
+        splitter_2->addWidget(lcdNumber);
+        splitter = new QSplitter(page_2);
+        splitter->setObjectName(QStringLiteral("splitter"));
+        splitter->setGeometry(QRect(10, 70, 1241, 611));
+        splitter->setOrientation(Qt::Horizontal);
+        qtPieMenu = new QtPieMenu(splitter);
+        qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
+        splitter->addWidget(qtPieMenu);
+        stackSlide->addWidget(page_2);
+
+        gridLayout->addWidget(stackSlide, 0, 0, 1, 1);
 
 
         retranslateUi(TestDialog);
-        QObject::connect(pushButton, SIGNAL(clicked()), customClock, SLOT(toggleSecondHand()));
-        QObject::connect(checkBox_2, SIGNAL(clicked(bool)), qtPieMenu, SLOT(setDanielArrow(bool)));
-        QObject::connect(checkBox, SIGNAL(clicked(bool)), customClock, SLOT(setSecondHand(bool)));
-        QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu, SLOT(setSelection(int)));
-        QObject::connect(qtPieMenu, SIGNAL(itemName(QString)), label, SLOT(setText(QString)));
-        QObject::connect(qtPieMenu, SIGNAL(itemSelect(int)), label, SLOT(clear()));
+
+        stackSlide->setCurrentIndex(1);
+
 
         QMetaObject::connectSlotsByName(TestDialog);
     } // setupUi
@@ -125,10 +150,11 @@ public:
     void retranslateUi(QDialog *TestDialog)
     {
         TestDialog->setWindowTitle(QApplication::translate("TestDialog", "TestDialog", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("TestDialog", "PushButton", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("TestDialog", "CheckBox", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("TestDialog", "DANIEL ARROW!!!!!", Q_NULLPTR));
+        label_2->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
+        label_3->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
         label->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
+        label_4->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
+        label_5->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
     } // retranslateUi
 
 };
