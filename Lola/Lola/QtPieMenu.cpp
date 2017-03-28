@@ -65,7 +65,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.rotate((360.0 / m_ItemNumbers)*2); //rotate in such a way that the rotation is clockwise starting from the bottom
 	for (int i = 0; i < m_ItemNumbers; ++i) {
 		if (m_Icons.at((i + m_Selection) % m_ItemNumbers))
-			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(128, 128)));
+			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(150, 150)).transformed(QTransform().rotate((-360 / m_ItemNumbers)*(i + m_Selection)), Qt::SmoothTransformation));
 		else
 			painter.drawConvexPolygon(itemShape);
 		painter.rotate(360.0 / m_ItemNumbers);
