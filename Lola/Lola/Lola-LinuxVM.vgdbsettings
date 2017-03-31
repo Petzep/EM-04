@@ -31,6 +31,7 @@
         <string>*.js</string>
         <string>*.png</string>
         <string>*.txt</string>
+        <string>*.ttf</string>
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>
@@ -78,6 +79,11 @@
     </Toolchain>
     <MakeCommandTemplate>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
+      <RemoteHost>
+        <HostName>192.168.56.101</HostName>
+        <Transport>SSH</Transport>
+        <UserName>computation</UserName>
+      </RemoteHost>
       <Command>make</Command>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
@@ -91,13 +97,19 @@
     </MakeCommandTemplate>
     <QMakeCommand>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
+      <RemoteHost>
+        <HostName>192.168.56.101</HostName>
+        <Transport>SSH</Transport>
+        <UserName>computation</UserName>
+      </RemoteHost>
       <Command>/home/computation/Qt5.7.0/5.7/gcc_64/bin/qmake</Command>
-      <Arguments> TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
+      <Arguments> TUIcomotive.pro CONFIGNAME=$(ConfigurationName) </Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records />
       </Environment>
     </QMakeCommand>
+    <QMakeAdditionalArguments />
     <UpdateSourcesInQmakeFile>true</UpdateSourcesInQmakeFile>
     <GeneratedFilesFolder>GeneratedFiles</GeneratedFilesFolder>
     <QtSettings>
@@ -177,6 +189,7 @@
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
+  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
     <ExtraSettings>

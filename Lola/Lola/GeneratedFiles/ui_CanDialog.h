@@ -52,10 +52,10 @@ public:
     {
         if (CanDialog->objectName().isEmpty())
             CanDialog->setObjectName(QStringLiteral("CanDialog"));
-        CanDialog->resize(1096, 395);
+        CanDialog->resize(800, 480);
         layoutWidget = new QWidget(CanDialog);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 10, 961, 371));
+        layoutWidget->setGeometry(QRect(10, 10, 641, 371));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -79,7 +79,7 @@ public:
 
         layoutWidget1 = new QWidget(CanDialog);
         layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(990, 10, 77, 83));
+        layoutWidget1->setGeometry(QRect(660, 10, 77, 83));
         verticalLayout = new QVBoxLayout(layoutWidget1);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -102,7 +102,7 @@ public:
 
         groupBox = new QGroupBox(CanDialog);
         groupBox->setObjectName(QStringLiteral("groupBox"));
-        groupBox->setGeometry(QRect(990, 110, 85, 111));
+        groupBox->setGeometry(QRect(660, 110, 85, 111));
         gridLayout_2 = new QGridLayout(groupBox);
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);

@@ -125,9 +125,6 @@
 #ifndef __LDBL_MAX__
 #define __LDBL_MAX__ 1.18973149535723176502e+4932L
 #endif
-#ifndef QT_NO_DEBUG
-#define QT_NO_DEBUG 1
-#endif
 #ifndef __UINT_LEAST8_MAX__
 #define __UINT_LEAST8_MAX__ 0xff
 #endif
@@ -142,9 +139,6 @@
 #endif
 #ifndef __DEC32_EPSILON__
 #define __DEC32_EPSILON__ 1E-6DF
-#endif
-#ifndef __OPTIMIZE__
-#define __OPTIMIZE__ 1
 #endif
 #ifndef __unix
 #define __unix 1
@@ -175,9 +169,6 @@
 #endif
 #ifndef __GCC_ATOMIC_POINTER_LOCK_FREE
 #define __GCC_ATOMIC_POINTER_LOCK_FREE 2
-#endif
-#ifndef _FORTIFY_SOURCE
-#define _FORTIFY_SOURCE 2
 #endif
 #ifndef __SIZEOF_INT__
 #define __SIZEOF_INT__ 4
@@ -300,6 +291,9 @@
 #ifndef __DEC32_MIN__
 #define __DEC32_MIN__ 1E-95DF
 #endif
+#ifndef QT_SERIALBUS_LIB
+#define QT_SERIALBUS_LIB 1
+#endif
 #ifndef __DEPRECATED
 #define __DEPRECATED 1
 #endif
@@ -386,6 +380,9 @@
 #endif
 #ifndef __UINT8_TYPE__
 #define __UINT8_TYPE__ unsigned char
+#endif
+#ifndef __NO_INLINE__
+#define __NO_INLINE__ 1
 #endif
 #ifndef __FLT_MANT_DIG__
 #define __FLT_MANT_DIG__ 24
@@ -521,6 +518,9 @@
 #endif
 #ifndef __UINT_LEAST32_MAX__
 #define __UINT_LEAST32_MAX__ 0xffffffffU
+#endif
+#ifndef QT_NETWORK_LIB
+#define QT_NETWORK_LIB 1
 #endif
 #ifndef __GCC_ATOMIC_LONG_LOCK_FREE
 #define __GCC_ATOMIC_LONG_LOCK_FREE 2
@@ -777,6 +777,9 @@
 #ifndef __ATOMIC_SEQ_CST
 #define __ATOMIC_SEQ_CST 5
 #endif
+#ifndef QT_QML_LIB
+#define QT_QML_LIB 1
+#endif
 #ifndef __UINT32_TYPE__
 #define __UINT32_TYPE__ unsigned int
 #endif
@@ -838,6 +841,9 @@
 ///home/computation/Qt5.7.0/5.7/gcc_64/include
 ///home/computation/Qt5.7.0/5.7/gcc_64/include/QtWidgets
 ///home/computation/Qt5.7.0/5.7/gcc_64/include/QtGui
+///home/computation/Qt5.7.0/5.7/gcc_64/include/QtSerialBus
+///home/computation/Qt5.7.0/5.7/gcc_64/include/QtQml
+///home/computation/Qt5.7.0/5.7/gcc_64/include/QtNetwork
 ///home/computation/Qt5.7.0/5.7/gcc_64/include/QtCore
 ///home/computation/Qt5.7.0/5.7/gcc_64/mkspecs/linux-g++
 ///usr/include/c++/5

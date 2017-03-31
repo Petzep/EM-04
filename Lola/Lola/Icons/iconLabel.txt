@@ -1,5 +1,5 @@
-Gauges Panel
+Debug
 Left Test Panel
 Menu
-Debug
+Right Test Panel
 Dail Panel

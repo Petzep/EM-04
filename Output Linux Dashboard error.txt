@@ -1,0 +1,7 @@
+﻿[9;0][?33l[?25l[?1cUnable to query physical screen size, defaulting to 100 dpi.
+To override, set QT_QPA_EGLFS_PHYSICAL_WIDTH and QT_QPA_EGLFS_PHYSICAL_HEIGHT (in millimeters).
+QFontDatabase: Cannot find font directory /usr/local/qt5/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from http://dejavu-fonts.org for example) or switch to fontconfig.
+JIT is disabled for QML. Property bindings and animations will be very slow. Visit https://wiki.qt.io/V4 to learn about possible solutions for your platform.
+qrc:/qml/dashboard.qml: Conflicting properties 'visible' and 'visibility' for Window 'root'
+EGLFS: OpenGL windows cannot be mixed with others.

@@ -38,7 +38,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 
 	QRectF selectionBoundingrect = itemShape.boundingRect();
 	selectionBoundingrect.adjust(-m_GradientRadius, -m_GradientRadius, m_GradientRadius, m_GradientRadius);
-	QPolygonF selectionShape = selectionBoundingrect;
+	QPolygonF selectionShape = selectionBoundingrect;	
 
 	int side = qMin(width(), height());
 
@@ -47,6 +47,14 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.translate(width() / 2, height() / 2);
 	painter.scale(side / 200.0, side / 200.0);
+	
+	//Draw Menu-Text
+	if(m_Selection < m_IconNames.size())
+	{
+		painter.save();
+		painter.drawText(QRect(0, 0, 0, 0), Qt::AlignCenter | Qt::TextDontClip, QString(m_IconNames.at(m_Selection)));
+		painter.restore();
+	}
 
 	//Paint selector
 	selectionShape.translate(QPointF(-0.5, (qreal)-100 + itemShape.boundingRect().width() - 0.5));
@@ -65,7 +73,7 @@ void QtPieMenu::paintEvent(QPaintEvent *)
 	painter.rotate((360.0 / m_ItemNumbers)*2); //rotate in such a way that the rotation is clockwise starting from the bottom
 	for (int i = 0; i < m_ItemNumbers; ++i) {
 		if (m_Icons.at((i + m_Selection) % m_ItemNumbers))
-			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(128, 128)).transformed(QTransform().rotate(-360/(i % m_ItemNumbers))));
+			painter.drawPixmap(itemShape.boundingRect(), m_Icons.at((i + m_Selection) % m_ItemNumbers)->pixmap(QSize(128, 128)).transformed(QTransform().rotate((-360 / m_ItemNumbers)*(i + m_Selection)), Qt::SmoothTransformation));
 		else
 			painter.drawConvexPolygon(itemShape);
 		painter.rotate(360.0 / m_ItemNumbers);

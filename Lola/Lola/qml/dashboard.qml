@@ -7,8 +7,8 @@ import QtQuick.Extras 1.4
 Window {
     id: root
 	objectName: "dashboardWindow"
-	width: 1024
-    height: 600
+	width: 800
+    height: 480
     visibility: "FullScreen"
     color: "#161616"
     title: "Lola Dashboard"
