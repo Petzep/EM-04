@@ -1,5 +1,5 @@
 Debug
-Left Test Panel
+Music
 Menu
 Right Test Panel
 Dail Panel

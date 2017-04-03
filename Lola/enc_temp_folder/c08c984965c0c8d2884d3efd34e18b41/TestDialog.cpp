@@ -219,8 +219,8 @@ void TestDialog::onPositionChanged(qint64 pos)
 	qint64 duration = (m_player->duration()) / 1000;
 	qint64 position = pos / 1000;
 
-	playerBar->setMaximum(duration);
-	playerBar->setValue(position);
+	playerBar->setMaximum(m_player->duration());
+	playerBar->setValue(pos);
 
 	QTime currentTime((position / 3600) % 60, (position / 60) % 60, position % 60, (position * 1000) % 1000);
 	QTime totalTime((duration / 3600) % 60, (duration / 60) % 60, duration%60, (duration * 1000) % 1000);

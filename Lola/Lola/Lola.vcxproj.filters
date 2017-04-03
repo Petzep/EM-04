@@ -287,5 +287,8 @@
     <Text Include="Resources\canout.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Icons\iconLabel.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
