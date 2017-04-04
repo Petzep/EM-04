@@ -76,7 +76,7 @@ bool TestDialog::event(QEvent *event)
 					}
 				}
 				//Button event handler
-				else if(QString(focusWidget()->metaObject()->className()).contains(QString("Button")))
+				else if(QString(focusWidget()->metaObject()->className()).contains(QString("Button")) || QString(focusWidget()->metaObject()->className()).contains(QString("Box")))
 				{
 					QPushButton* button = (QPushButton*)focusWidget();
 					switch(cmd)
@@ -192,6 +192,7 @@ bool TestDialog::event(QEvent *event)
 
 void TestDialog::onCurrentIndexChanged(int track)
 {
+	playlistWidget->setCurrentRow(m_playlist->currentIndex());
 	updateMetaData();
 }
 
@@ -243,8 +244,11 @@ void TestDialog::on_playButton_toggled(bool)
 void TestDialog::on_prevButton_clicked(void)
 {
 	m_player->playlist()->previous();
-	if(!(m_player->playlist()->currentIndex()))
+	if(!(m_player->playlist()->currentIndex()) && m_player->playlist()->playbackMode() == QMediaPlaylist::PlaybackMode::Sequential)
+	{
+		nextButton->setFocus();
 		prevButton->setEnabled(false);
+	}
 	else
 		nextButton->setEnabled(true);
 	updateMetaData();
@@ -253,11 +257,52 @@ void TestDialog::on_prevButton_clicked(void)
 void TestDialog::on_nextButton_clicked(void)
 {
 	m_player->playlist()->next();
-	if(!(m_player->playlist()->currentIndex() < m_player->playlist()->mediaCount() - 1))
+	if(!(m_player->playlist()->currentIndex() < m_player->playlist()->mediaCount() - 1) && m_player->playlist()->playbackMode() == QMediaPlaylist::PlaybackMode::Sequential)
+	{
+		prevButton->setFocus();
 		nextButton->setEnabled(false);
+	}
 	else
 		prevButton->setEnabled(true);
 	updateMetaData();
+}
+
+void TestDialog::on_loopOneButton_clicked(void)
+{
+	if(!loopOneButton->isChecked())
+	{
+		loopOneButton->setChecked(false);
+		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Sequential);
+	}
+	else
+	{
+		loopAllButton->setChecked(false);
+		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::CurrentItemOnce);
+	}
+}
+
+void TestDialog::on_loopAllButton_clicked(void)
+{
+	if(!loopAllButton->isChecked())
+	{
+		loopAllButton->setChecked(false);
+		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Sequential);
+	}
+	else
+	{
+		loopOneButton->setChecked(false);
+		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
+		nextButton->setEnabled(true);
+		prevButton->setEnabled(true);
+	}
+}
+
+void TestDialog::on_shuffleBox_clicked(void)
+{
+	if(shuffleBox->isChecked())
+		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Random);
+	else
+		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Sequential);
 }
 
 void TestDialog::on_stopButton_clicked(void)
@@ -275,8 +320,11 @@ bool TestDialog::loadMusic(QString musicFolder)
 	for(const QString& f : files)
 	{
 		content.push_back(QUrl::fromLocalFile(dir.path() + "/" + f));
+		QFileInfo fi(f);
+		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), playlistWidget);
 	}
 	m_playlist->addMedia(content);
+	playlistWidget->setCurrentRow(0);
 
 	return true;
 }

@@ -13,13 +13,16 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
 #include "QtPieMenu.h"
@@ -45,6 +48,10 @@ public:
     QPushButton *prevButton;
     QPushButton *nextButton;
     QDial *volumeDail;
+    QListWidget *playlistWidget;
+    QRadioButton *loopOneButton;
+    QRadioButton *loopAllButton;
+    QCheckBox *shuffleBox;
     QWidget *Menu;
     QSplitter *splitter;
     QtPieMenu *qtPieMenu;
@@ -77,7 +84,7 @@ public:
         Music->setObjectName(QStringLiteral("Music"));
         playerBar = new QProgressBar(Music);
         playerBar->setObjectName(QStringLiteral("playerBar"));
-        playerBar->setGeometry(QRect(120, 70, 241, 23));
+        playerBar->setGeometry(QRect(320, 80, 241, 23));
         playerBar->setMaximum(100);
         playerBar->setValue(0);
         playerBar->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
@@ -86,33 +93,50 @@ public:
         playerBar->setFormat(QStringLiteral(""));
         label = new QLabel(Music);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(120, 50, 47, 13));
+        label->setGeometry(QRect(320, 60, 47, 13));
         label_2 = new QLabel(Music);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(120, 30, 41, 16));
+        label_2->setGeometry(QRect(320, 40, 41, 16));
         textArtist = new QLabel(Music);
         textArtist->setObjectName(QStringLiteral("textArtist"));
-        textArtist->setGeometry(QRect(160, 30, 201, 16));
+        textArtist->setGeometry(QRect(360, 40, 201, 16));
         textTitle = new QLabel(Music);
         textTitle->setObjectName(QStringLiteral("textTitle"));
-        textTitle->setGeometry(QRect(160, 50, 201, 16));
+        textTitle->setGeometry(QRect(360, 60, 201, 16));
         playButton = new QPushButton(Music);
         playButton->setObjectName(QStringLiteral("playButton"));
-        playButton->setGeometry(QRect(140, 130, 75, 23));
+        playButton->setGeometry(QRect(340, 140, 75, 23));
         playButton->setCheckable(true);
         stopButton = new QPushButton(Music);
         stopButton->setObjectName(QStringLiteral("stopButton"));
-        stopButton->setGeometry(QRect(250, 130, 75, 23));
+        stopButton->setGeometry(QRect(450, 140, 75, 23));
         prevButton = new QPushButton(Music);
         prevButton->setObjectName(QStringLiteral("prevButton"));
-        prevButton->setGeometry(QRect(100, 180, 75, 23));
+        prevButton->setGeometry(QRect(300, 190, 75, 23));
         nextButton = new QPushButton(Music);
         nextButton->setObjectName(QStringLiteral("nextButton"));
-        nextButton->setGeometry(QRect(280, 180, 75, 23));
+        nextButton->setGeometry(QRect(480, 190, 75, 23));
         volumeDail = new QDial(Music);
         volumeDail->setObjectName(QStringLiteral("volumeDail"));
-        volumeDail->setGeometry(QRect(200, 160, 50, 64));
+        volumeDail->setGeometry(QRect(400, 170, 50, 64));
         volumeDail->setMaximum(100);
+        playlistWidget = new QListWidget(Music);
+        playlistWidget->setObjectName(QStringLiteral("playlistWidget"));
+        playlistWidget->setGeometry(QRect(30, 40, 221, 192));
+        playlistWidget->setFocusPolicy(Qt::NoFocus);
+        playlistWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        playlistWidget->setProperty("showDropIndicator", QVariant(false));
+        loopOneButton = new QRadioButton(Music);
+        loopOneButton->setObjectName(QStringLiteral("loopOneButton"));
+        loopOneButton->setGeometry(QRect(360, 260, 82, 17));
+        loopOneButton->setAutoExclusive(false);
+        loopAllButton = new QRadioButton(Music);
+        loopAllButton->setObjectName(QStringLiteral("loopAllButton"));
+        loopAllButton->setGeometry(QRect(450, 260, 82, 17));
+        loopAllButton->setAutoExclusive(false);
+        shuffleBox = new QCheckBox(Music);
+        shuffleBox->setObjectName(QStringLiteral("shuffleBox"));
+        shuffleBox->setGeometry(QRect(280, 260, 70, 17));
         stackSlide->addWidget(Music);
         Menu = new QWidget();
         Menu->setObjectName(QStringLiteral("Menu"));
@@ -137,6 +161,7 @@ public:
         splitter_2->setOrientation(Qt::Horizontal);
         dial = new QDial(splitter_2);
         dial->setObjectName(QStringLiteral("dial"));
+        dial->setFocusPolicy(Qt::NoFocus);
         splitter_2->addWidget(dial);
         label_5 = new QLabel(splitter_2);
         label_5->setObjectName(QStringLiteral("label_5"));
@@ -150,6 +175,15 @@ public:
         lcdNumber->setSegmentStyle(QLCDNumber::Filled);
         lcdNumber->setProperty("value", QVariant(56.2));
         splitter_2->addWidget(lcdNumber);
+        QWidget::setTabOrder(pushButton, pushButton_2);
+        QWidget::setTabOrder(pushButton_2, playButton);
+        QWidget::setTabOrder(playButton, stopButton);
+        QWidget::setTabOrder(stopButton, prevButton);
+        QWidget::setTabOrder(prevButton, nextButton);
+        QWidget::setTabOrder(nextButton, volumeDail);
+        QWidget::setTabOrder(volumeDail, shuffleBox);
+        QWidget::setTabOrder(shuffleBox, loopOneButton);
+        QWidget::setTabOrder(loopOneButton, loopAllButton);
 
         retranslateUi(TestDialog);
         QObject::connect(qtPieMenu, SIGNAL(itemSelect(int)), stackSlide, SLOT(slideInIdx(int)));
@@ -173,6 +207,9 @@ public:
         stopButton->setText(QApplication::translate("TestDialog", "Stop", Q_NULLPTR));
         prevButton->setText(QApplication::translate("TestDialog", "Previous", Q_NULLPTR));
         nextButton->setText(QApplication::translate("TestDialog", "Next", Q_NULLPTR));
+        loopOneButton->setText(QApplication::translate("TestDialog", "Loop Song", Q_NULLPTR));
+        loopAllButton->setText(QApplication::translate("TestDialog", "Loop All", Q_NULLPTR));
+        shuffleBox->setText(QApplication::translate("TestDialog", "Shuffle", Q_NULLPTR));
         label_5->setText(QApplication::translate("TestDialog", "UserName", Q_NULLPTR));
     } // retranslateUi
 

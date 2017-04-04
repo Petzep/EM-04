@@ -7,6 +7,7 @@
 #include <QMediaPlayer>
 #include <QMediaMetaData>
 #include <QMediaPlaylist>
+#include <QListWidget>
 #include "SieFlyStyle.h"
 #include "ui_TestDialog.h"
 
@@ -26,6 +27,9 @@ public slots:
 	void on_stopButton_clicked(void);
 	void on_prevButton_clicked(void);
 	void on_nextButton_clicked(void);
+	void on_loopOneButton_clicked(void);
+	void on_loopAllButton_clicked(void);
+	void on_shuffleBox_clicked(void);
 	void onPositionChanged(qint64 position);
 	void onCurrentIndexChanged(int);
 	void onStateChanged(QMediaPlayer::State);
