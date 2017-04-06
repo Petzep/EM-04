@@ -65,59 +65,84 @@ bool MenuDialog::event(QEvent *event)
 						MENU->setSelection(value);
 					}
 				}
-				//Dail event handler
-				else if (volumeDial->hasFocus() || trebDial->hasFocus() || bassDial->hasFocus())
+				//Button event handler
+				else if(QString(focusWidget()->metaObject()->className()).contains(QString("Button")) || QString(focusWidget()->metaObject()->className()).contains(QString("Box")))
 				{
-					QDial* dial = (QDial*)focusWidget();
-					if (dial->notchesVisible())
+					QPushButton* button = (QPushButton*)focusWidget();
+					switch(cmd)
 					{
-						switch (cmd)
-						{
-						case Qt::Key_7:
-						case Qt::Key_5:
-							dial->setNotchesVisible(false);
-							break;
-						case Qt::Key_8:
-						case Qt::Key_6:
-						{
-							dial->setValue(dial->value() + 1);
-							break;
-						}
-						case Qt::Key_2:
-						case Qt::Key_4:
-						{
-							dial->setValue(dial->value() - 1);
-							break;
-						}
-						default:
-							break;
-						}
-					}
-					else
-					{
-						switch (cmd)
-						{
-						case Qt::Key_5:
-							dial->setNotchesVisible(true);
-							break;
-						case Qt::Key_8:
 						case Qt::Key_4:
 						{
 							focusPreviousChild();
 							break;
 						}
-						case Qt::Key_2:
 						case Qt::Key_6:
 						{
 							focusNextChild();
 							break;
 						}
-						case Qt::Key_7:
-							stackSlide->slideHome();
-							MENU->setFocus();
+						case Qt::Key_5:
+						{
+							button->click();
 							break;
+						}
 						default:
 							break;
+					}
+				}
+				//Dail event handler
+				else if(QString(focusWidget()->metaObject()->className()).contains(QString("Dial")))
+				{
+					QDial* dial = (QDial*)focusWidget();
+					if(dial->notchesVisible())
+					{
+						switch(cmd)
+						{
+							case Qt::Key_7:
+							case Qt::Key_5:
+								dial->setNotchesVisible(false);
+								break;
+							case Qt::Key_8:
+							case Qt::Key_6:
+							{
+								dial->setValue(dial->value() + 1);
+								break;
+							}
+							case Qt::Key_2:
+							case Qt::Key_4:
+							{
+								dial->setValue(dial->value() - 1);
+								break;
+							}
+							default:
+								break;
+						}
+					}
+					else
+					{
+						switch(cmd)
+						{
+							case Qt::Key_5:
+								dial->setNotchesVisible(true);
+								break;
+							case Qt::Key_8:
+							case Qt::Key_4:
+							{
+								focusPreviousChild();
+								break;
+							}
+							case Qt::Key_2:
+							case Qt::Key_6:
+							{
+								focusNextChild();
+								break;
+							}
+							case Qt::Key_7:
+								stackSlide->slideHome();
+								MENU->setFocus();
+								break;
+							default:
+								break;
 						}
 					}
 				}
@@ -154,4 +179,9 @@ bool MenuDialog::event(QEvent *event)
 	}
 
 	return QWidget::event(event);
+}
+
+void MenuDialog::on_quitButton_clicked(void)
+{
+	this->close();
 }

@@ -11,6 +11,7 @@ TestDialog::TestDialog(QWidget *parent)
 	m_player->setPlaylist(m_playlist);
 	m_player->setVolume(50);
 	playerBar->setMaximum(m_player->duration()/1000);
+	volumeDail->setValue(m_player->volume());
 	connect(volumeDail, SIGNAL(valueChanged(int)), m_player, SLOT(setVolume(int)));
 	connect(m_player, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
 	connect(m_playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
@@ -192,7 +193,7 @@ bool TestDialog::event(QEvent *event)
 
 void TestDialog::onCurrentIndexChanged(int track)
 {
-	playlistWidget->setCurrentRow(m_playlist->currentIndex());
+	playlistWidget->setCurrentRow(track);
 	updateMetaData();
 }
 

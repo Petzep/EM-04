@@ -35,6 +35,7 @@
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>
+      <SelectedDirectories />
     </MainSourceTransferCommand>
     <AllowChangingHostForMainCommands>false</AllowChangingHostForMainCommands>
     <SkipBuildIfNoSourceFilesChanged>false</SkipBuildIfNoSourceFilesChanged>
@@ -80,7 +81,7 @@
     <MakeCommandTemplate>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <RemoteHost>
-        <HostName>192.168.137.213</HostName>
+        <HostName>192.168.137.234</HostName>
         <Transport>SSH</Transport>
         <UserName>pi</UserName>
       </RemoteHost>
@@ -99,12 +100,12 @@
     <QMakeCommand>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <RemoteHost>
-        <HostName>192.168.137.213</HostName>
+        <HostName>192.168.137.234</HostName>
         <Transport>SSH</Transport>
         <UserName>pi</UserName>
       </RemoteHost>
-      <Command>/usr/local/qt5/bin/qmake</Command>
-      <Arguments> TUIcomotive.pro CONFIGNAME=$(ConfigurationName) </Arguments>
+      <Command>qtchooser</Command>
+      <Arguments>-run-tool=qmake -qt=qt5 TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records />
@@ -157,7 +158,7 @@
       <DebuggedProgram>$(TargetPath)</DebuggedProgram>
       <GDBServerPort>2000</GDBServerPort>
       <ProgramArguments />
-      <ProgramEnvironment>PATH=/usr/local/qt5/bin:$PATH</ProgramEnvironment>
+      <ProgramEnvironment>PATH=/usr/local/qt5/bin:$PATH|QT_PLUGIN_PATH=/usr/local/qt5/plugins/</ProgramEnvironment>
     </LaunchGDBSettings>
     <GenerateCtrlBreakInsteadOfCtrlC>false</GenerateCtrlBreakInsteadOfCtrlC>
     <DeploymentTargetPath />

@@ -42,49 +42,49 @@
        <item>
         <widget class="QPushButton" name="addButton">
          <property name="text">
-          <string>skADDje</string>
+          <string>sk&amp;ADDje</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="deleteButton">
          <property name="text">
-          <string>sletXIT</string>
+          <string>slet&amp;XIT</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="testButton">
          <property name="text">
-          <string>UI Test</string>
+          <string>&amp;UI Test</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="menuButton">
          <property name="text">
-          <string>Menu Button</string>
+          <string>&amp;Menu Button</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="styleButton">
          <property name="text">
-          <string>Style Test</string>
+          <string>&amp;Style Test</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="canButton">
          <property name="text">
-          <string>CAN test</string>
+          <string>&amp;CAN test</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="dashboardButton">
          <property name="text">
-          <string>Dashboard</string>
+          <string>&amp;Dashboard</string>
          </property>
         </widget>
        </item>
