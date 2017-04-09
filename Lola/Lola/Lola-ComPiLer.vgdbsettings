@@ -86,7 +86,7 @@
         <UserName>pi</UserName>
       </RemoteHost>
       <Command>make</Command>
-      <Arguments>-j4</Arguments>
+      <Arguments>-j3</Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records>
@@ -104,8 +104,8 @@
         <Transport>SSH</Transport>
         <UserName>pi</UserName>
       </RemoteHost>
-      <Command>qtchooser</Command>
-      <Arguments>-run-tool=qmake -qt=qt5 TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
+      <Command>/opt/Qt5.8/bin/qmake</Command>
+      <Arguments>TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records />

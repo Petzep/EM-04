@@ -306,6 +306,26 @@ void TestDialog::on_shuffleBox_clicked(void)
 		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Sequential);
 }
 
+void TestDialog::on_dashboardButton_clicked(void)
+{
+	QQmlApplicationEngine* engine = new QQmlApplicationEngine;
+	engine->load(QUrl("qrc:/qml/dashboard.qml"));
+
+	if(engine->rootObjects().isEmpty())
+		return;
+	QObject *rootObject = engine->rootObjects().first();
+	QObject *qmlObject = rootObject->findChild<QObject*>("valueSource");
+
+	rootObject->setProperty("visibility", "Windowed");
+	qmlObject->setProperty("temperature", 0.8);
+}
+
+void TestDialog::on_canButton_clicked(void)
+{
+	CanDialog dialog(this);
+	dialog.exec();
+}
+
 void TestDialog::on_stopButton_clicked(void)
 {
 	m_player->stop();

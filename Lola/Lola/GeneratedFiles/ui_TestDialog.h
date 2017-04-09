@@ -35,8 +35,8 @@ class Ui_TestDialog
 public:
     StackSlide *stackSlide;
     QWidget *Debug;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QPushButton *dashbaordButton;
+    QPushButton *canButton;
     QWidget *Music;
     QProgressBar *playerBar;
     QLabel *label;
@@ -73,12 +73,12 @@ public:
         stackSlide->setMenuPage(2);
         Debug = new QWidget();
         Debug->setObjectName(QStringLiteral("Debug"));
-        pushButton = new QPushButton(Debug);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(140, 70, 101, 31));
-        pushButton_2 = new QPushButton(Debug);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-        pushButton_2->setGeometry(QRect(140, 110, 101, 31));
+        dashbaordButton = new QPushButton(Debug);
+        dashbaordButton->setObjectName(QStringLiteral("dashbaordButton"));
+        dashbaordButton->setGeometry(QRect(140, 70, 101, 31));
+        canButton = new QPushButton(Debug);
+        canButton->setObjectName(QStringLiteral("canButton"));
+        canButton->setGeometry(QRect(140, 110, 101, 31));
         stackSlide->addWidget(Debug);
         Music = new QWidget();
         Music->setObjectName(QStringLiteral("Music"));
@@ -175,8 +175,8 @@ public:
         lcdNumber->setSegmentStyle(QLCDNumber::Filled);
         lcdNumber->setProperty("value", QVariant(56.2));
         splitter_2->addWidget(lcdNumber);
-        QWidget::setTabOrder(pushButton, pushButton_2);
-        QWidget::setTabOrder(pushButton_2, playButton);
+        QWidget::setTabOrder(dashbaordButton, canButton);
+        QWidget::setTabOrder(canButton, playButton);
         QWidget::setTabOrder(playButton, stopButton);
         QWidget::setTabOrder(stopButton, prevButton);
         QWidget::setTabOrder(prevButton, nextButton);
@@ -197,8 +197,8 @@ public:
     void retranslateUi(QDialog *TestDialog)
     {
         TestDialog->setWindowTitle(QApplication::translate("TestDialog", "TestDialog", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("TestDialog", "Dashboard", Q_NULLPTR));
-        pushButton_2->setText(QApplication::translate("TestDialog", "CAN-Bus", Q_NULLPTR));
+        dashbaordButton->setText(QApplication::translate("TestDialog", "Dashboard", Q_NULLPTR));
+        canButton->setText(QApplication::translate("TestDialog", "CAN-Bus", Q_NULLPTR));
         label->setText(QApplication::translate("TestDialog", "Title:", Q_NULLPTR));
         label_2->setText(QApplication::translate("TestDialog", "Artist:", Q_NULLPTR));
         textArtist->setText(QApplication::translate("TestDialog", "-", Q_NULLPTR));

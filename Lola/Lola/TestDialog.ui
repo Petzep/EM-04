@@ -29,7 +29,7 @@
     <number>2</number>
    </property>
    <widget class="QWidget" name="Debug">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="dashboardButton">
      <property name="geometry">
       <rect>
        <x>140</x>
@@ -42,7 +42,7 @@
       <string>Dashboard</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="canButton">
      <property name="geometry">
       <rect>
        <x>140</x>
@@ -347,8 +347,8 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>pushButton</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>dashboardButton</tabstop>
+  <tabstop>canButton</tabstop>
   <tabstop>playButton</tabstop>
   <tabstop>stopButton</tabstop>
   <tabstop>prevButton</tabstop>
