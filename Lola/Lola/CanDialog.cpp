@@ -138,28 +138,42 @@ void CanDialog::canRx(void)
 
 	while(canDevice->framesAvailable())
 	{
+		CanLogMsg canData;
 		const QCanBusFrame frame = canDevice->readFrame();
+		
+		int index = model->rowCount() - 1;
 
-		QString view;
+		QString line;
 		if(!frame.frameType() == QCanBusFrame::ErrorFrame)
-			view = frame.toString();
-
-		const QString time = QString::fromLatin1("%1.%2  ")
-			.arg(frame.timeStamp().seconds(), 10, 10, QLatin1Char(' '))
-			.arg(frame.timeStamp().microSeconds() / 100, 4, 10, QLatin1Char('0'));
+			line = frame.toString();
 
 		QStandardItem *item = new QStandardItem();
 		model->setItem(model->rowCount(), 0, item);
 
+		QStringList splitList = line.split(']').first().split('[');
+		canData.dlc = splitList.last().toInt();
 
-		QModelIndex Qindex = model->index(0, 0, QModelIndex());
-		model->setData(Qindex, QVariant(QString("%1").arg(frame.timeStamp().microSeconds(), 12, 10, QChar('0'))));
-		Qindex = model->index(0, 1, QModelIndex());
-		model->setData(Qindex, QVariant(QString("0x%1").arg(frame.frameId())));
-		Qindex = model->index(0, 2, QModelIndex());
-		model->setData(Qindex, "x");
-		Qindex = model->index(0, 3, QModelIndex());
-		model->setData(Qindex, frame.payload());
+		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
+		int pos = 0;
+		canData.data.clear();
+		for(int i = 0; i < canData.dlc; i++)
+		{
+			if((pos = rx.indexIn(line, pos)) != -1)
+			{
+				canData.data.append(rx.cap(1));
+				pos += rx.matchedLength();
+			}
+		}
+		canData.time = frame.timeStamp().microSeconds();
+
+		QModelIndex Qindex = model->index(index, 0, QModelIndex());
+		model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
+		Qindex = model->index(index, 1, QModelIndex());
+		model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
+		Qindex = model->index(index, 2, QModelIndex());
+		model->setData(Qindex, canData.dlc);
+		Qindex = model->index(index, 3, QModelIndex());
+		model->setData(Qindex, canData.data.join(" "));
 	}
 }
 
