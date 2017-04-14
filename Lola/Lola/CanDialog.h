@@ -29,8 +29,7 @@ public:
 	void initTable();
 	void readFile(QString filename);
 	void dataToTable(CanLogMsg data);
-	bool initCan(int can);	
-
+	bool initCan(int can);
 private:
 	QStandardItemModel *model;
 	QFileSystemWatcher watcher;
@@ -45,4 +44,9 @@ public slots:
 	void on_radioCan_toggled(bool);
 	void on_checkUpdate_toggled(bool);
 	void handleFileChanged(const QString&);
+
+	void canError(void);
+	void canRx(void);
+	void canTx(void);
+
 };

@@ -212,8 +212,7 @@ void TestDialog::on_quitButton_clicked(void)
 
 void TestDialog::on_shutdownButton_clicked(void)
 {
-	qDebug("Not activated yet");
-	//QProcess::startDetached("shutdown -t 10");
+	QProcess::startDetached("shutdown now");
 }
 
 //////////////////////

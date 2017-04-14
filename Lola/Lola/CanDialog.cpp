@@ -90,8 +90,28 @@ bool CanDialog::initCan(int can)
 {
 	if(QCanBus::instance()->plugins().contains(QStringLiteral("socketcan").toUtf8()))
 	{
-		canDevice = QCanBus::instance()->createDevice(QStringLiteral("socketcan").toUtf8(), QStringLiteral("can").append(can + 'a'));
-		canDevice->connectDevice();
+		QString errorString;
+		canDevice = QCanBus::instance()->createDevice(QStringLiteral("socketcan").toUtf8(), QStringLiteral("can").append(can + '0'), &errorString);
+
+		if(!canDevice)
+		{
+			QMessageBox::StandardButton warningBox;
+			warningBox = QMessageBox::warning(this, "CANerror", (tr("Error creating device '%1', reason: '%2'").arg(QStringLiteral("can").append(can + '0')).arg(errorString)));
+		
+			return false;
+		}
+
+		connect(canDevice, SIGNAL(errorOccurred()), this, SLOT(canError()));
+		connect(canDevice, SIGNAL(framesReceived()), this, SLOT(canRx()));
+		connect(canDevice, SIGNAL(framesWritten()), this, SLOT(canTx()));
+
+		canDevice->setConfigurationParameter(QCanBusDevice::BitRateKey, 500000);
+
+		if(!canDevice->connectDevice())
+		{
+			QMessageBox::StandardButton warningBox;
+			warningBox = QMessageBox::warning(this, "CANerror", tr("Connection error: %1\n Device: %2").arg(canDevice->errorString()).arg(QStringLiteral("can").append(can + '0')));
+		}
 
 		QCanBusFrame frame;
 		frame.setFrameId(0x001);
@@ -103,6 +123,49 @@ bool CanDialog::initCan(int can)
 	}
 	else
 		return false;
+}
+
+void CanDialog::canError(void)
+{
+	QMessageBox::StandardButton warningBox;
+	warningBox = QMessageBox::warning(this, "CANerror", tr("Connection error: %1").arg(canDevice->errorString()));
+}
+
+void CanDialog::canRx(void)
+{
+	if(!canDevice)
+		return;
+
+	while(canDevice->framesAvailable())
+	{
+		const QCanBusFrame frame = canDevice->readFrame();
+
+		QString view;
+		if(!frame.frameType() == QCanBusFrame::ErrorFrame)
+			view = frame.toString();
+
+		const QString time = QString::fromLatin1("%1.%2  ")
+			.arg(frame.timeStamp().seconds(), 10, 10, QLatin1Char(' '))
+			.arg(frame.timeStamp().microSeconds() / 100, 4, 10, QLatin1Char('0'));
+
+		QStandardItem *item = new QStandardItem();
+		model->setItem(model->rowCount(), 0, item);
+
+
+		QModelIndex Qindex = model->index(0, 0, QModelIndex());
+		model->setData(Qindex, QVariant(QString("%1").arg(frame.timeStamp().microSeconds(), 12, 10, QChar('0'))));
+		Qindex = model->index(0, 1, QModelIndex());
+		model->setData(Qindex, QVariant(QString("0x%1").arg(frame.frameId())));
+		Qindex = model->index(0, 2, QModelIndex());
+		model->setData(Qindex, "x");
+		Qindex = model->index(0, 3, QModelIndex());
+		model->setData(Qindex, frame.payload());
+	}
+}
+
+void CanDialog::canTx(void)
+{
+	qDebug("Frames written");
 }
 
 void CanDialog::on_refreshButton_clicked(void)

@@ -19,6 +19,7 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpacerItem>
@@ -47,6 +48,12 @@ public:
     QRadioButton *radioCan;
     QRadioButton *radioFile;
     QCheckBox *checkUpdate;
+    QLabel *canLabel;
+    QLabel *bitrateLabel;
+    QLabel *label;
+    QLineEdit *canEdit;
+    QLineEdit *bitrateEdit;
+    QLineEdit *errorEdit;
 
     void setupUi(QDialog *CanDialog)
     {
@@ -130,6 +137,27 @@ public:
 
         gridLayout_2->addWidget(checkUpdate, 1, 0, 1, 1);
 
+        canLabel = new QLabel(CanDialog);
+        canLabel->setObjectName(QStringLiteral("canLabel"));
+        canLabel->setGeometry(QRect(80, 400, 61, 16));
+        canLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        bitrateLabel = new QLabel(CanDialog);
+        bitrateLabel->setObjectName(QStringLiteral("bitrateLabel"));
+        bitrateLabel->setGeometry(QRect(100, 430, 41, 16));
+        bitrateLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        label = new QLabel(CanDialog);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(330, 400, 31, 16));
+        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        canEdit = new QLineEdit(CanDialog);
+        canEdit->setObjectName(QStringLiteral("canEdit"));
+        canEdit->setGeometry(QRect(150, 400, 113, 20));
+        bitrateEdit = new QLineEdit(CanDialog);
+        bitrateEdit->setObjectName(QStringLiteral("bitrateEdit"));
+        bitrateEdit->setGeometry(QRect(150, 430, 113, 20));
+        errorEdit = new QLineEdit(CanDialog);
+        errorEdit->setObjectName(QStringLiteral("errorEdit"));
+        errorEdit->setGeometry(QRect(370, 400, 113, 20));
 
         retranslateUi(CanDialog);
 
@@ -147,6 +175,9 @@ public:
         radioCan->setText(QApplication::translate("CanDialog", "CANBUS", Q_NULLPTR));
         radioFile->setText(QApplication::translate("CanDialog", "File", Q_NULLPTR));
         checkUpdate->setText(QApplication::translate("CanDialog", "Update", Q_NULLPTR));
+        canLabel->setText(QApplication::translate("CanDialog", "CanDevice:", Q_NULLPTR));
+        bitrateLabel->setText(QApplication::translate("CanDialog", "Bitrate:", Q_NULLPTR));
+        label->setText(QApplication::translate("CanDialog", "Error:", Q_NULLPTR));
     } // retranslateUi
 
 };
