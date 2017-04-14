@@ -16,6 +16,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QtPieMenu", "QtPieMenu\QtPi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StackSlide", "StackSlide\StackSlide.vcxproj", "{3B1D9102-5C13-45B1-B03B-4959077E4CE3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{43A48D14-E8A9-4310-8ED7-EA17BCC96FA8}"
+	ProjectSection(SolutionItems) = preProject
+		Todo.txt = Todo.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		ComPiLer|x64 = ComPiLer|x64

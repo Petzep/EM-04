@@ -20,7 +20,18 @@ TestDialog::TestDialog(QWidget *parent)
 	if(!loadMusic("/media"))
 		QApplication::beep();
 
+	//miniFix for broken QtStyle
+	QKeyEvent * eve1 = new QKeyEvent(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
+	QKeyEvent * eve2 = new QKeyEvent(QEvent::KeyRelease, Qt::Key_Tab, Qt::NoModifier);
+
 	MENU->setFocus();
+
+	qApp->postEvent((QObject*)MENU, (QEvent *)eve1);
+	qApp->postEvent((QObject*)MENU, (QEvent *)eve2);
+
+	focusPreviousChild();
+
+	stackSlide->slideHome();
 }
 
 TestDialog::~TestDialog()
@@ -191,6 +202,23 @@ bool TestDialog::event(QEvent *event)
 	return QWidget::event(event);
 }
 
+//////////////////////
+/////Debug Events/////
+//////////////////////
+void TestDialog::on_quitButton_clicked(void)
+{
+	this->close();
+}
+
+void TestDialog::on_shutdownButton_clicked(void)
+{
+	qDebug("Not activated yet");
+	//QProcess::startDetached("shutdown -t 10");
+}
+
+//////////////////////
+/////Music Events/////
+//////////////////////
 void TestDialog::onCurrentIndexChanged(int track)
 {
 	playlistWidget->setCurrentRow(track);

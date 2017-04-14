@@ -35,8 +35,10 @@ class Ui_TestDialog
 public:
     StackSlide *stackSlide;
     QWidget *Debug;
-    QPushButton *dashbaordButton;
+    QPushButton *dashboardButton;
     QPushButton *canButton;
+    QPushButton *quitButton;
+    QPushButton *shutdownButton;
     QWidget *Music;
     QProgressBar *playerBar;
     QLabel *label;
@@ -73,12 +75,18 @@ public:
         stackSlide->setMenuPage(2);
         Debug = new QWidget();
         Debug->setObjectName(QStringLiteral("Debug"));
-        dashbaordButton = new QPushButton(Debug);
-        dashbaordButton->setObjectName(QStringLiteral("dashbaordButton"));
-        dashbaordButton->setGeometry(QRect(140, 70, 101, 31));
+        dashboardButton = new QPushButton(Debug);
+        dashboardButton->setObjectName(QStringLiteral("dashboardButton"));
+        dashboardButton->setGeometry(QRect(140, 70, 101, 31));
         canButton = new QPushButton(Debug);
         canButton->setObjectName(QStringLiteral("canButton"));
         canButton->setGeometry(QRect(140, 110, 101, 31));
+        quitButton = new QPushButton(Debug);
+        quitButton->setObjectName(QStringLiteral("quitButton"));
+        quitButton->setGeometry(QRect(140, 150, 101, 31));
+        shutdownButton = new QPushButton(Debug);
+        shutdownButton->setObjectName(QStringLiteral("shutdownButton"));
+        shutdownButton->setGeometry(QRect(140, 230, 101, 31));
         stackSlide->addWidget(Debug);
         Music = new QWidget();
         Music->setObjectName(QStringLiteral("Music"));
@@ -147,6 +155,7 @@ public:
         qtPieMenu = new QtPieMenu(splitter);
         qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
         qtPieMenu->setSelectionRadius(16);
+        qtPieMenu->setSelection(2);
         splitter->addWidget(qtPieMenu);
         stackSlide->addWidget(Menu);
         page_3 = new QWidget();
@@ -175,7 +184,7 @@ public:
         lcdNumber->setSegmentStyle(QLCDNumber::Filled);
         lcdNumber->setProperty("value", QVariant(56.2));
         splitter_2->addWidget(lcdNumber);
-        QWidget::setTabOrder(dashbaordButton, canButton);
+        QWidget::setTabOrder(dashboardButton, canButton);
         QWidget::setTabOrder(canButton, playButton);
         QWidget::setTabOrder(playButton, stopButton);
         QWidget::setTabOrder(stopButton, prevButton);
@@ -197,8 +206,10 @@ public:
     void retranslateUi(QDialog *TestDialog)
     {
         TestDialog->setWindowTitle(QApplication::translate("TestDialog", "TestDialog", Q_NULLPTR));
-        dashbaordButton->setText(QApplication::translate("TestDialog", "Dashboard", Q_NULLPTR));
+        dashboardButton->setText(QApplication::translate("TestDialog", "Dashboard", Q_NULLPTR));
         canButton->setText(QApplication::translate("TestDialog", "CAN-Bus", Q_NULLPTR));
+        quitButton->setText(QApplication::translate("TestDialog", "Exit", Q_NULLPTR));
+        shutdownButton->setText(QApplication::translate("TestDialog", "Shutdown", Q_NULLPTR));
         label->setText(QApplication::translate("TestDialog", "Title:", Q_NULLPTR));
         label_2->setText(QApplication::translate("TestDialog", "Artist:", Q_NULLPTR));
         textArtist->setText(QApplication::translate("TestDialog", "-", Q_NULLPTR));

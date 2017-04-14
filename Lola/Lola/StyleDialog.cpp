@@ -116,23 +116,21 @@ StyleDialog::StyleDialog(QWidget *parent)
 	setLayout(mainLayout);
 
 	setWindowTitle(tr("Styles"));
-	changeStyle("SieFly");
 }
 
 void StyleDialog::changeStyle(const QString &styleName)
 {
-	if (styleName == "NorwegianWood") {
+	if (styleName == "NorwegianWood")
 		QApplication::setStyle(new NorwegianWoodStyle);
-	}
 	else if(styleName == "SieFly")
 		QApplication::setStyle(new SieFlyStyle);
 	else if(styleName == "Proto")
 		QApplication::setStyle(new ProtoStyle);
 	else if(styleName == "DarkWood")
 		QApplication::setStyle(new DarkWoodStyle);
-	else {
+	else 
 		QApplication::setStyle(QStyleFactory::create(styleName));
-	}
+	
 	changePalette();
 }
 

@@ -55,6 +55,32 @@
       <string>CAN-Bus</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="quitButton">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>150</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Exit</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="shutdownButton">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>230</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Shutdown</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="Music">
     <widget class="QProgressBar" name="playerBar">
@@ -286,6 +312,9 @@
      <widget class="QtPieMenu" name="qtPieMenu">
       <property name="selectionRadius">
        <double>16.000000000000000</double>
+      </property>
+      <property name="selection">
+       <number>2</number>
       </property>
      </widget>
     </widget>

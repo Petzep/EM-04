@@ -25,6 +25,8 @@ public:
 	void updateMetaData();
 
 public slots:
+//Debug
+	void on_quitButton_clicked(void);
 //MusicPlayer
 	void on_playButton_toggled(bool);
 	void on_stopButton_clicked(void);
@@ -37,6 +39,7 @@ public slots:
 	void on_dashboardButton_clicked(void);
 	void on_canButton_clicked(void);
 	void onPositionChanged(qint64 position);
+	void on_shutdownButton_clicked(void);
 	void onCurrentIndexChanged(int);
 	void onStateChanged(QMediaPlayer::State);
 

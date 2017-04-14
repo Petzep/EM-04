@@ -18,6 +18,7 @@ class TUIcomotive : public QMainWindow
 
 public:
     TUIcomotive(QWidget *parent = Q_NULLPTR);
+	bool event(QEvent *event);
 
 private:
     Ui::TUIcomotiveClass ui;

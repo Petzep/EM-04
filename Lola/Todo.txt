@@ -1,0 +1,9 @@
+TODO:
+
+- Command line parser
+http://doc.qt.io/qt-5/qcommandlineparser.html
+http://www.thegeekstuff.com/2013/01/c-argc-argv/
+
+- Make close/shutdown option
+-> shutdown http://www.qtcentre.org/threads/18171-How-to-turn-off-PC QProcess::startDetached("shutdown now");
+

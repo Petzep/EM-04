@@ -74,6 +74,7 @@ public:
 
         bangaList = new QListWidget(layoutWidget);
         bangaList->setObjectName(QStringLiteral("bangaList"));
+        bangaList->setFocusPolicy(Qt::NoFocus);
 
         gridLayout->addWidget(bangaList, 1, 0, 1, 2);
 
@@ -143,6 +144,12 @@ public:
         statusBar = new QStatusBar(TUIcomotiveClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         TUIcomotiveClass->setStatusBar(statusBar);
+        QWidget::setTabOrder(addButton, deleteButton);
+        QWidget::setTabOrder(deleteButton, testButton);
+        QWidget::setTabOrder(testButton, menuButton);
+        QWidget::setTabOrder(menuButton, styleButton);
+        QWidget::setTabOrder(styleButton, canButton);
+        QWidget::setTabOrder(canButton, dashboardButton);
 
         retranslateUi(TUIcomotiveClass);
 
