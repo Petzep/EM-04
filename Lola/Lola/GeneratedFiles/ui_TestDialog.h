@@ -16,108 +16,189 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDial>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
-#include "CustomClock.h"
 #include "QtPieMenu.h"
+#include "StackSlide.h"
 
 QT_BEGIN_NAMESPACE
 
 class Ui_TestDialog
 {
 public:
-    QPushButton *pushButton;
-    QtPieMenu *qtPieMenu;
-    QCheckBox *checkBox;
-    QDial *dial;
-    CustomClock *customClock;
-    QCheckBox *checkBox_2;
+    StackSlide *stackSlide;
+    QWidget *Debug;
+    QPushButton *dashboardButton;
+    QPushButton *canButton;
+    QPushButton *quitButton;
+    QPushButton *shutdownButton;
+    QWidget *Music;
+    QProgressBar *playerBar;
     QLabel *label;
-    QWidget *widget;
-    QGridLayout *gridLayout;
-    QDial *dial_4;
-    QDial *dial_5;
-    QDial *dial_2;
-    QDial *dial_3;
+    QLabel *label_2;
+    QLabel *textArtist;
+    QLabel *textTitle;
+    QPushButton *playButton;
+    QPushButton *stopButton;
+    QPushButton *prevButton;
+    QPushButton *nextButton;
+    QDial *volumeDail;
+    QListWidget *playlistWidget;
+    QRadioButton *loopOneButton;
+    QRadioButton *loopAllButton;
+    QCheckBox *shuffleBox;
+    QWidget *Menu;
+    QSplitter *splitter;
+    QtPieMenu *qtPieMenu;
+    QWidget *page_3;
+    QWidget *page_4;
+    QSplitter *splitter_2;
+    QDial *dial;
+    QLabel *label_5;
+    QLCDNumber *lcdNumber;
 
     void setupUi(QDialog *TestDialog)
     {
         if (TestDialog->objectName().isEmpty())
             TestDialog->setObjectName(QStringLiteral("TestDialog"));
-        TestDialog->resize(899, 562);
-        pushButton = new QPushButton(TestDialog);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(0, 60, 75, 23));
-        qtPieMenu = new QtPieMenu(TestDialog);
-        qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
-        qtPieMenu->setGeometry(QRect(290, 40, 281, 341));
-        qtPieMenu->setItemNumbers(20);
-        qtPieMenu->setSelectionColor(QColor(144, 0, 0));
-        qtPieMenu->setSelectionInnerColor(QColor(255, 255, 255));
-        qtPieMenu->setSelectionOuterColor(QColor(0, 255, 0));
-        qtPieMenu->setProperty("ToggleSecondHand", QVariant(true));
-        qtPieMenu->setProperty("colorSecondHand", QVariant(QColor(45, 130, 0)));
-        checkBox = new QCheckBox(TestDialog);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(10, 10, 70, 17));
-        dial = new QDial(TestDialog);
-        dial->setObjectName(QStringLiteral("dial"));
-        dial->setGeometry(QRect(0, 80, 50, 64));
-        dial->setMinimum(1);
-        dial->setMaximum(20);
-        dial->setPageStep(10);
-        dial->setInvertedAppearance(true);
-        dial->setWrapping(true);
-        customClock = new CustomClock(TestDialog);
-        customClock->setObjectName(QStringLiteral("customClock"));
-        customClock->setGeometry(QRect(20, 170, 161, 141));
-        customClock->setProperty("ToggleSecondHand", QVariant(true));
-        customClock->setColorMinuteHand(QColor(255, 0, 0, 191));
-        checkBox_2 = new QCheckBox(TestDialog);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setGeometry(QRect(10, 30, 121, 17));
-        label = new QLabel(TestDialog);
+        TestDialog->resize(800, 480);
+        stackSlide = new StackSlide(TestDialog);
+        stackSlide->setObjectName(QStringLiteral("stackSlide"));
+        stackSlide->setGeometry(QRect(9, 70, 781, 401));
+        stackSlide->setMenuPage(2);
+        Debug = new QWidget();
+        Debug->setObjectName(QStringLiteral("Debug"));
+        dashboardButton = new QPushButton(Debug);
+        dashboardButton->setObjectName(QStringLiteral("dashboardButton"));
+        dashboardButton->setGeometry(QRect(140, 70, 101, 31));
+        canButton = new QPushButton(Debug);
+        canButton->setObjectName(QStringLiteral("canButton"));
+        canButton->setGeometry(QRect(140, 110, 101, 31));
+        quitButton = new QPushButton(Debug);
+        quitButton->setObjectName(QStringLiteral("quitButton"));
+        quitButton->setGeometry(QRect(140, 150, 101, 31));
+        shutdownButton = new QPushButton(Debug);
+        shutdownButton->setObjectName(QStringLiteral("shutdownButton"));
+        shutdownButton->setGeometry(QRect(140, 230, 101, 31));
+        stackSlide->addWidget(Debug);
+        Music = new QWidget();
+        Music->setObjectName(QStringLiteral("Music"));
+        playerBar = new QProgressBar(Music);
+        playerBar->setObjectName(QStringLiteral("playerBar"));
+        playerBar->setGeometry(QRect(320, 80, 241, 23));
+        playerBar->setMaximum(100);
+        playerBar->setValue(0);
+        playerBar->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        playerBar->setTextVisible(true);
+        playerBar->setInvertedAppearance(false);
+        playerBar->setFormat(QStringLiteral(""));
+        label = new QLabel(Music);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(400, 30, 47, 311));
-        widget = new QWidget(TestDialog);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(580, 330, 208, 208));
-        gridLayout = new QGridLayout(widget);
-        gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
-        gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        gridLayout->setContentsMargins(0, 0, 0, 0);
-        dial_4 = new QDial(widget);
-        dial_4->setObjectName(QStringLiteral("dial_4"));
-
-        gridLayout->addWidget(dial_4, 1, 0, 1, 1);
-
-        dial_5 = new QDial(widget);
-        dial_5->setObjectName(QStringLiteral("dial_5"));
-
-        gridLayout->addWidget(dial_5, 1, 1, 1, 1);
-
-        dial_2 = new QDial(widget);
-        dial_2->setObjectName(QStringLiteral("dial_2"));
-
-        gridLayout->addWidget(dial_2, 0, 0, 1, 1);
-
-        dial_3 = new QDial(widget);
-        dial_3->setObjectName(QStringLiteral("dial_3"));
-
-        gridLayout->addWidget(dial_3, 0, 1, 1, 1);
-
+        label->setGeometry(QRect(320, 60, 47, 13));
+        label_2 = new QLabel(Music);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(320, 40, 41, 16));
+        textArtist = new QLabel(Music);
+        textArtist->setObjectName(QStringLiteral("textArtist"));
+        textArtist->setGeometry(QRect(360, 40, 201, 16));
+        textTitle = new QLabel(Music);
+        textTitle->setObjectName(QStringLiteral("textTitle"));
+        textTitle->setGeometry(QRect(360, 60, 201, 16));
+        playButton = new QPushButton(Music);
+        playButton->setObjectName(QStringLiteral("playButton"));
+        playButton->setGeometry(QRect(340, 140, 75, 23));
+        playButton->setCheckable(true);
+        stopButton = new QPushButton(Music);
+        stopButton->setObjectName(QStringLiteral("stopButton"));
+        stopButton->setGeometry(QRect(450, 140, 75, 23));
+        prevButton = new QPushButton(Music);
+        prevButton->setObjectName(QStringLiteral("prevButton"));
+        prevButton->setGeometry(QRect(300, 190, 75, 23));
+        nextButton = new QPushButton(Music);
+        nextButton->setObjectName(QStringLiteral("nextButton"));
+        nextButton->setGeometry(QRect(480, 190, 75, 23));
+        volumeDail = new QDial(Music);
+        volumeDail->setObjectName(QStringLiteral("volumeDail"));
+        volumeDail->setGeometry(QRect(400, 170, 50, 64));
+        volumeDail->setMaximum(100);
+        playlistWidget = new QListWidget(Music);
+        playlistWidget->setObjectName(QStringLiteral("playlistWidget"));
+        playlistWidget->setGeometry(QRect(30, 40, 221, 192));
+        playlistWidget->setFocusPolicy(Qt::NoFocus);
+        playlistWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        playlistWidget->setProperty("showDropIndicator", QVariant(false));
+        loopOneButton = new QRadioButton(Music);
+        loopOneButton->setObjectName(QStringLiteral("loopOneButton"));
+        loopOneButton->setGeometry(QRect(360, 260, 82, 17));
+        loopOneButton->setAutoExclusive(false);
+        loopAllButton = new QRadioButton(Music);
+        loopAllButton->setObjectName(QStringLiteral("loopAllButton"));
+        loopAllButton->setGeometry(QRect(450, 260, 82, 17));
+        loopAllButton->setAutoExclusive(false);
+        shuffleBox = new QCheckBox(Music);
+        shuffleBox->setObjectName(QStringLiteral("shuffleBox"));
+        shuffleBox->setGeometry(QRect(280, 260, 70, 17));
+        stackSlide->addWidget(Music);
+        Menu = new QWidget();
+        Menu->setObjectName(QStringLiteral("Menu"));
+        splitter = new QSplitter(Menu);
+        splitter->setObjectName(QStringLiteral("splitter"));
+        splitter->setGeometry(QRect(0, 0, 781, 401));
+        splitter->setOrientation(Qt::Horizontal);
+        qtPieMenu = new QtPieMenu(splitter);
+        qtPieMenu->setObjectName(QStringLiteral("qtPieMenu"));
+        qtPieMenu->setSelectionRadius(16);
+        qtPieMenu->setSelection(2);
+        splitter->addWidget(qtPieMenu);
+        stackSlide->addWidget(Menu);
+        page_3 = new QWidget();
+        page_3->setObjectName(QStringLiteral("page_3"));
+        stackSlide->addWidget(page_3);
+        page_4 = new QWidget();
+        page_4->setObjectName(QStringLiteral("page_4"));
+        stackSlide->addWidget(page_4);
+        splitter_2 = new QSplitter(TestDialog);
+        splitter_2->setObjectName(QStringLiteral("splitter_2"));
+        splitter_2->setGeometry(QRect(-10, 0, 791, 61));
+        splitter_2->setOrientation(Qt::Horizontal);
+        dial = new QDial(splitter_2);
+        dial->setObjectName(QStringLiteral("dial"));
+        dial->setFocusPolicy(Qt::NoFocus);
+        splitter_2->addWidget(dial);
+        label_5 = new QLabel(splitter_2);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        splitter_2->addWidget(label_5);
+        lcdNumber = new QLCDNumber(splitter_2);
+        lcdNumber->setObjectName(QStringLiteral("lcdNumber"));
+        QFont font;
+        font.setStrikeOut(false);
+        lcdNumber->setFont(font);
+        lcdNumber->setSmallDecimalPoint(true);
+        lcdNumber->setSegmentStyle(QLCDNumber::Filled);
+        lcdNumber->setProperty("value", QVariant(56.2));
+        splitter_2->addWidget(lcdNumber);
+        QWidget::setTabOrder(dashboardButton, canButton);
+        QWidget::setTabOrder(canButton, playButton);
+        QWidget::setTabOrder(playButton, stopButton);
+        QWidget::setTabOrder(stopButton, prevButton);
+        QWidget::setTabOrder(prevButton, nextButton);
+        QWidget::setTabOrder(nextButton, volumeDail);
+        QWidget::setTabOrder(volumeDail, shuffleBox);
+        QWidget::setTabOrder(shuffleBox, loopOneButton);
+        QWidget::setTabOrder(loopOneButton, loopAllButton);
 
         retranslateUi(TestDialog);
-        QObject::connect(pushButton, SIGNAL(clicked()), customClock, SLOT(toggleSecondHand()));
-        QObject::connect(checkBox_2, SIGNAL(clicked(bool)), qtPieMenu, SLOT(setDanielArrow(bool)));
-        QObject::connect(checkBox, SIGNAL(clicked(bool)), customClock, SLOT(setSecondHand(bool)));
-        QObject::connect(dial, SIGNAL(valueChanged(int)), qtPieMenu, SLOT(setSelection(int)));
-        QObject::connect(qtPieMenu, SIGNAL(itemName(QString)), label, SLOT(setText(QString)));
-        QObject::connect(qtPieMenu, SIGNAL(itemSelect(int)), label, SLOT(clear()));
+        QObject::connect(qtPieMenu, SIGNAL(itemSelect(int)), stackSlide, SLOT(slideInIdx(int)));
+
+        stackSlide->setCurrentIndex(2);
+
 
         QMetaObject::connectSlotsByName(TestDialog);
     } // setupUi
@@ -125,10 +206,22 @@ public:
     void retranslateUi(QDialog *TestDialog)
     {
         TestDialog->setWindowTitle(QApplication::translate("TestDialog", "TestDialog", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("TestDialog", "PushButton", Q_NULLPTR));
-        checkBox->setText(QApplication::translate("TestDialog", "CheckBox", Q_NULLPTR));
-        checkBox_2->setText(QApplication::translate("TestDialog", "DANIEL ARROW!!!!!", Q_NULLPTR));
-        label->setText(QApplication::translate("TestDialog", "TextLabel", Q_NULLPTR));
+        dashboardButton->setText(QApplication::translate("TestDialog", "Dashboard", Q_NULLPTR));
+        canButton->setText(QApplication::translate("TestDialog", "CAN-Bus", Q_NULLPTR));
+        quitButton->setText(QApplication::translate("TestDialog", "Exit", Q_NULLPTR));
+        shutdownButton->setText(QApplication::translate("TestDialog", "Shutdown", Q_NULLPTR));
+        label->setText(QApplication::translate("TestDialog", "Title:", Q_NULLPTR));
+        label_2->setText(QApplication::translate("TestDialog", "Artist:", Q_NULLPTR));
+        textArtist->setText(QApplication::translate("TestDialog", "-", Q_NULLPTR));
+        textTitle->setText(QApplication::translate("TestDialog", "-", Q_NULLPTR));
+        playButton->setText(QApplication::translate("TestDialog", "Play", Q_NULLPTR));
+        stopButton->setText(QApplication::translate("TestDialog", "Stop", Q_NULLPTR));
+        prevButton->setText(QApplication::translate("TestDialog", "Previous", Q_NULLPTR));
+        nextButton->setText(QApplication::translate("TestDialog", "Next", Q_NULLPTR));
+        loopOneButton->setText(QApplication::translate("TestDialog", "Loop Song", Q_NULLPTR));
+        loopAllButton->setText(QApplication::translate("TestDialog", "Loop All", Q_NULLPTR));
+        shuffleBox->setText(QApplication::translate("TestDialog", "Shuffle", Q_NULLPTR));
+        label_5->setText(QApplication::translate("TestDialog", "UserName", Q_NULLPTR));
     } // retranslateUi
 
 };

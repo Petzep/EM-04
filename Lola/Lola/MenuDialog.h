@@ -17,4 +17,5 @@ public:
 
 public slots:
 	void on_controlDial_valueChanged(int);
+	void on_quitButton_clicked(void);
 };

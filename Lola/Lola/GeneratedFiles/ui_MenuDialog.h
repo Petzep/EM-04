@@ -64,7 +64,7 @@ public:
     QPushButton *pushButton_13;
     QPushButton *pushButton_14;
     QWidget *leftPage;
-    QPushButton *pushButton;
+    QPushButton *quitButton;
     QPushButton *pushButton_2;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
@@ -229,9 +229,9 @@ public:
         stackSlide->addWidget(page);
         leftPage = new QWidget();
         leftPage->setObjectName(QStringLiteral("leftPage"));
-        pushButton = new QPushButton(leftPage);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(120, 40, 70, 23));
+        quitButton = new QPushButton(leftPage);
+        quitButton->setObjectName(QStringLiteral("quitButton"));
+        quitButton->setGeometry(QRect(120, 40, 70, 23));
         pushButton_2 = new QPushButton(leftPage);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
         pushButton_2->setGeometry(QRect(90, 80, 75, 23));
@@ -357,8 +357,8 @@ public:
         gridLayout_2->addLayout(verticalLayout_2, 1, 2, 1, 1);
 
         QWidget::setTabOrder(pushButton_13, pushButton_14);
-        QWidget::setTabOrder(pushButton_14, pushButton);
-        QWidget::setTabOrder(pushButton, pushButton_2);
+        QWidget::setTabOrder(pushButton_14, quitButton);
+        QWidget::setTabOrder(quitButton, pushButton_2);
         QWidget::setTabOrder(pushButton_2, pushButton_3);
         QWidget::setTabOrder(pushButton_3, pushButton_4);
         QWidget::setTabOrder(pushButton_4, pushButton_5);
@@ -412,7 +412,7 @@ public:
         label->setText(QApplication::translate("MenuDialog", "Test Text", Q_NULLPTR));
         pushButton_13->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
         pushButton_14->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
-        pushButton->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
+        quitButton->setText(QApplication::translate("MenuDialog", "Quit", Q_NULLPTR));
         pushButton_2->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
         pushButton_3->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));
         pushButton_4->setText(QApplication::translate("MenuDialog", "PushButton", Q_NULLPTR));

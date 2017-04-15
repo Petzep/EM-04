@@ -22,6 +22,8 @@ TUIcomotive::TUIcomotive(QWidget *parent)
 									"background-color: black;"
 									"color: green;"
 									"border-style: inset;}");
+
+	ui.addButton->setFocus();
 }
 
 void TUIcomotive::on_addButton_clicked(void)
@@ -109,4 +111,61 @@ void TUIcomotive::addListItem(QString name, QString email)
 		item->setData(Qt::UserRole, email);
 		ui.bangaList->setCurrentItem(item);
 	}
+}
+
+bool TUIcomotive::event(QEvent *event)
+{
+	if(event->type() == QEvent::KeyPress)
+	{
+		QKeyEvent *ke = static_cast<QKeyEvent *>(event);
+		int cmd = ke->key();
+		if(cmd >= Qt::Key_0 && cmd <= Qt::Key_9) //filter for numeric-keys
+		{
+			//Button event handler
+			if(QString(focusWidget()->metaObject()->className()).contains(QString("Button")))
+			{
+				QPushButton* button = (QPushButton*)focusWidget();
+				switch(cmd)
+				{
+					case Qt::Key_4:
+					{
+						focusPreviousChild();
+						break;
+					}
+					case Qt::Key_6:
+					{
+						focusNextChild();
+						break;
+					}
+					case Qt::Key_5:
+					{
+						button->click();
+						break;
+					}
+					default:
+						break;
+				}
+			}
+			else
+				focusPreviousChild();
+		}
+			
+		//Always return to home and set focus
+		if(ke->key() == Qt::Key_0)
+		{
+			QKeyEvent * eve1 = new QKeyEvent(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
+			QKeyEvent * eve2 = new QKeyEvent(QEvent::KeyRelease, Qt::Key_Tab, Qt::NoModifier);
+
+			ui.addButton->setFocus();
+
+			qApp->postEvent((QObject*)ui.addButton, (QEvent *)eve1);
+			qApp->postEvent((QObject*)ui.addButton, (QEvent *)eve2);
+
+			focusPreviousChild();
+
+		}
+		return true;
+
+		}
+	return QWidget::event(event);
 }

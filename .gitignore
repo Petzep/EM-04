@@ -261,3 +261,4 @@ paket-files/
 *.sln.iml
 
 /Lola/Lola/BuildRuleQt.targets
+/Lola/Lola/media

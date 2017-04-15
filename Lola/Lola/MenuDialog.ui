@@ -361,7 +361,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </widget>
        <widget class="QWidget" name="leftPage">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="quitButton">
          <property name="geometry">
           <rect>
            <x>120</x>
@@ -371,7 +371,7 @@ p, li { white-space: pre-wrap; }
           </rect>
          </property>
          <property name="text">
-          <string>PushButton</string>
+          <string>Quit</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_2">
@@ -745,7 +745,7 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>pushButton_13</tabstop>
   <tabstop>pushButton_14</tabstop>
-  <tabstop>pushButton</tabstop>
+  <tabstop>quitButton</tabstop>
   <tabstop>pushButton_2</tabstop>
   <tabstop>pushButton_3</tabstop>
   <tabstop>pushButton_4</tabstop>

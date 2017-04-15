@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="ComPiLer|x64">
+      <Configuration>ComPiLer</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -40,6 +44,10 @@
     <ConfigurationType>Makefile</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared" />
@@ -71,9 +79,21 @@
     <IncludePath />
     <ReferencePath />
     <LibraryPath />
-    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtWidgets;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtGui;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtCore;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0006\linux-g++;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\c++\5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\c++\5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\c++\5\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0004\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include;LinuxVM;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtWidgets;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtGui;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtSerialBus;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtQml;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtNetwork;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0005\include\QtCore;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0006\linux-g++;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\c++\5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu\c++\5;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\c++\5\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0001\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0004\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0002\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include\x86_64-linux-gnu;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.56.101\0000\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_LinuxVM.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakePreprocessorDefinitions>__VisualGDB_CFG_LinuxVM;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
+    <NMakeOutput>$(ProjectDir)Lola-ComPiLer.vgdbsettings</NMakeOutput>
+    <IncludePath />
+    <ReferencePath />
+    <LibraryPath />
+    <NMakeIncludeSearchPath>$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0000\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0000\include\QtWidgets;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0000\include\QtGui;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0000\include\QtCore;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0002\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0002\include\interface\vcos\pthreads;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0002\include\interface\vmcs_host\linux;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0001\linux-rasp-pi-g++;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0003\include\c++\4.9;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0003\include\arm-linux-gnueabihf\c++\4.9;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0003\include\c++\4.9\backward;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0004\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0006\include;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0005\include-fixed;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0003\include\arm-linux-gnueabihf;$(LOCALAPPDATA)\VisualGDB\RemoteSourceCache\192.168.137.213\0003\include;ComPiLer;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(ProjectDir)\gcc_ComPiLer.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakePreprocessorDefinitions>__VisualGDB_CFG_ComPiLer;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -120,6 +140,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_CustomClock.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -131,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MenuDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_NorwegianWoodStyle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
@@ -144,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_QtPieMenu.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_SieFlyStyle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
@@ -157,14 +184,19 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_TestDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_TUIcomotive.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_TUIcomotive.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -180,20 +212,30 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_MenuDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_QtPieMenu.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_StackSlide.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_TestDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_TUIcomotive.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RaspberryPi|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='LinuxVM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ComPiLer|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuDialog.cpp" />
@@ -391,6 +433,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <None Include="compiler.pro" />
     <None Include="linuxvm.pro" />
     <None Include="qml\dashboard.qml" />
     <None Include="qml\DashboardGaugeStyle.qml" />
@@ -411,6 +454,7 @@
     <None Include="TUIcomotive.pro" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Icons\iconLabel.txt" />
     <Text Include="Resources\canout.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

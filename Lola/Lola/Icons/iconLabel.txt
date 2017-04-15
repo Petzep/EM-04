@@ -1,5 +1,5 @@
-Gauges Panel
-Left Test Panel
+Debug
+Music
 Menu
 Right Test Panel
 Dail Panel

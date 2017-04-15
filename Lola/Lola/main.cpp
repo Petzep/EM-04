@@ -3,8 +3,12 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    TUIcomotive w;
-    w.show();
-    return a.exec();
+    QApplication app(argc, argv);
+	
+	QFontDatabase::addApplicationFont(":/fonts/MsSansSerif.ttf");
+	app.setFont(QFont("Microsoft Sans Serif", 8));
+
+    TUIcomotive window;	
+	window.showNormal();
+    return app.exec();
 }

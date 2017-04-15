@@ -37,5 +37,7 @@
         <file>images/temperature-icon.png</file>
         <file>qml/LightSmallIndicator.qml</file>
         <file>images/elec-icon.png</file>
+        <file>fonts/DejaVuSans.ttf</file>
+        <file>fonts/MsSansSerif.ttf</file>
     </qresource>
 </RCC>

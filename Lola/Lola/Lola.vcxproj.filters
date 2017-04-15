@@ -279,9 +279,15 @@
     <None Include="qml\LightSmallIndicator.qml">
       <Filter>QML</Filter>
     </None>
+    <None Include="compiler.pro">
+      <Filter>QMake Project files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\canout.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Icons\iconLabel.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

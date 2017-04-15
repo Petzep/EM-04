@@ -2,7 +2,7 @@
 #Feel free to modify any flags you want.
 #Visit http://visualgdb.com/makefiles for more details.
 
-QT       += core gui serialbus qml
+QT       += core gui serialbus qml multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
