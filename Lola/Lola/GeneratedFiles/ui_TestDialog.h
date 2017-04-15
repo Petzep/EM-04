@@ -57,7 +57,12 @@ public:
     QWidget *Menu;
     QSplitter *splitter;
     QtPieMenu *qtPieMenu;
-    QWidget *page_3;
+    QWidget *Radio;
+    QPushButton *nextStationButton;
+    QPushButton *prevStationButton;
+    QListWidget *stationWidget;
+    QDial *volumeDail_2;
+    QRadioButton *radioButton;
     QWidget *page_4;
     QSplitter *splitter_2;
     QDial *dial;
@@ -158,9 +163,29 @@ public:
         qtPieMenu->setSelection(2);
         splitter->addWidget(qtPieMenu);
         stackSlide->addWidget(Menu);
-        page_3 = new QWidget();
-        page_3->setObjectName(QStringLiteral("page_3"));
-        stackSlide->addWidget(page_3);
+        Radio = new QWidget();
+        Radio->setObjectName(QStringLiteral("Radio"));
+        nextStationButton = new QPushButton(Radio);
+        nextStationButton->setObjectName(QStringLiteral("nextStationButton"));
+        nextStationButton->setGeometry(QRect(230, 60, 101, 23));
+        prevStationButton = new QPushButton(Radio);
+        prevStationButton->setObjectName(QStringLiteral("prevStationButton"));
+        prevStationButton->setGeometry(QRect(230, 300, 101, 23));
+        stationWidget = new QListWidget(Radio);
+        stationWidget->setObjectName(QStringLiteral("stationWidget"));
+        stationWidget->setGeometry(QRect(500, 51, 221, 291));
+        stationWidget->setFocusPolicy(Qt::NoFocus);
+        stationWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        stationWidget->setProperty("showDropIndicator", QVariant(false));
+        volumeDail_2 = new QDial(Radio);
+        volumeDail_2->setObjectName(QStringLiteral("volumeDail_2"));
+        volumeDail_2->setGeometry(QRect(340, 140, 91, 81));
+        volumeDail_2->setMaximum(100);
+        radioButton = new QRadioButton(Radio);
+        radioButton->setObjectName(QStringLiteral("radioButton"));
+        radioButton->setGeometry(QRect(250, 170, 61, 17));
+        radioButton->setAutoExclusive(false);
+        stackSlide->addWidget(Radio);
         page_4 = new QWidget();
         page_4->setObjectName(QStringLiteral("page_4"));
         stackSlide->addWidget(page_4);
@@ -221,6 +246,9 @@ public:
         loopOneButton->setText(QApplication::translate("TestDialog", "Loop Song", Q_NULLPTR));
         loopAllButton->setText(QApplication::translate("TestDialog", "Loop All", Q_NULLPTR));
         shuffleBox->setText(QApplication::translate("TestDialog", "Shuffle", Q_NULLPTR));
+        nextStationButton->setText(QApplication::translate("TestDialog", "Next Station", Q_NULLPTR));
+        prevStationButton->setText(QApplication::translate("TestDialog", "Previous Station", Q_NULLPTR));
+        radioButton->setText(QApplication::translate("TestDialog", "Radio", Q_NULLPTR));
         label_5->setText(QApplication::translate("TestDialog", "UserName", Q_NULLPTR));
     } // retranslateUi
 

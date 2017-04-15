@@ -8,6 +8,7 @@ TestDialog::TestDialog(QWidget *parent)
 	this->setFixedSize(QSize(800, 480));
 	m_player = new QMediaPlayer(this);
 	m_playlist = new QMediaPlaylist(m_player);
+	m_radiolist = new QMediaPlaylist(m_player);
 	m_player->setPlaylist(m_playlist);
 	m_player->setVolume(50);
 	playerBar->setMaximum(m_player->duration()/1000);
@@ -216,6 +217,22 @@ void TestDialog::on_shutdownButton_clicked(void)
 }
 
 //////////////////////
+/////Radio Events/////
+//////////////////////
+void TestDialog::on_nextStationButton_clicked(void)
+{
+	m_player->playlist()->next();
+}
+
+void TestDialog::on_prevStationButton_clicked(void)
+{
+	m_player->playlist()->previous();
+}
+void TestDialog::on_radioButton_clicked(void)
+{
+	m_player->setPlaylist(m_radiolist);
+}
+//////////////////////
 /////Music Events/////
 //////////////////////
 void TestDialog::onCurrentIndexChanged(int track)
@@ -262,6 +279,9 @@ void TestDialog::onPositionChanged(qint64 pos)
 
 void TestDialog::on_playButton_toggled(bool)
 {
+	if(m_player->playlist() != m_playlist)
+		m_player->setPlaylist(m_playlist);
+
 	if(playButton->isChecked())
 		m_player->play();
 	else
@@ -371,8 +391,29 @@ bool TestDialog::loadMusic(QString musicFolder)
 		QFileInfo fi(f);
 		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), playlistWidget);
 	}
+
 	m_playlist->addMedia(content);
 	playlistWidget->setCurrentRow(0);
+
+	return true;
+}
+
+bool TestDialog::loadRadio()
+{
+	QDir dir(QString(QDir::currentPath() + "radio"));
+	QStringList files = dir.entryList(QStringList() << "*.mp3", QDir::Files);
+	if(files.isEmpty())
+		return false;
+	QList<QMediaContent> content;
+	for(const QString& f : files)
+	{
+		content.push_back(QUrl::fromLocalFile(dir.path() + "/" + f));
+		QFileInfo fi(f);
+		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), playlistWidget);
+	}
+
+	m_radiolist->addMedia(content);
+	stationWidget->setCurrentRow(0);
 
 	return true;
 }

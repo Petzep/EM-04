@@ -22,11 +22,16 @@ public:
 	~TestDialog();
 	bool event(QEvent *event);
 	bool loadMusic(QString dir);
+	bool loadRadio();
 	void updateMetaData();
 
 public slots:
 //Debug
 	void on_quitButton_clicked(void);
+//Radio
+	void on_prevStationButton_clicked(void);
+	void on_nextStationButton_clicked(void);
+	void on_radioButton_clicked(void);
 //MusicPlayer
 	void on_playButton_toggled(bool);
 	void on_stopButton_clicked(void);
@@ -46,6 +51,7 @@ public slots:
 private:
 	QMediaPlayer* m_player;
 	QMediaPlaylist* m_playlist;
+	QMediaPlaylist* m_radiolist;
 	
 
 };
