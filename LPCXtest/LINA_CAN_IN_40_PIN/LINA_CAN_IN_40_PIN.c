@@ -24,8 +24,8 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)				//blink left
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)				//blink right
 #define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)				//whiper speed
-#define BLOWER_ADDRESS		(0x007 + COUT_ADDRESS)
 #define CLAXON_ADDRESS		(0x007 + COUT_ADDRESS)
+#define BLOWER_ADDRESS		(0x008 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -464,6 +464,13 @@ int main(void)
 			//achterlichten
 			rearOn = rear;
 			SendMsgBuf.ID = REAR_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = rearOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+			SendMsgBuf.ID = LIGHT_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Type = 0;
 			SendMsgBuf.Data[0] = rearOn;
