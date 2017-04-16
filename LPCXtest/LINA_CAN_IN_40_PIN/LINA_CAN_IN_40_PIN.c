@@ -4,7 +4,7 @@ Name        : EM4_CAN_IN.c
 Author      : Nephtaly Aniceta
 Version     : 0.8
 Copyright   : GPLv3
-Description : Main CAN IN Function
+Description : Main CAN IN Function for Lina
 Inspired by work from previous years.
 Rewritten for Visual Studio and LPCOpen v2.xx
 ===============================================================================
@@ -12,19 +12,20 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0000
-#define	EM_04_CAN_RANGE		0x100
+#define DEVICE_NR			0b0000								//Device number, check bottom of page for allocation
+#define	EM_04_CAN_RANGE		0x100								//offset for CAN_BUS
 
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
-#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
-#define LIGHT_ADDRESS			(0x001 + COUT_ADDRESS)
-#define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
-#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
-#define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
-#define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
-#define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)
+#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)			//CAN_OUT offset
+#define LIGHT_ADDRESS		(0x001 + COUT_ADDRESS)				//Algemene lampen achterlichten(rear and city?)
+#define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)				//msg_obj.data[0],msg_obj.data[1],msg_obj.data[2] for cit, low, high
+#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)				//
+#define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)				//blink left
+#define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)				//blink right
+#define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)				//whiper speed
 #define BLOWER_ADDRESS		(0x007 + COUT_ADDRESS)
+#define CLAXON_ADDRESS		(0x007 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -36,16 +37,8 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_SIGNAL1			(0x001 + MC_ADDRESS)
 #define MC_SIGNAL2			(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
+#define MC_DNR				(0x004 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
-
-#define	ALL_MESSAGE			1
-#define FRONT_MESSAGE		2
-#define	REAR_MESSAGE		3
-#define	LEFT_MESSAGE		4
-#define	RIGHT_MESSAGE		5
-#define	PERSNOAL_MESSAGE	6
-#define	LIGHT_MESSAGE			7
-#define	TOTAL_MESSAGE		8
 
 #define BLINK_FREQ			750
 
@@ -71,15 +64,17 @@ static ADC_CLOCK_SETUP_T ADCSetup;
 * @brief	Handle interrupt from SysTick timer
 * @return	Nothing
 */
-void SysTick_Handler(void) {
+void SysTick_Handler(void)
+{
 	SysTickCnt++;
 }
 
-void Delay(unsigned long tick) {
+void Delay(unsigned long tick)
+{
 	unsigned long systickcnt;
 
 	systickcnt = SysTickCnt;
-	while ((SysTickCnt - systickcnt) < tick)
+	while((SysTickCnt - systickcnt) < tick)
 		;
 }
 
@@ -109,7 +104,7 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 volatile uint32_t timer;//ms timer
 volatile uint8_t  t_flag;//timer flag
 
-/* Reply message received */
+						 /* Reply message received */
 static void ReplyMessage(CAN_MSG_T *pRcvMsg)
 {
 	CAN_MSG_T SendMsgBuf = *pRcvMsg;
@@ -127,7 +122,7 @@ void CAN_IRQHandler(void)
 	IntStatus = Chip_CAN_GetIntStatus(LPC_CAN);
 
 	/* New Message came */
-	if (IntStatus & CAN_ICR_RI)
+	if(IntStatus & CAN_ICR_RI)
 	{
 		Chip_CAN_Receive(LPC_CAN, &RcvMsgBuf);
 		//ReplyMessage(&RcvMsgBuf);
@@ -186,11 +181,23 @@ int main(void)
 	bool blinkRightState = false;
 	bool wiperState = false;
 
-	bool lightsOn = false;
-	bool frontOn = false;
-	bool alarmOn = false;
-	bool wiperOn = false;
+	bool fogLightsOn = false;
+	bool cityLightOn = false;
+	bool lowBeamOn = false;
+	bool highBeamOn = false;
+	bool claxonOn = false;
+	bool dnr_DOn = false;
+	bool dnr_NOn = false;
+	bool dnr_ROn = false;
+	bool rearOn = false;
+	bool washerOn = false;
+	bool buttonOn = false;
 	bool blowerOn = false;
+	bool alarmOn = false;
+	bool wiperOn = false; //TO BE REMOVED
+	bool wiper1On = false;
+	bool wiper2On = false;
+	bool wiperInterval = false;
 
 	bool sendOn = false;
 	bool can1On = false;
@@ -217,7 +224,7 @@ int main(void)
 	unsigned long LoopTick = 0;
 
 
-	for (;;) //infinite loop
+	for(;;) //infinite loop
 	{
 		bool pin1 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 16);
 		bool pin2 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 15);
@@ -257,29 +264,42 @@ int main(void)
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH2, &dataADC1);
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH6, &dataADC2);
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH5, &dataADC3);
-			
-		bool blinkLeft = pin1;
-		bool alarm = pin2;
-		bool lights = pin3;
-		bool wiper = pin4;
-		bool blinkRight = pin5;
-		bool blower = pin6;
-		bool front = pin8;
-		bool can1 = pin7;
-		bool can2 = pin9;
-		bool send = pin28;
-		bool test = pin27;
-		bool hud1 = pin17;
-		bool hud2 = pin18;
-		bool hud3 = pin19;
-		bool hud4 = pin20;
-		bool hud5 = pin21;
-		bool hud6 = pin22;
-		bool hud7 = pin23;
-		bool hud8 = pin24;
-		bool hudWarning = pin16;
-		bool motorController1 = pin25;
-		bool motorController2 = pin26;
+
+		bool fogLights = !pin7;
+		bool cityLight = !pin15;
+		bool lowBeam = !pin8;
+		bool highBeam = !pin11;
+		bool claxon = !pin12;
+		bool rear = pin4;
+		bool blinkLeft = !pin10;
+		bool blinkRight = !pin1;
+		bool dnr_D = !pin13;
+		bool dnr_N = !pin9;
+		bool dnr_R = !pin6;
+		bool washer = pin2;
+		bool button = !pin5;
+		bool blower = false;
+		bool alarm = false;
+		bool wiper = false; //TO BE REMOVED
+		bool wiperInterval = false;
+		bool wiper1 = false;
+		bool wiper2 = false;
+
+		bool can1 = false;
+		bool can2 = false;
+		bool send = false;
+		bool test = false;
+		bool hud1 = false;
+		bool hud2 = false;
+		bool hud3 = false;
+		bool hud4 = false;
+		bool hud5 = false;
+		bool hud6 = false;
+		bool hud7 = false;
+		bool hud8 = false;
+		bool hudWarning = false;
+		bool motorController1 = false;
+		bool motorController2 = false;
 
 		bool click = false;
 
@@ -288,7 +308,7 @@ int main(void)
 		//////////////////////////////
 		////////BUTTON HANDLER////////
 		//////////////////////////////
-		if(blower != blowerOn)
+		if(blowerOn != blower)
 		{
 			blowerOn = blower;
 
@@ -299,7 +319,7 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if (blinkLeft != blinkLeftOn && !alarm)
+		if(blinkLeft != blinkLeftOn && !alarm)
 		{
 			blinkLeftOn = blinkLeft;
 			if(!blinkLeft)
@@ -313,7 +333,7 @@ int main(void)
 			}
 		}
 
-		if (blinkRight != blinkRightOn && !alarm)
+		if(blinkRight != blinkRightOn && !alarm)
 		{
 			blinkRightOn = blinkRight;
 			if(!blinkRight)
@@ -327,7 +347,7 @@ int main(void)
 			}
 		}
 
-		if (alarm != alarmOn)
+		if(alarm != alarmOn)
 		{
 			alarmOn = alarm;
 			if(blinkLeftState)
@@ -339,7 +359,7 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			
+
 			if(blinkRightState)
 			{
 				blinkRightState = false;
@@ -351,30 +371,119 @@ int main(void)
 			}
 		}
 
-		if (lights != lightsOn)
+		if(highBeam != highBeamOn)
 		{
-			//Toggle DIM_LIGHTS head and rear
-			lightsOn = lights;
-			SendMsgBuf.ID = LIGHT_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
+			//grootlicht
+			highBeamOn = highBeam;
+			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 4;
 			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = lightsOn;
+			SendMsgBuf.Data[0] = lowBeam;
+			SendMsgBuf.Data[1] = cityLight;
+			SendMsgBuf.Data[2] = highBeam;
+			SendMsgBuf.Data[3] = fogLights;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+		if(lowBeam != lowBeamOn)
+		{
+			//stadslichten
+			lowBeamOn = lowBeam;
+			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 4;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = lowBeam;
+			SendMsgBuf.Data[1] = cityLight;
+			SendMsgBuf.Data[2] = highBeam;
+			SendMsgBuf.Data[3] = fogLights;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+		if(cityLight != cityLightOn)
+		{
+			//stadslichten
+			cityLightOn = cityLight;
+			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 4;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = lowBeam;
+			SendMsgBuf.Data[1] = cityLight;
+			SendMsgBuf.Data[2] = highBeam;
+			SendMsgBuf.Data[3] = fogLights;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+		if(fogLights != fogLightsOn)
+		{
+			//stadslichten
+			fogLightsOn = fogLights;
+			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 4;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = lowBeam;
+			SendMsgBuf.Data[1] = cityLight;
+			SendMsgBuf.Data[2] = highBeam;
+			SendMsgBuf.Data[3] = fogLights;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if(front != frontOn)
+		if(dnr_D != dnr_DOn)
 		{
-			//Toggle DIM_LIGHTS head and rear
-			frontOn = front;
-			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
+			dnr_DOn = dnr_D;
+			SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = frontOn;
+			SendMsgBuf.Data[0] = 1;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
-		if (can1 != can1On)
+		if(dnr_N != dnr_NOn)
+		{
+			dnr_NOn = dnr_N;
+			SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 2;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+		if(dnr_R != dnr_ROn)
+		{
+			dnr_ROn = dnr_R;
+			SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = 3;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(rear != rearOn)
+		{
+			//achterlichten
+			rearOn = rear;
+			SendMsgBuf.ID = REAR_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = rearOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(claxon != claxonOn)
+		{
+			//achterlichten
+			claxonOn = claxon;
+			SendMsgBuf.ID = CLAXON_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = claxonOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(can1 != can1On)
 		{
 			//Test can2
 			can1On = can1;
@@ -386,7 +495,7 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if (can2 != can2On)
+		if(can2 != can2On)
 		{
 			//Test can1
 			can2On = can2;
@@ -445,7 +554,7 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if (wiper != wiperOn)
+		if(wiper != wiperOn)
 		{
 			//Toggle whiper, send to personal adress from whiper
 			wiperOn = wiper;
@@ -461,42 +570,42 @@ int main(void)
 
 			if (wiperOn)
 			{
-				//first disable reset
-				SendMsgBuf.Data[3] = false;
-				SendMsgBuf.Data[4] = false;
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			//first disable reset
+			SendMsgBuf.Data[3] = false;
+			SendMsgBuf.Data[4] = false;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-				//then set wiper on
-				SendMsgBuf.Data[3] = true;
-				SendMsgBuf.Data[4] = true;
-				Delay(100);
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			//then set wiper on
+			SendMsgBuf.Data[3] = true;
+			SendMsgBuf.Data[4] = true;
+			Delay(100);
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
 			else
 			{
-				//first set wiper off
-				SendMsgBuf.Data[3] = false;
-				SendMsgBuf.Data[4] = false;
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			//first set wiper off
+			SendMsgBuf.Data[3] = false;
+			SendMsgBuf.Data[4] = false;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 
-				//then enable reset
-				SendMsgBuf.Data[3] = false;
-				SendMsgBuf.Data[4] = true;
-				Delay(100);
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			//then enable reset
+			SendMsgBuf.Data[3] = false;
+			SendMsgBuf.Data[4] = true;
+			Delay(100);
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}*/
 		}
 
 		//Send an overview of the inputs
-		if (send != sendOn)
+		if(send != sendOn)
 		{
 			sendOn = send;
 			//SEND all buttons
-			if (send)
+			if(send)
 			{
 				SendMsgBuf.ID = BROADCAST_ADDRESS + 1 + 256 | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 6;
@@ -580,7 +689,7 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			
+
 		}
 
 		if((hud1 != hud1On) || (hud2 != hud2On) || (hud3 != hud3On) || (hud4 != hud4On) || (hud5 != hud5On) || (hud6 != hud6On) || (hud7 != hud7On) || (hud8 != hud8On))
@@ -612,7 +721,7 @@ int main(void)
 		if(hudWarning != hudWarningOn)
 		{
 			hudWarningOn = hudWarning;
-			
+
 			SendMsgBuf.ID = WARNING_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Type = 0;
@@ -654,13 +763,13 @@ int main(void)
 		//
 		//Left Blink
 		//
-		if ((blinkLeftOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
+		if((blinkLeftOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ))
 		{
 			click = true;
 			SendMsgBuf.ID = LEFT_ADDRESS;
 			SendMsgBuf.DLC = 1;
 			//Turn on if there is no blink and (left_blinker or Alarm is on)
-			if (!blinkLeftState && (blinkLeftOn || alarmOn))
+			if(!blinkLeftState && (blinkLeftOn || alarmOn))
 			{
 				blinkLeftState = true;
 				SendMsgBuf.Data[0] = true;
@@ -679,12 +788,12 @@ int main(void)
 		//
 		//Right Blink
 		//
-		if ((blinkRightOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ)) //TODO: check if blinkRightState has to be included
+		if((blinkRightOn || alarmOn) && ((LoopTick - lastClick) >= BLINK_FREQ)) //TODO: check if blinkRightState has to be included
 		{
 			click = true;
-			SendMsgBuf.ID =RIGHT_ADDRESS;
+			SendMsgBuf.ID = RIGHT_ADDRESS;
 			SendMsgBuf.DLC = 1;
-			if (!blinkRightState && (blinkRightOn || alarmOn))
+			if(!blinkRightState && (blinkRightOn || alarmOn))
 			{
 				blinkRightState = true;
 				SendMsgBuf.Data[0] = true;
@@ -700,7 +809,7 @@ int main(void)
 			}
 		}
 
-		if (click)
+		if(click)
 			lastClick = SysTickCnt;
 
 		//
@@ -781,15 +890,39 @@ int main(void)
 /*
 Ouput pins:
 -------------
-8	1,7
-7	3,3
-1	2,7
-2	2,8
-3	2,1
-4	0,3
-5	0,4
-6	0,5
+Can rear
 
+8	1,7		Port 0	Door 1
+7	3,3		Port 1	Door 2
+1	2,7		Port 2	right taillight		(has 3rd light connected)
+2	2,8		Port 3	right indicator
+3	2,1		Port 4	left indicator
+4	0,3		Port 5	Number plate lighting
+5	1,10	Port 6	Left taillight
+6	2,11	Port 7	Unused (inserted in D-sub)
+
+
+Can front top one
+
+8	1,7		Port 0	left front indicator
+7	3,3		Port 1	left fullbeam
+1	2,7		Port 2	right front dippedbeam
+2	2,8		Port 3	left front dippedbeam
+3	2,1		Port 4	right city light
+4	0,3		Port 5	left breedte licht
+5	1,10	Port 6	left city light
+6	2,11	Port 7	horn
+
+Can mid bottom one
+
+8	1,7		Port 0	right front indicator
+7	3,3		Port 1	right front door
+1	2,7		Port 2	right full beam
+2	2,8		Port 3	washer
+3	2,1		Port 4	blower
+4	0,3		Port 5	wiper
+5	1,10	Port 6	rechts breedte licht
+6	2,11	Port 7	left front door
 Led pins:
 -------------
 led 1 (green) power light

@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{5c65df82-f6a4-4a9b-b726-cc6bb096e13f}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{ae70c452-eee1-4320-a592-155ffbd7d6d6}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{fe2076cb-bc8b-4bfd-83af-e8aa80a243b9}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Make files">
+      <UniqueIdentifier>{b7689ba3-6f02-44a7-a5fd-8aea623bf8d9}</UniqueIdentifier>
+      <Extensions>*.mak</Extensions>
+    </Filter>
+    <Filter Include="VisualGDB settings">
+      <UniqueIdentifier>{5cfdb200-4fe1-476d-9635-3886ac43186c}</UniqueIdentifier>
+      <Extensions>*.vgdbsettings</Extensions>
+    </Filter>
+    <Filter Include="Source files\Device-specific files">
+      <UniqueIdentifier>{1a8380fe-80e2-4849-8746-f6297c74c165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Device-specific files">
+      <UniqueIdentifier>{b1c22738-8e94-4748-8de7-b7d0f01dfcd7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\acmp_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_1125.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\chip_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\clock_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\dac_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpiogroup_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_1.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_2.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2cm_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2c_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\iocon_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pinint_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pmu_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\ssp_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\sysctl_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\sysinit_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\timer_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\uart_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\Common\startup.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
+    <ClCompile Include="LINA_CAN_OUT.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="debug.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="LINA_CAN_OUT-Debug.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="release.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="LINA_CAN_OUT-Release.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="nxp_lpc.mak">
+      <Filter>Source files\Device-specific files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\arm_common_tables.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\arm_math.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm0.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm0plus.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm3.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm4.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm4_simd.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cmFunc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cmInstr.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_sc000.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_sc300.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\RTOS\cmsis_os.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpcusbsio\lpcusbsio_i2c.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\acmp_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_1125.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\ccand_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\chip.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\clock_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\cmsis.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\dac_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\fmc_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpiogroup_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_1.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_2.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2cm_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2c_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2c_common_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\iocon_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pinint_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pmu_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\romapi_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\ssp_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\sysctl_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\timer_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\uart_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\usbd_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_110x\cmsis_110x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_1125\cmsis_1125.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11axx\cmsis_11axx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11cxx\cmsis_11cxx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11exx\cmsis_11exx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11uxx\cmsis_11uxx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11xxlv\cmsis_11lvxx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\error.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\lpc_types.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_audio.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_cdc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_cdcuser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_core.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_desc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_dfu.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_dfuuser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_hid.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_hiduser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_hw.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_msc.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_mscuser.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_rom_api.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\Common\sys_config.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="nxp_lpc.xml">
+      <Filter>VisualGDB settings</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

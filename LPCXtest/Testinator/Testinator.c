@@ -13,7 +13,7 @@
 #define DEVICE_NR			0x010
 
 #define ALL_ADDRESS			0x000
-#define DIM_ADDRESS			0x008
+#define LIGHT_ADDRESS			0x008
 #define FRONT_DEVICES		0x000
 #define LEFT_DEVICES		0x001
 #define REAR_DEVICES		0x002

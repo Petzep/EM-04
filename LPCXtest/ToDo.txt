@@ -1,7 +1,5 @@
 TODO:
- - check SetPort on CAN_IN
- - Rename EM35
- - IO config
+- Filter maakt if statment voor rear onnodig
 
 
 TEST:

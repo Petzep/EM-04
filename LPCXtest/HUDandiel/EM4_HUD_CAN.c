@@ -17,7 +17,7 @@ Controls the HUD of EM-04
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
 #define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
-#define DIM_ADDRESS			(0x001 + COUT_ADDRESS)
+#define LIGHT_ADDRESS			(0x001 + COUT_ADDRESS)
 #define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
 #define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
@@ -57,7 +57,7 @@ Controls the HUD of EM-04
 #define	NFC_MESSAGE			8
 #define	LEFT_MESSAGE		10
 #define	RIGHT_MESSAGE		11
-#define DIM_MESSAGE			12
+#define LIGHT_MESSAGE			12
 #define FRONT_MESSAGE		13
 #define	TOTAL_MESSAGE		14
 
@@ -370,8 +370,8 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = DIM_MESSAGE;
-	msg_obj.mode_id = DIM_ADDRESS;
+	msg_obj.msgobj = LIGHT_MESSAGE;
+	msg_obj.mode_id = LIGHT_ADDRESS;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
@@ -525,7 +525,7 @@ void CAN_rx(uint8_t msg_obj_num)
 			//led t2(green)
 			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 8, msg_obj.data[0]);
 		}
-		if(msg_obj_num == DIM_MESSAGE)
+		if(msg_obj_num == LIGHT_MESSAGE)
 		{
 			//led t6(green)
 			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, msg_obj.data[0]);

@@ -14,7 +14,7 @@
 #define DEVICE_NR			0x020
 
 #define ALL_ADDRESS			0x000
-#define DIM_ADDRESS			0x008
+#define LIGHT_ADDRESS			0x008
 #define FRONT_DEVICES		0x000
 #define REAR_DEVICES		0x001
 #define LEFT_DEVICES		0x002
@@ -27,7 +27,7 @@
 #define	LEFT_MESSAGE		4
 #define	RIGHT_MESSAGE		5
 #define	PERSNOAL_MESSAGE	6
-#define	DIM_MESSAGE			7
+#define	LIGHT_MESSAGE			7
 #define	TOTAL_MESSAGE		8
 
 /*enum CAN_MESSAGE
@@ -38,7 +38,7 @@
 	LEFT_MESSAGE,
 	RIGHT_MESSAGE,
 	PERSNOAL_MESSAGE,
-	DIM_MESSAGE,
+	LIGHT_MESSAGE,
 	TOTAL_MESSAGE,
 };*/
 
@@ -160,32 +160,32 @@ void CAN_init() {
 	if (DEVICE_NR & 0b0010)
 	{
 		msg_obj.msgobj = FRONT_MESSAGE;
-		msg_obj.mode_id = FRONT_DEVICES + DIM_ADDRESS; //0000 0000 101x
-		msg_obj.mask = 0xFFE; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+		msg_obj.mode_id = FRONT_DEVICES + LIGHT_ADDRESS; //0000 0000 101x
+		msg_obj.mask = 0xFFE; //1111 1111 1110 filters for any LIGHT_ADDRESS in the F/R_DEVICES 
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
 	if (!(DEVICE_NR & 0b0010))
 	{
 		msg_obj.msgobj = REAR_MESSAGE;
-		msg_obj.mode_id = REAR_DEVICES + DIM_ADDRESS; //0000 0000 100x
-		msg_obj.mask = 0xFFE; //1111 1111 1110 filters for any DIM_ADDRESS in the F/R_DEVICES 
+		msg_obj.mode_id = REAR_DEVICES + LIGHT_ADDRESS; //0000 0000 100x
+		msg_obj.mask = 0xFFE; //1111 1111 1110 filters for any LIGHT_ADDRESS in the F/R_DEVICES 
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
 	if (!(DEVICE_NR & 0b0001))
 	{
 		msg_obj.msgobj = LEFT_MESSAGE;
-		msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS; //0000 0000 10x0
-		msg_obj.mask = 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+		msg_obj.mode_id = LEFT_DEVICES + LIGHT_ADDRESS; //0000 0000 10x0
+		msg_obj.mask = 0xFFD; //1111 1111 1101 filters for any LIGHT_ADDRESS in the L/R_DEVICES
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 	
 	if (DEVICE_NR & 0b0001)
 	{
 		msg_obj.msgobj = RIGHT_MESSAGE;
-		msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS; //0000 0000 10x1
-		msg_obj.mask = 0xFFD; //1111 1111 1101 filters for any DIM_ADDRESS in the L/R_DEVICES
+		msg_obj.mode_id = RIGHT_DEVICES + LIGHT_ADDRESS; //0000 0000 10x1
+		msg_obj.mask = 0xFFD; //1111 1111 1101 filters for any LIGHT_ADDRESS in the L/R_DEVICES
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
 
@@ -194,8 +194,8 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	//msg_obj.msgobj = DIM_MESSAGE;
-	//msg_obj.mode_id = DIM_ADDRESS;
+	//msg_obj.msgobj = LIGHT_MESSAGE;
+	//msg_obj.mode_id = LIGHT_ADDRESS;
 	//msg_obj.mask = 0xFFF;
 	//->config_rxmsgobj(&msg_obj);
 	
@@ -237,7 +237,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 			setPort(2, msg_obj.data[0]);
 		}
 
-		if (msg_obj_num == DIM_MESSAGE)
+		if (msg_obj_num == LIGHT_MESSAGE)
 		{
 			setPort(2, msg_obj.data[0]);
 		}
@@ -368,7 +368,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //left on
-		msg_obj.mode_id = (DIM_ADDRESS + LEFT_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + LEFT_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = true;
@@ -381,7 +381,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //left off
-		msg_obj.mode_id = (DIM_ADDRESS + LEFT_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + LEFT_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = false;
@@ -394,7 +394,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //RIGHT on
-		msg_obj.mode_id = (DIM_ADDRESS + RIGHT_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + RIGHT_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = true;
@@ -407,7 +407,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //RIGHT off
-		msg_obj.mode_id = (DIM_ADDRESS + RIGHT_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + RIGHT_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = false;
@@ -420,7 +420,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //FRONT on
-		msg_obj.mode_id = (DIM_ADDRESS + FRONT_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + FRONT_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = true;
@@ -433,7 +433,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //FRONT off
-		msg_obj.mode_id = (DIM_ADDRESS + FRONT_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + FRONT_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = false;
@@ -446,7 +446,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //REAR on
-		msg_obj.mode_id = (DIM_ADDRESS + REAR_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + REAR_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = true;
@@ -459,7 +459,7 @@ int main(void) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);	//led 2 (red)
 		
 		msg_obj.msgobj = 0; //REAR off
-		msg_obj.mode_id = (DIM_ADDRESS + REAR_DEVICES) | CAN_MSGOBJ_STD;
+		msg_obj.mode_id = (LIGHT_ADDRESS + REAR_DEVICES) | CAN_MSGOBJ_STD;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = false;
