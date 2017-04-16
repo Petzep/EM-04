@@ -15,7 +15,7 @@
 #define DEVICE_NR			0x020
 
 #define ALL_ADDRESS			0x000
-#define DIM_ADDRESS			0x008
+#define LIGHT_ADDRESS			0x008
 #define FRONT_DEVICES		0x000
 #define REAR_DEVICES		0x001
 #define LEFT_DEVICES		0x002
@@ -29,7 +29,7 @@
 #define	LEFT_MESSAGE		4
 #define	RIGHT_MESSAGE		5
 #define	PERSNOAL_MESSAGE	6
-#define	DIM_MESSAGE			7
+#define	LIGHT_MESSAGE			7
 #define	TOTAL_MESSAGE		8
 
 #define BLINK_FREQ			750
@@ -283,7 +283,7 @@ int main(void) {
 			//Toggle DIM_LIGHTS head and rear
 			lightsOn = lights;
 			msg_obj.msgobj = __COUNTER__;
-			msg_obj.mode_id = DIM_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = LIGHT_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			msg_obj.data[0] = lightsOn;
@@ -342,7 +342,7 @@ int main(void) {
 		{
 			click = true;
 			msg_obj.msgobj = __COUNTER__;
-			msg_obj.mode_id = LEFT_DEVICES + DIM_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = LEFT_DEVICES + LIGHT_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			//Turn on if there is no blink and (left_blinker or Alarm is on)
@@ -367,7 +367,7 @@ int main(void) {
 		{
 			click = true;
 			msg_obj.msgobj = __COUNTER__;
-			msg_obj.mode_id = RIGHT_DEVICES + DIM_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mode_id = RIGHT_DEVICES + LIGHT_ADDRESS | CAN_MSGOBJ_STD;
 			msg_obj.mask = 0x0;
 			msg_obj.dlc = 1;
 			if (!blinkRightState)

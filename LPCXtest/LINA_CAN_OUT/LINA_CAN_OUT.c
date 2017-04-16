@@ -15,16 +15,18 @@
 #define DEVICE_NR			0b0111
 #define	EM_04_CAN_RANGE		0x100
 
+#define	EM_04_CAN_RANGE		0x100							
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
-#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
+#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)			
 #define LIGHT_ADDRESS		(0x001 + COUT_ADDRESS)
 #define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
-#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
+#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)		
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
 #define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)
 #define BLOWER_ADDRESS		(0x007 + COUT_ADDRESS)
+#define CLAXON_ADDRESS		(0x007 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -36,18 +38,20 @@
 #define MC_SIGNAL1			(0x001 + MC_ADDRESS)
 #define MC_SIGNAL2			(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
+#define MC_DNR				(0x004 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
-#define FRONT_MESSAGE		2
-#define	REAR_MESSAGE		3
-#define	LEFT_MESSAGE		4
-#define	RIGHT_MESSAGE		5
-#define	PERSNOAL_MESSAGE	6
-#define	LIGHT_MESSAGE			7
-#define WIPER_MESSAGE		8
+#define	LIGHT_MESSAGE		2
+#define FRONT_MESSAGE		3
+#define	REAR_MESSAGE		4
+#define	LEFT_MESSAGE		5
+#define	RIGHT_MESSAGE		6
+#define WIPER_MESSAGE		7
+#define CLAXON_MESSAGE		8
 #define BLOWER_MESSAGE		9
-#define	TOTAL_MESSAGE		10
+#define	PERSNOAL_MESSAGE	10
+#define	TOTAL_MESSAGE		11
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -163,8 +167,23 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	if(DEVICE_NR == 0b0111) // Front/Mid
+	if(DEVICE_NR == 0b0111) // Front
 	{
+		msg_obj.msgobj = FRONT_MESSAGE;
+		msg_obj.mode_id = FRONT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = LEFT_MESSAGE;
+		msg_obj.mode_id = LEFT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = RIGHT_MESSAGE;
+		msg_obj.mode_id = RIGHT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 		msg_obj.msgobj = WIPER_MESSAGE;
 		msg_obj.mode_id = WIPER_ADDRESS;
 		msg_obj.mask = 0xFFF;
@@ -174,25 +193,29 @@ void CAN_init() {
 		msg_obj.mode_id = BLOWER_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
-	if (DEVICE_NR & 0b0001) //Select only the front bit of the twins [bug for mid, solve by shifting]
-	{
-		msg_obj.msgobj = FRONT_MESSAGE;
-		msg_obj.mode_id = FRONT_ADDRESS;
+
+		msg_obj.msgobj = LIGHT_MESSAGE;
+		msg_obj.mode_id = LIGHT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = CLAXON_MESSAGE;
+		msg_obj.mode_id = CLAXON_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
-
-	if (!(DEVICE_NR & 0b0001)) //Select only the rear bit (=not front bit) of the twins [bug for mid, solve by shifting]
+	if(DEVICE_NR == 0b0110) // Rear
 	{
-		msg_obj.msgobj = REAR_MESSAGE;
-		msg_obj.mode_id = REAR_ADDRESS; 
+		msg_obj.msgobj = REAR_ADDRESS;
+		msg_obj.mode_id = REAR_MESSAGE;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	}
 
-	if (DEVICE_NR & 0b0010)  //Select only the twin bit
-	{
+		msg_obj.msgobj = LIGHT_MESSAGE;
+		msg_obj.mode_id = LIGHT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 		msg_obj.msgobj = LEFT_MESSAGE;
 		msg_obj.mode_id = LEFT_ADDRESS;
 		msg_obj.mask = 0xFFF;
@@ -200,6 +223,34 @@ void CAN_init() {
 
 		msg_obj.msgobj = RIGHT_MESSAGE;
 		msg_obj.mode_id = RIGHT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+	}
+
+	if(DEVICE_NR == 0b0100) // Mid
+	{
+		msg_obj.msgobj = FRONT_MESSAGE;
+		msg_obj.mode_id = FRONT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = LEFT_MESSAGE;
+		msg_obj.mode_id = LEFT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = RIGHT_MESSAGE;
+		msg_obj.mode_id = RIGHT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = CLAXON_MESSAGE;
+		msg_obj.mode_id = CLAXON_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = LIGHT_MESSAGE;
+		msg_obj.mode_id = LIGHT_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}
@@ -234,38 +285,85 @@ void CAN_rx(uint8_t msg_obj_num) {
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
 		if (msg_obj_num == FRONT_MESSAGE)
 		{
-			setPort(0, msg_obj.data[0]);
+			if(DEVICE_NR == 0b0111)
+			{
+				setPort(3, msg_obj.data[0]); //lowBeam left
+				setPort(2, msg_obj.data[0]); //lowBeam right
+				setPort(6, msg_obj.data[1]); //cityLight left
+				setPort(4, msg_obj.data[1]); //cityLight right
+				setPort(1, msg_obj.data[2]); //highBeam left
+				setPort(5, msg_obj.data[3]); //fogLights left
+			}
+			if(DEVICE_NR == 0b0100)
+			{
+				setPort(2, msg_obj.data[2]); //highBeam right
+				setPort(6, msg_obj.data[3]); //fogLights right
+			}
 		}
 
-		if (msg_obj_num == REAR_MESSAGE)
+		if(msg_obj_num == REAR_MESSAGE)
 		{
-			setPort(0, msg_obj.data[0]);
+			setPort(6, msg_obj.data[0]); //left taillight
+			setPort(2, msg_obj.data[0]); //right taillight
+			setPort(5, msg_obj.data[0]); //number plate lighting
 		}
 
 		if (msg_obj_num == LEFT_MESSAGE)
 		{
-			setPort(1, msg_obj.data[0]);
+			if(DEVICE_NR == 0b0110)
+			{
+				setPort(4, msg_obj.data[0]); //left rear indicator
+			}
+			if(DEVICE_NR == 0b0111)
+			{
+				setPort(0, msg_obj.data[0]); //left front
+			}
 		}
 
 		if (msg_obj_num == RIGHT_MESSAGE)
 		{
-			setPort(2, msg_obj.data[0]);
+			if(DEVICE_NR == 0b0110)
+			{
+				setPort(3, msg_obj.data[0]); //right rear indicator
+			}
+			if(DEVICE_NR == 0b0100)
+			{
+				setPort(0, msg_obj.data[0]); //right front
+			}
 		}
 
-		if (msg_obj_num == LIGHT_MESSAGE)
+		if(msg_obj_num == LIGHT_MESSAGE)
 		{
-			//Toggle DIM_lights (Head and rear)
-			setPort(3, msg_obj.data[0]);
+			if(DEVICE_NR == 0b0110)
+			{
+				setPort(6, msg_obj.data[0]); //left taillight
+				setPort(2, msg_obj.data[0]); //right taillight
+				setPort(5, msg_obj.data[0]); //number plate lighting
+			}
 		}
 
 		if(msg_obj_num == WIPER_MESSAGE)
 		{
-			setPort(6, msg_obj.data[0]);
+			if(DEVICE_NR == 0b0100)
+			{
+				setPort(5, msg_obj.data[0]);
+			}
 		}
 
 		if(msg_obj_num == BLOWER_MESSAGE)
 		{
-			setPort(7, msg_obj.data[0]);
+			if(DEVICE_NR == 0b0100)
+			{
+				setPort(4, msg_obj.data[0]);
+			}
+		}
+
+		if(msg_obj_num == CLAXON_MESSAGE)
+		{
+			if(DEVICE_NR == 0b0111)
+			{
+				setPort(7, msg_obj.data[0]);
+			}
 		}
 
 		if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -331,14 +429,96 @@ void CAN_error(uint32_t error_info){
 }
 
 void setPort(int port, bool onoff){
-	if (port == 0) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, onoff);
-	if (port == 1) Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, onoff);
-	if (port == 2) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
-	if (port == 3) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, onoff);
-	if (port == 4) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
-	if (port == 5) Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
-	if (port == 6) Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, onoff);
-	if (port == 7) Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, onoff);
+	if(DEVICE_NR == 0b0110)//rear
+		switch(port)
+		{
+			case 0: //Door 1
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, onoff);
+				break;
+			case 1://Door 2
+				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, onoff);
+				break;
+			case 2://Right taillight
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
+				break;
+			case 3://Right indicator
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, onoff);
+				break;
+			case 4://Left indicator
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
+				break;
+			case 5://Numberplate
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
+				break;
+			case 6://left taillight
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, onoff);
+				break;
+			case 7://unused
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, onoff);
+				break;
+			default:
+				break;
+		}
+	else if(DEVICE_NR == 0b0100)//mid (bottom)
+		switch(port)
+		{
+			case 0://right front indicator
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, onoff);
+				break;
+			case 1://Right front door
+				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, onoff);
+				break;
+			case 2://Right full beam
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
+				break;
+			case 3://washer
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, onoff);
+				break;
+			case 4://blower
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
+				break;
+			case 5://wiper
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
+				break;
+			case 6://rechts breedte licht
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, onoff);
+				break;
+			case 7://left front door
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, onoff);
+				break;
+			default:
+				break;
+		}
+	else if(DEVICE_NR == 0b0111)//front (top)
+		switch(port)
+		{
+			case 0://left front indicator
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 7, onoff);
+				break;
+			case 1://left fullbeam
+				Chip_GPIO_WritePortBit(LPC_GPIO, 3, 3, onoff);
+				break;
+			case 2://right dippedbeam
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 7, onoff);
+				break;
+			case 3://left front dippedbeam
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 8, onoff);
+				break;
+			case 4://right citylight
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 1, onoff);
+				break;
+			case 5://left breedte licht
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, onoff);
+				break;
+			case 6://left city light
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 10, onoff);
+				break;
+			case 7://horn
+				Chip_GPIO_WritePortBit(LPC_GPIO, 2, 11, onoff);
+				break;
+			default:
+				break;
+		}
 }
 
 
@@ -401,14 +581,38 @@ int main(void){
 /*
 Ouput pins:
 -------------
-8	1,7
-7	3,3
-1	2,7
-2	2,8
-3	2,1
-4	0,3
-5	0,4
-6	0,5
+Can rear
+
+8	1,7		Port 0	Door 1
+7	3,3		Port 1	Door 2
+1	2,7		Port 2	right taillight		(has 3rd light connected)
+2	2,8		Port 3	right indicator
+3	2,1		Port 4	left indicator
+4	0,3		Port 5	Number plate lighting
+5	1,10	Port 6	Left taillight
+6	2,11	Port 7	Unused (inserted in D-sub)
+
+Can front bottom one
+
+8	1,7		Port 0	right front indicator
+7	3,3		Port 1	right front door
+1	2,7		Port 2	right full beam
+2	2,8		Port 3	washer
+3	2,1		Port 4	blower
+4	0,3		Port 5	wiper
+5	1,10	Port 6	rechts breedte licht
+6	2,11	Port 7	left front door
+
+Can front top one
+
+8	1,7		Port 0	left front indicator
+7	3,3		Port 1	left fullbeam
+1	2,7		Port 2	right front dippedbeam
+2	2,8		Port 3	left front dippedbeam
+3	2,1		Port 4	right city light
+4	0,3		Port 5	left breedte licht
+5	1,10	Port 6	left city light
+6	2,11	Port 7	horn
 
 Led pins:
 -------------
