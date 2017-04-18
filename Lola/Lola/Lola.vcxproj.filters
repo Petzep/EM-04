@@ -282,6 +282,9 @@
     <None Include="compiler.pro">
       <Filter>QMake Project files</Filter>
     </None>
+    <None Include="qml\dashboardRect.qml">
+      <Filter>QML</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\canout.txt">

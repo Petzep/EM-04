@@ -1,5 +1,5 @@
 Debug
 Music
 Menu
-Right Test Panel
+Radio
 Dail Panel

@@ -9,7 +9,7 @@ Window {
 	objectName: "dashboardWindow"
 	width: 800
     height: 480
-    visibility: "FullScreen"
+    visibility: "AutomaticVisibility"
     color: "#161616"
     title: "Lola Dashboard"
 

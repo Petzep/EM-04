@@ -68,7 +68,7 @@ void TUIcomotive::on_dashboardButton_clicked(void)
 	QObject *rootObject = engine->rootObjects().first();
 	QObject *qmlObject = rootObject->findChild<QObject*>("valueSource");
 	
-	rootObject->setProperty("visibility", "Windowed");
+	rootObject->setProperty("visibility", "Fullscreen");
 	qmlObject->setProperty("temperature", 0.8);
 }
 

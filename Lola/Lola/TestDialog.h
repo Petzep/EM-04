@@ -9,6 +9,7 @@
 #include <QMediaPlaylist>
 #include <QListWidget>
 #include <QtQml/QtQml>
+#include <QQuickWidget>
 #include "SieFlyStyle.h"
 #include "CanDialog.h"
 #include "ui_TestDialog.h"
@@ -26,6 +27,8 @@ public:
 	void updateMetaData();
 
 public slots:
+//Dashboard
+	void dashboardClose(void);
 //Debug
 	void on_quitButton_clicked(void);
 //Radio

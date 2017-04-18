@@ -26,6 +26,7 @@
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QWidget>
 #include "QtPieMenu.h"
+#include "QtQuickWidgets/QQuickWidget"
 #include "StackSlide.h"
 
 QT_BEGIN_NAMESPACE
@@ -68,6 +69,7 @@ public:
     QDial *dial;
     QLabel *label_5;
     QLCDNumber *lcdNumber;
+    QQuickWidget *quickWidget;
 
     void setupUi(QDialog *TestDialog)
     {
@@ -209,6 +211,13 @@ public:
         lcdNumber->setSegmentStyle(QLCDNumber::Filled);
         lcdNumber->setProperty("value", QVariant(56.2));
         splitter_2->addWidget(lcdNumber);
+        quickWidget = new QQuickWidget(TestDialog);
+        quickWidget->setObjectName(QStringLiteral("quickWidget"));
+        quickWidget->setGeometry(QRect(0, 0, 800, 480));
+        quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
+        quickWidget->raise();
+        stackSlide->raise();
+        splitter_2->raise();
         QWidget::setTabOrder(dashboardButton, canButton);
         QWidget::setTabOrder(canButton, playButton);
         QWidget::setTabOrder(playButton, stopButton);

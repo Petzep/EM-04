@@ -39,5 +39,6 @@
         <file>images/elec-icon.png</file>
         <file>fonts/DejaVuSans.ttf</file>
         <file>fonts/MsSansSerif.ttf</file>
+        <file>qml/dashboardRect.qml</file>
     </qresource>
 </RCC>

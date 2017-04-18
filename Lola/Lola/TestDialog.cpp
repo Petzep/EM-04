@@ -21,6 +21,10 @@ TestDialog::TestDialog(QWidget *parent)
 	if(!loadMusic("/media"))
 		QApplication::beep();
 
+	quickWidget->setSource(QUrl("qrc:/qml/dashboardRect.qml"));
+	quickWidget->setVisible(false);
+	connect((QObject*)quickWidget->rootObject(), SIGNAL(exit()), this, SLOT(dashboardClose()));
+
 	//miniFix for broken QtStyle
 	QKeyEvent * eve1 = new QKeyEvent(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
 	QKeyEvent * eve2 = new QKeyEvent(QEvent::KeyRelease, Qt::Key_Tab, Qt::NoModifier);
@@ -195,12 +199,28 @@ bool TestDialog::event(QEvent *event)
 		//Always return to home and set focus
 		if(ke->key() == Qt::Key_0)
 		{
+			if(quickWidget->isVisible())
+			{
+				quickWidget->setVisible(false);
+				quickWidget->lower();
+			}
 			stackSlide->slideHome();
 			MENU->setFocus();
 		}
 		return true;
 	}
 	return QWidget::event(event);
+}
+
+//////////////////////
+/////Debug Events/////
+//////////////////////
+void TestDialog::dashboardClose(void)
+{
+	quickWidget->setVisible(false);
+	quickWidget->lower();
+	stackSlide->slideHome();
+	MENU->setFocus();
 }
 
 //////////////////////
@@ -214,6 +234,18 @@ void TestDialog::on_quitButton_clicked(void)
 void TestDialog::on_shutdownButton_clicked(void)
 {
 	QProcess::startDetached("shutdown now");
+}
+
+void TestDialog::on_dashboardButton_clicked(void)
+{
+	quickWidget->setVisible(true);
+	quickWidget->raise();
+}
+
+void TestDialog::on_canButton_clicked(void)
+{
+	CanDialog dialog(this);
+	dialog.exec();
 }
 
 //////////////////////
@@ -351,26 +383,6 @@ void TestDialog::on_shuffleBox_clicked(void)
 		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Random);
 	else
 		m_player->playlist()->setPlaybackMode(QMediaPlaylist::PlaybackMode::Sequential);
-}
-
-void TestDialog::on_dashboardButton_clicked(void)
-{
-	QQmlApplicationEngine* engine = new QQmlApplicationEngine;
-	engine->load(QUrl("qrc:/qml/dashboard.qml"));
-
-	if(engine->rootObjects().isEmpty())
-		return;
-	QObject *rootObject = engine->rootObjects().first();
-	QObject *qmlObject = rootObject->findChild<QObject*>("valueSource");
-
-	rootObject->setProperty("visibility", "Windowed");
-	qmlObject->setProperty("temperature", 0.8);
-}
-
-void TestDialog::on_canButton_clicked(void)
-{
-	CanDialog dialog(this);
-	dialog.exec();
 }
 
 void TestDialog::on_stopButton_clicked(void)

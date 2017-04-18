@@ -437,6 +437,7 @@
     <None Include="linuxvm.pro" />
     <None Include="qml\dashboard.qml" />
     <None Include="qml\DashboardGaugeStyle.qml" />
+    <None Include="qml\dashboardRect.qml" />
     <None Include="qml\IconGaugeStyle.qml" />
     <None Include="qml\LightIndicator.qml" />
     <None Include="qml\LightSmallIndicator.qml" />

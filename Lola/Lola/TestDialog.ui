@@ -436,9 +436,30 @@
     </property>
    </widget>
   </widget>
+  <widget class="QQuickWidget" name="quickWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>480</height>
+    </rect>
+   </property>
+   <property name="resizeMode">
+    <enum>QQuickWidget::SizeRootObjectToView</enum>
+   </property>
+  </widget>
+  <zorder>quickWidget</zorder>
+  <zorder>stackSlide</zorder>
+  <zorder>splitter_2</zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header>QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
   <customwidget>
    <class>QtPieMenu</class>
    <extends>QWidget</extends>
