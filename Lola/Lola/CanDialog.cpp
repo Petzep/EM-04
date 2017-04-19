@@ -144,7 +144,7 @@ void CanDialog::canRx(	void)
 		int index = model->rowCount() - 1;
 
 		QString line;
-		if(!frame.frameType() == QCanBusFrame::ErrorFrame)
+		//if(!frame.frameType() == QCanBusFrame::ErrorFrame) //not working???
 			line = frame.toString();
 
 		QStandardItem *item = new QStandardItem();
@@ -169,11 +169,12 @@ void CanDialog::canRx(	void)
 		QModelIndex Qindex = model->index(index, 0, QModelIndex());
 		model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
 		Qindex = model->index(index, 1, QModelIndex());
-		model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
+		model->setData(Qindex, canData.data.first().toInt());
+		//model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
 		Qindex = model->index(index, 2, QModelIndex());
 		model->setData(Qindex, canData.dlc);
 		Qindex = model->index(index, 3, QModelIndex());
-		model->setData(Qindex, line);
+		model->setData(Qindex, canData.data.join(" "));
 	}
 }
 

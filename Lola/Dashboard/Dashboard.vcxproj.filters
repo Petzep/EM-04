@@ -35,6 +35,10 @@
     <Filter Include="Generated Files\Debug">
       <UniqueIdentifier>{cf42446b-3208-4d76-932b-a34bc52c03f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qml">
+      <UniqueIdentifier>{4cdba2ca-3672-4884-adee-2f59ce5093c2}</UniqueIdentifier>
+      <Extensions>*.qml</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -62,6 +66,36 @@
     <None Include="Dashboard.pro" />
     <None Include="compiler.pro">
       <Filter>QMake Project files</Filter>
+    </None>
+    <None Include="qml\dashboard.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\DashboardGaugeStyle.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\dashboardRect.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\IconGaugeStyle.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\LightIndicator.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\LightSmallIndicator.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\StatIndicator.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\TachometerStyle.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\TurnIndicator.qml">
+      <Filter>qml</Filter>
+    </None>
+    <None Include="qml\ValueSource.qml">
+      <Filter>qml</Filter>
     </None>
   </ItemGroup>
 </Project>

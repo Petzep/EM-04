@@ -130,6 +130,16 @@
   <ItemGroup>
     <None Include="compiler.pro" />
     <None Include="Dashboard.pro" />
+    <None Include="qml\dashboard.qml" />
+    <None Include="qml\DashboardGaugeStyle.qml" />
+    <None Include="qml\dashboardRect.qml" />
+    <None Include="qml\IconGaugeStyle.qml" />
+    <None Include="qml\LightIndicator.qml" />
+    <None Include="qml\LightSmallIndicator.qml" />
+    <None Include="qml\StatIndicator.qml" />
+    <None Include="qml\TachometerStyle.qml" />
+    <None Include="qml\TurnIndicator.qml" />
+    <None Include="qml\ValueSource.qml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

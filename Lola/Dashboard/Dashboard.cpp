@@ -65,8 +65,7 @@ void Dashboard::canRx(void)
 		const QCanBusFrame frame = canDevice->readFrame();
 
 		QString line;
-		if(!frame.frameType() == QCanBusFrame::ErrorFrame)
-			line = frame.toString();
+		line = frame.toString();
 
 		QStringList splitList = line.split(']').first().split('[');
 		canData.dlc = splitList.last().toInt();
@@ -84,10 +83,10 @@ void Dashboard::canRx(void)
 		}
 		canData.time = frame.timeStamp().microSeconds();
 
-		if(canData.id == 0)
+		if(canData.dlc == 1)
 		{
 			QObject *qmlObject = m_root->findChild<QObject*>("valueSource");
-			qmlObject->setProperty("temperature", canData.data.first().toInt());
+			qmlObject->setProperty("kph", canData.data.first().toInt());
 		}
 		
 
