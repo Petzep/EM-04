@@ -40,5 +40,12 @@
         <file>fonts/DejaVuSans.ttf</file>
         <file>fonts/MsSansSerif.ttf</file>
         <file>qml/dashboardRect.qml</file>
+        <file>qml/QtQuick.2/qmldir</file>
+        <file>qml/QtQuick/Window.2/qmldir</file>
+        <file>qml/QtQuick/Layouts/qmldir</file>
+        <file>qml/QtQuick/Extras/qmldir</file>
+        <file>qml/QtQuick/Controls/qmldir</file>
+        <file>qml/QtGraphicalEffects/qmldir</file>
+        <file>qml/QtGraphicalEffects/private/qmldir</file>
     </qresource>
 </RCC>

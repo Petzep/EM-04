@@ -22,7 +22,7 @@ TestDialog::TestDialog(QWidget *parent)
 		QApplication::beep();
 
 	quickWidget->setSource(QUrl("qrc:/qml/dashboardRect.qml"));
-	quickWidget->setVisible(false);
+	quickWidget->hide();
 	connect((QObject*)quickWidget->rootObject(), SIGNAL(exit()), this, SLOT(dashboardClose()));
 
 	//miniFix for broken QtStyle
@@ -217,7 +217,15 @@ bool TestDialog::event(QEvent *event)
 //////////////////////
 void TestDialog::dashboardClose(void)
 {
-	quickWidget->setVisible(false);
+	if(quickWidget->status() == QQuickWidget::Status::Null)
+		qInfo("This QQuickWidget has no source set.");
+	if(quickWidget->status() == QQuickWidget::Status::Ready)
+		qInfo("This QQuickWidget has loaded and created the QML component.");
+	if(quickWidget->status() == QQuickWidget::Status::Loading)
+		qInfo("This QQuickWidget is loading network data.");
+	if(quickWidget->status() == QQuickWidget::Status::Error)
+		qInfo("	One or more errors occurred. Call errors() to retrieve a list of errors.");
+	quickWidget->show();
 	quickWidget->lower();
 	stackSlide->slideHome();
 	MENU->setFocus();

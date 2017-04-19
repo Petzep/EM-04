@@ -131,7 +131,7 @@ void CanDialog::canError(void)
 	warningBox = QMessageBox::warning(this, "CANerror", tr("Connection error: %1").arg(canDevice->errorString()));
 }
 
-void CanDialog::canRx(void)
+void CanDialog::canRx(	void)
 {
 	if(!canDevice)
 		return;
@@ -173,7 +173,7 @@ void CanDialog::canRx(void)
 		Qindex = model->index(index, 2, QModelIndex());
 		model->setData(Qindex, canData.dlc);
 		Qindex = model->index(index, 3, QModelIndex());
-		model->setData(Qindex, canData.data.join(" "));
+		model->setData(Qindex, line);
 	}
 }
 
