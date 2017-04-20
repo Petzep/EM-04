@@ -19,7 +19,7 @@
         <UserName>pi</UserName>
       </RemoteHost>
       <LocalDirectory>$(ProjectDir)</LocalDirectory>
-      <RemoteDirectory>/tmp/VisualGDB/$(ProjectDirUnixStyle)</RemoteDirectory>
+      <RemoteDirectory>/home/pi/lola</RemoteDirectory>
       <FileMasks>
         <string>*.cpp</string>
         <string>*.h</string>
@@ -105,7 +105,7 @@
         <UserName>pi</UserName>
       </RemoteHost>
       <Command>/opt/Qt5.8/bin/qmake</Command>
-      <Arguments>TUIcomotive.pro CONFIGNAME=$(ConfigurationName)</Arguments>
+      <Arguments>TUIcomotive.pro CONFIGNAME=$(ConfigurationName) </Arguments>
       <WorkingDirectory>$(BuildDir)</WorkingDirectory>
       <Environment>
         <Records />
@@ -189,6 +189,9 @@
   <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
+    <CFLAGS />
+    <CXXFLAGS />
+    <ExternalSourceFileList />
     <ExtraSettings>
       <HideErrorsInSystemHeaders>true</HideErrorsInSystemHeaders>
     </ExtraSettings>

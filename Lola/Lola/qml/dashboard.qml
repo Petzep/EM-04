@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
@@ -9,9 +9,11 @@ Window {
 	objectName: "dashboardWindow"
 	width: 800
     height: 480
-    visibility: "AutomaticVisibility"
+    visibility: "Windowed"
     color: "#161616"
     title: "Lola Dashboard"
+
+   	signal exit()
 
     ValueSource {
         id: valueSource
@@ -24,6 +26,14 @@ Window {
         width: root.width
         height: Math.min(root.width, root.height)
         anchors.centerIn: parent
+		focus: true
+		Keys.onPressed: {
+        if (event.key == Qt.Key_0) {
+            root.exit()
+            event.accepted = true;
+			console.log("Exiting")
+			}
+		}
 		
 		Column {
 				id: dashColumn

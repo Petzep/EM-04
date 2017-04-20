@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 
 Item {
     // This enum is actually keyboard-related, but it serves its purpose

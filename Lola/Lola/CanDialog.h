@@ -14,9 +14,9 @@
 struct CanLogMsg
 {
 	long long time;
-	QString id;
+	uint32_t id; //extended data frame suport
 	int dlc;
-	QStringList data;
+	QVector<uint32_t> data;
 };
 
 class CanDialog : public QDialog, public Ui::CanDialog

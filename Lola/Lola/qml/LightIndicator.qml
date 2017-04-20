@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 
 Item {
     property bool dim: true

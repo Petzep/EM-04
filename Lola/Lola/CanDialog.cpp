@@ -25,6 +25,10 @@ void CanDialog::initTable()
 	model->setHorizontalHeaderItem(2, new QStandardItem(QString("DLC")));
 	model->setHorizontalHeaderItem(3, new QStandardItem(QString("Data")));
 	model->setHorizontalHeaderItem(4, new QStandardItem(QString("Message")));
+	
+	canTable->setColumnWidth(1, 100);
+	canTable->setColumnWidth(2, 50);
+	canTable->setColumnWidth(3, 200);
 }
 
 void CanDialog::readFile(QString filename)
@@ -35,6 +39,7 @@ void CanDialog::readFile(QString filename)
 
 	QStringList splitList;
 	QTextStream in(&file);
+	QStringList dataString;
 	CanLogMsg canData;
 	for(int index = 0; !in.atEnd(); index++)
 	{
@@ -46,7 +51,7 @@ void CanDialog::readFile(QString filename)
 			splitList.clear();
 
 			splitList = line.split('>').first().split('x');
-			canData.id = splitList.last();
+			canData.id = splitList.last().toInt(Q_NULLPTR, 16);
 			splitList.clear();
 
 			splitList = line.split(']').first().split('[');
@@ -54,16 +59,16 @@ void CanDialog::readFile(QString filename)
 			splitList.clear();
 
 			QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
-			int pos = 0;
+			int pos = line.lastIndexOf("]"); //only searches after the id
 			canData.data.clear();
+			dataString.clear();
 			for(int i = 0; i < canData.dlc; i++)
-			{
 				if((pos = rx.indexIn(line, pos)) != -1)
 				{
-					canData.data.append(rx.cap(1));
+					canData.data.append(rx.cap(1).toInt(Q_NULLPTR, 16));
+					dataString.append(rx.cap(1));
 					pos += rx.matchedLength();
 				}
-			}
 
 			QStandardItem *item = new QStandardItem();
 			model->setItem(model->rowCount(), 0, item);
@@ -71,11 +76,12 @@ void CanDialog::readFile(QString filename)
 			QModelIndex Qindex = model->index(index, 0, QModelIndex());
 			model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
 			Qindex = model->index(index, 1, QModelIndex());
-			model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
+			model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id, 3, 16, QLatin1Char('0'))));
 			Qindex = model->index(index, 2, QModelIndex());
+			model->setData(Qindex, Qt::AlignCenter, Qt::TextAlignmentRole);
 			model->setData(Qindex, canData.dlc);
 			Qindex = model->index(index, 3, QModelIndex());
-			model->setData(Qindex, canData.data.join(" "));
+			model->setData(Qindex, dataString.join(" "));
 		}
 	}
 	file.close();
@@ -144,7 +150,8 @@ void CanDialog::canRx(void)
 		int index = model->rowCount() - 1;
 
 		QString line;
-		if(!frame.frameType() == QCanBusFrame::ErrorFrame)
+		QStringList dataString;
+		//if(!frame.frameType() == QCanBusFrame::ErrorFrame)
 			line = frame.toString();
 
 		QStandardItem *item = new QStandardItem();
@@ -152,15 +159,18 @@ void CanDialog::canRx(void)
 
 		QStringList splitList = line.split(']').first().split('[');
 		canData.dlc = splitList.last().toInt();
+		canData.id = splitList.first().toInt();
 
-		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
-		int pos = 0;
 		canData.data.clear();
+		dataString.clear();
+		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
+		int pos = line.lastIndexOf(']'); //only searches after the id
 		for(int i = 0; i < canData.dlc; i++)
 		{
 			if((pos = rx.indexIn(line, pos)) != -1)
 			{
-				canData.data.append(rx.cap(1));
+				canData.data.append(rx.cap(1).toInt(Q_NULLPTR, 16));
+				dataString.append(rx.cap(1));
 				pos += rx.matchedLength();
 			}
 		}
@@ -169,11 +179,12 @@ void CanDialog::canRx(void)
 		QModelIndex Qindex = model->index(index, 0, QModelIndex());
 		model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
 		Qindex = model->index(index, 1, QModelIndex());
-		model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
+		model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id, 3, 16, QLatin1Char('0'))));
 		Qindex = model->index(index, 2, QModelIndex());
 		model->setData(Qindex, canData.dlc);
+		model->setData(Qindex, Qt::AlignCenter, Qt::TextAlignmentRole);
 		Qindex = model->index(index, 3, QModelIndex());
-		model->setData(Qindex, canData.data.join(" "));
+		model->setData(Qindex, dataString.join(" "));
 	}
 }
 

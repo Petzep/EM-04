@@ -2,7 +2,7 @@
 #Feel free to modify any flags you want.
 #Visit http://visualgdb.com/makefiles for more details.
 
-QT       += core gui serialbus qml multimedia
+QT       += core gui serialbus qml multimedia quickwidgets quick 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,3 +26,5 @@ OBJECTS_DIR = $$DESTDIR
 MOC_DIR     = $$DESTDIR
 RCC_DIR     = $$DESTDIR
 UI_DIR      = $$DESTDIR
+
+CONFIG += static staticlib

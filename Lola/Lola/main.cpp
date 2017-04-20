@@ -7,8 +7,7 @@ int main(int argc, char *argv[])
 	
 	QFontDatabase::addApplicationFont(":/fonts/MsSansSerif.ttf");
 	app.setFont(QFont("Microsoft Sans Serif", 8));
-
-    TUIcomotive window;	
+	TUIcomotive window;	
 	window.showNormal();
     return app.exec();
 }

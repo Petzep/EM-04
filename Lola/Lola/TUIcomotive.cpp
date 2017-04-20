@@ -60,6 +60,7 @@ void TUIcomotive::on_canButton_clicked(void)
 
 void TUIcomotive::on_dashboardButton_clicked(void)
 {
+	this->hide();
 	QQmlApplicationEngine* engine = new QQmlApplicationEngine;
 	engine->load(QUrl("qrc:/qml/dashboard.qml"));
 
@@ -68,7 +69,6 @@ void TUIcomotive::on_dashboardButton_clicked(void)
 	QObject *rootObject = engine->rootObjects().first();
 	QObject *qmlObject = rootObject->findChild<QObject*>("valueSource");
 	
-	rootObject->setProperty("visibility", "Fullscreen");
 	qmlObject->setProperty("temperature", 0.8);
 }
 

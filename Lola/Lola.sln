@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Todo.txt = Todo.txt
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dashboard", "Dashboard\Dashboard.vcxproj", "{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		ComPiLer|x64 = ComPiLer|x64
@@ -70,6 +72,16 @@ Global
 		{3B1D9102-5C13-45B1-B03B-4959077E4CE3}.RaspberryPi|x64.Build.0 = Release|x64
 		{3B1D9102-5C13-45B1-B03B-4959077E4CE3}.Release|x64.ActiveCfg = Release|x64
 		{3B1D9102-5C13-45B1-B03B-4959077E4CE3}.Release|x64.Build.0 = Release|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.ComPiLer|x64.ActiveCfg = ComPiLer|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.ComPiLer|x64.Build.0 = ComPiLer|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.Debug|x64.ActiveCfg = Debug|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.Debug|x64.Build.0 = Debug|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.LinuxVM|x64.ActiveCfg = Release|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.LinuxVM|x64.Build.0 = Release|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.RaspberryPi|x64.ActiveCfg = Release|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.RaspberryPi|x64.Build.0 = Release|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.Release|x64.ActiveCfg = Release|x64
+		{F64C0BA4-8FFA-470D-AEB4-53A8E2BC768E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

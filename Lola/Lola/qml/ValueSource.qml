@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.7
 
 Item {
     id: valueSource
@@ -94,7 +94,7 @@ Item {
                 NumberAnimation {
                     target: valueSource
                     property: "rpm"
-                    easing.type: Easing.outSine
+                    easing.type: Easing.OutSine
                     from: 80
                     to: 123
                     duration: 4000
@@ -127,7 +127,7 @@ Item {
                 NumberAnimation {
                     target: valueSource
                     property: "rpm"
-                    easing.type: Easing.outBack
+                    easing.type:Easing.OutBack
                     to: 60
                     duration: 1000
                 }
