@@ -20,6 +20,7 @@ TestDialog::TestDialog(QWidget *parent)
 
 	if(!loadMusic("/media"))
 		QApplication::beep();
+	loadRadio();
 
 	quickWidget->setSource(QUrl("qrc:/qml/dashboardRect.qml"));
 	quickWidget->hide();
@@ -271,13 +272,37 @@ void TestDialog::on_prevStationButton_clicked(void)
 void TestDialog::on_radioButton_clicked(void)
 {
 	m_player->setPlaylist(m_radiolist);
+	m_player->play();
+}
+
+bool TestDialog::loadRadio()
+{
+	QDir dir(QString(QDir::currentPath() + "/radio"));
+	QStringList files = dir.entryList(QStringList() << "*.mp3", QDir::Files);
+	if(files.isEmpty())
+		return false;
+	QList<QMediaContent> content;
+	for(const QString& f : files)
+	{
+		content.push_back(QUrl::fromLocalFile(dir.path() + "/" + f));
+		QFileInfo fi(f);
+		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), stationWidget);
+	}
+
+	m_radiolist->addMedia(content);
+	stationWidget->setCurrentRow(0);
+
+	return true;
 }
 //////////////////////
 /////Music Events/////
 //////////////////////
 void TestDialog::onCurrentIndexChanged(int track)
 {
-	playlistWidget->setCurrentRow(track);
+	if(radioButton->isChecked())
+		stationWidget->setCurrentRow(track);
+	else
+		playlistWidget->setCurrentRow(track);
 	updateMetaData();
 }
 
@@ -414,26 +439,6 @@ bool TestDialog::loadMusic(QString musicFolder)
 
 	m_playlist->addMedia(content);
 	playlistWidget->setCurrentRow(0);
-
-	return true;
-}
-
-bool TestDialog::loadRadio()
-{
-	QDir dir(QString(QDir::currentPath() + "radio"));
-	QStringList files = dir.entryList(QStringList() << "*.mp3", QDir::Files);
-	if(files.isEmpty())
-		return false;
-	QList<QMediaContent> content;
-	for(const QString& f : files)
-	{
-		content.push_back(QUrl::fromLocalFile(dir.path() + "/" + f));
-		QFileInfo fi(f);
-		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), playlistWidget);
-	}
-
-	m_radiolist->addMedia(content);
-	stationWidget->setCurrentRow(0);
 
 	return true;
 }
