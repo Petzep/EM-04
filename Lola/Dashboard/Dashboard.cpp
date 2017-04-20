@@ -66,36 +66,42 @@ void Dashboard::canRx(void)
 		const QCanBusFrame frame = canDevice->readFrame();
 
 		QString line;
-		line = frame.toString();
+		line = frame.toString().toLatin1();
 
 		QStringList splitList = line.split(']').first().split('[');
 		canData.dlc = splitList.last().toInt();
-		canData.id = splitList.first().toInt();
+		canData.id = frame.frameId();
 
 		canData.data.clear();
-		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
-		int pos = line.lastIndexOf("]"); //only searches after the id
 		for(int i = 0; i < canData.dlc; i++)
-			if((pos = rx.indexIn(line, pos)) != -1)
-			{
-				canData.data.append(rx.cap(1).toInt(Q_NULLPTR, 16));
-				pos += rx.matchedLength();
-		}
-		canData.time = frame.timeStamp().microSeconds();
+			canData.data.append(frame.payload().at(i));
+		for(int i = canData.dlc; i < 8; i++)
+			canData.data.append(0);
 
+		canData.time = frame.timeStamp().microSeconds();
+		qWarning("canData.id: %d", canData.id);
+		qWarning("canData.dlc: %d", canData.dlc);
+		qWarning("canData.data.count: %d", canData.data.count());
+		qWarning("frame.frameId(): %d", frame.frameId());
+		qWarning("frame.payload().at(0) %d", frame.payload().at(0));
+		qWarning("canData.data.at(1): %d", canData.data.at(0));
+		qWarning("canData.data.at(1): %d", canData.data.at(1));
+		qWarning("canData.data.at(2): %d", canData.data.at(2));
+		qWarning("canData.data.at(3): %d", canData.data.at(3));
 		if(canData.id == SPEED_ADDRESS)
 			qmlObject->setProperty("kph", canData.data.at(0));
 		else if(canData.id == TEMPERATURE_ADDRESS)
 			qmlObject->setProperty("temperature", canData.data.at(0));
 		else if(canData.id == LEFT_ADDRESS)
-			qmlObject->setProperty("turnSignal", canData.data.at(0) ? Qt::LeftArrow : -1);
+			qmlObject->setProperty("leftArrow", canData.data.at(0));
 		else if(canData.id == RIGHT_ADDRESS)
-			qmlObject->setProperty("turnSignal", canData.data.at(0) ? Qt::RightArrow : -1);
+			qmlObject->setProperty("rightArrow", canData.data.at(0));
 		else if(canData.id == FRONT_ADDRESS)
 		{
-			qmlObject->setProperty("smallOn", canData.data.at(0));
-			qmlObject->setProperty("dimOn", canData.data.at(1));
-			qmlObject->setProperty("fullOn", canData.data.at(3));
+			qWarning("lightshizzle");
+			qmlObject->setProperty("smallOn", canData.data.at(0) ? true : false);
+			qmlObject->setProperty("dimOn", canData.data.at(1) ? true : false);
+			qmlObject->setProperty("fullOn", canData.data.at(3) ? true : false);
 		}
 		else if(canData.id == MC_DNR)
 		{

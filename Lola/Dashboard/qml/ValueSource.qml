@@ -8,7 +8,8 @@ Item {
     property real fuel: 0.85
     property string gear: "N"
     
-    property int turnSignal: -1
+    property bool leftArrow: false
+	property bool rightArrow: false
 	property bool smallOn: false
 	property bool dimOn: false
 	property bool fullOn: false

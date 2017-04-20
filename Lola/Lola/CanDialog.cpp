@@ -137,7 +137,7 @@ void CanDialog::canError(void)
 	warningBox = QMessageBox::warning(this, "CANerror", tr("Connection error: %1").arg(canDevice->errorString()));
 }
 
-void CanDialog::canRx(	void)
+void CanDialog::canRx(void)
 {
 	if(!canDevice)
 		return;
@@ -151,7 +151,7 @@ void CanDialog::canRx(	void)
 
 		QString line;
 		QStringList dataString;
-		//if(!frame.frameType() == QCanBusFrame::ErrorFrame) //not working???
+		//if(!frame.frameType() == QCanBusFrame::ErrorFrame)
 			line = frame.toString();
 
 		QStandardItem *item = new QStandardItem();
@@ -164,7 +164,7 @@ void CanDialog::canRx(	void)
 		canData.data.clear();
 		dataString.clear();
 		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
-		int pos = line.lastIndexOf("]"); //only searches after the id
+		int pos = line.lastIndexOf(']'); //only searches after the id
 		for(int i = 0; i < canData.dlc; i++)
 		{
 			if((pos = rx.indexIn(line, pos)) != -1)

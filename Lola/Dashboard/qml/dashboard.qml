@@ -106,7 +106,7 @@ Window {
 					height: container.height * 0.1 - gaugeRow.spacing
 
 					direction: Qt.LeftArrow
-					on: valueSource.turnSignal == Qt.LeftArrow
+					on: valueSource.leftArrow;
 				}
 
 				Item {
@@ -195,7 +195,7 @@ Window {
 					height: container.height * 0.1 - gaugeRow.spacing
 
 					direction: Qt.RightArrow
-					on: valueSource.turnSignal == Qt.RightArrow
+					on: valueSource.rightArrow
 				}
 			}
 

@@ -6,17 +6,7 @@ Item {
     property int direction: Qt.LeftArrow
     property bool on: false
 
-    property bool flashing: false
-
     scale: direction === Qt.LeftArrow ? 1 : -1
-
-    Timer {
-        id: flashTimer
-        interval: 500
-        running: on
-        repeat: true
-        onTriggered: flashing = !flashing
-    }
 
     function paintOutlinePath(ctx) {
         ctx.beginPath();
@@ -49,7 +39,7 @@ Item {
     Canvas {
         id: foregroundCanvas
         anchors.fill: parent
-        visible: on && flashing
+        visible: on
 
         onPaint: {
             var ctx = getContext("2d");
