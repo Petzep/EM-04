@@ -62,7 +62,7 @@ Window {
 						width: height
 						height: container.height * 0.1 - gaugeRow.spacing
 
-						on: valueSource.smallOn;
+						on: valueSource.smallOn
 					}
 
 					Text {

@@ -40,8 +40,24 @@ Item {
         onPaint: {
             var ctx = getContext("2d");
             ctx.reset();
-			ctx.lineWidth = on?3:1;
-			ctx.strokeStyle = on?"green":"black";
+			ctx.lineWidth = 1;
+			ctx.strokeStyle = "black";
+
+            paintOutlinePath(ctx);
+			ctx.stroke();
+        }
+    }
+
+	    Canvas {
+        id: foregroundCanvas
+        anchors.fill: parent
+        visible: on
+
+        onPaint: {
+            var ctx = getContext("2d");
+            ctx.reset();
+			ctx.lineWidth = 3;
+			ctx.strokeStyle = "green";
 
             paintOutlinePath(ctx);
 			ctx.stroke();

@@ -14,6 +14,5 @@ Item {
 	property bool dimOn: false
 	property bool fullOn: false
     property real temperature: 23
-    property bool start: false
 	property bool batOn: false
 }
