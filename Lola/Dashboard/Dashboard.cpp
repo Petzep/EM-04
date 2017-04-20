@@ -59,6 +59,7 @@ void Dashboard::canRx(void)
 	if(!canDevice)
 		return;
 
+	QObject *qmlObject = m_root->findChild<QObject*>("valueSource");
 	while(canDevice->framesAvailable())
 	{
 		CanLogMsg canData;
@@ -69,35 +70,51 @@ void Dashboard::canRx(void)
 
 		QStringList splitList = line.split(']').first().split('[');
 		canData.dlc = splitList.last().toInt();
+		canData.id = splitList.first().toInt();
 
-		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
-		int pos = 0;
 		canData.data.clear();
+		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
+		int pos = line.lastIndexOf("]"); //only searches after the id
 		for(int i = 0; i < canData.dlc; i++)
-		{
 			if((pos = rx.indexIn(line, pos)) != -1)
 			{
-				canData.data.append(rx.cap(1));
+				canData.data.append(rx.cap(1).toInt(Q_NULLPTR, 16));
 				pos += rx.matchedLength();
-			}
 		}
 		canData.time = frame.timeStamp().microSeconds();
 
-		if(canData.dlc == 1)
+		if(canData.id == SPEED_ADDRESS)
+			qmlObject->setProperty("kph", canData.data.at(0));
+		else if(canData.id == TEMPERATURE_ADDRESS)
+			qmlObject->setProperty("temperature", canData.data.at(0));
+		else if(canData.id == LEFT_ADDRESS)
+			qmlObject->setProperty("turnSignal", canData.data.at(0) ? Qt::LeftArrow : -1);
+		else if(canData.id == RIGHT_ADDRESS)
+			qmlObject->setProperty("turnSignal", canData.data.at(0) ? Qt::RightArrow : -1);
+		else if(canData.id == FRONT_ADDRESS)
 		{
-			QObject *qmlObject = m_root->findChild<QObject*>("valueSource");
-			qmlObject->setProperty("kph", canData.data.first().toInt());
+			qmlObject->setProperty("smallOn", canData.data.at(0));
+			qmlObject->setProperty("dimOn", canData.data.at(1));
+			qmlObject->setProperty("fullOn", canData.data.at(3));
 		}
-		
-
-	/*	QModelIndex Qindex = model->index(index, 0, QModelIndex());
-		model->setData(Qindex, QVariant(QString("%1").arg(canData.time, 12, 10, QChar('0'))));
-		Qindex = model->index(index, 1, QModelIndex());
-		model->setData(Qindex, QVariant(QString("0x%1").arg(canData.id)));
-		Qindex = model->index(index, 2, QModelIndex());
-		model->setData(Qindex, canData.dlc);
-		Qindex = model->index(index, 3, QModelIndex());
-		model->setData(Qindex, canData.data.join(" "));*/
+		else if(canData.id == MC_DNR)
+		{
+			switch(canData.data.at(0))
+			{
+				case 0:
+					qmlObject->setProperty("gear", "D");
+					break;
+				case 1:
+					qmlObject->setProperty("gear", "N");
+					break;
+				case 2:
+					qmlObject->setProperty("gear", "R");
+					break;
+				default:
+					qmlObject->setProperty("gear", "Error");
+					break;
+			}
+		}
 	}
 }
 

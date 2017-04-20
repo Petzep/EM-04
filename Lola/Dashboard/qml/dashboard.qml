@@ -62,7 +62,7 @@ Window {
 						width: height
 						height: container.height * 0.1 - gaugeRow.spacing
 
-						on: true
+						on: valueSource.smallOn;
 					}
 
 					Text {
@@ -90,7 +90,7 @@ Window {
 						width: height
 						height: container.height * 0.1 - gaugeRow.spacing
 
-						on: true
+						on: valueSource.batOn
 					}
 				}
 			Row {
@@ -139,7 +139,7 @@ Window {
 
 					CircularGauge {
 						value: valueSource.temperature
-						maximumValue: 1
+						maximumValue: 80
 						width: parent.width
 						height: parent.height * 0.7
 						y: parent.height / 2 + container.height * 0.01
@@ -148,13 +148,13 @@ Window {
 							id: tempGaugeStyle
 
 							icon: "qrc:/images/temperature-icon.png"
+							tickmarkStepSize: 80;
 							maxWarningColor: Qt.rgba(0.5, 0, 0, 1)
 
 							tickmarkLabel: Text {
 								color: "white"
-								visible: styleData.value === 0 || styleData.value === 1
 								font.pixelSize: tempGaugeStyle.toPixels(0.225)
-								text: styleData.value === 0 ? "C" : (styleData.value === 1 ? "H" : "")
+								text: styleData.value === 0 ? "C" : (styleData.value === 80 ? "H" : "")
 							}
 						}
 					}
