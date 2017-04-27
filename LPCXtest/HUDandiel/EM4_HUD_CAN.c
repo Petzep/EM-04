@@ -14,16 +14,18 @@ Controls the HUD of EM-04
 #define DEVICE_NR			0b1001
 #define	EM_04_CAN_RANGE		0x100
 
+#define	EM_04_CAN_RANGE		0x100							
 #define ALL_ADDRESS			(0x000 + EM_04_CAN_RANGE)
 #define FAN_ADDRESS			(0x010 + EM_04_CAN_RANGE)
-#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)
-#define LIGHT_ADDRESS			(0x001 + COUT_ADDRESS)
+#define COUT_ADDRESS		(0x020 + EM_04_CAN_RANGE)			
+#define LIGHT_ADDRESS		(0x001 + COUT_ADDRESS)
 #define FRONT_ADDRESS		(0x002 + COUT_ADDRESS)
-#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)
+#define REAR_ADDRESS		(0x003 + COUT_ADDRESS)		
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
 #define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)
-#define BLOWER_ADDRESS		(0x007 + COUT_ADDRESS)
+#define CLAXON_ADDRESS		(0x007 + COUT_ADDRESS)
+#define BLOWER_ADDRESS		(0x008 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -32,9 +34,10 @@ Controls the HUD of EM-04
 #define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
 #define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
-#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
-#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
+#define MC_SPEED_STAT		(0x001 + MC_ADDRESS)
+#define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
+#define MC_DNR				(0x004 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define NFC_ADDRESS			0x5ca
@@ -57,7 +60,7 @@ Controls the HUD of EM-04
 #define	NFC_MESSAGE			8
 #define	LEFT_MESSAGE		10
 #define	RIGHT_MESSAGE		11
-#define LIGHT_MESSAGE			12
+#define LIGHT_MESSAGE		12
 #define FRONT_MESSAGE		13
 #define	TOTAL_MESSAGE		14
 
@@ -527,13 +530,16 @@ void CAN_rx(uint8_t msg_obj_num)
 		}
 		if(msg_obj_num == LIGHT_MESSAGE)
 		{
-			//led t6(green)
-			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, msg_obj.data[0]);
+			//niks
 		}
 		if(msg_obj_num == FRONT_MESSAGE)
 		{
-			//led t7(blue)
-			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[0]);
+			//led t5(green) (city)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, msg_obj.data[0]);
+			//led t6(green) (dim)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, msg_obj.data[1]);
+			//led t7(blue) (full)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[3]);
 		}
 	}
 	NVIC_EnableIRQ(CAN_IRQn);

@@ -34,8 +34,8 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
 #define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
-#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
-#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
+#define MC_SPEED_STAT		(0x001 + MC_ADDRESS)
+#define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
@@ -160,8 +160,9 @@ int main(void)
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 10 | 1 << 11);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 4 | 1 << 9 | 1 << 14);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 15 | 1 << 16 | 1 << 17 | 1 << 18 | 1 << 22);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 4 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 14 | 1 << 15 | 1 << 31);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 0 | 1 << 1 | 1 << 8 | 1 << 10 | 1 << 15 | 1 << 31);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 4, 1 << 28 | 1 << 29);
 
@@ -241,19 +242,19 @@ int main(void)
 		bool pin13 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 1);
 		bool pin14 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 2);
 		bool pin15 = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 3);
-		bool pin16 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6);
+		bool pin16 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6); //check R
 		bool pin17 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 29);
 		bool pin18 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 28);
-		bool pin19 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8);
+		bool pin19 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8); //check
 		bool pin20 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 7);
-		bool pin21 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 10);
-		bool pin22 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 15);
+		bool pin21 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 10); //check D
+		bool pin22 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 15); //check N
 		bool pin23 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 0);
-		bool pin24 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 14);
+		bool pin24 = false;
 		bool pin25 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 1);
-		bool pin26 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);
-		bool pin27 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 9);
-		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
+		bool pin26 = false;
+		bool pin27 = false;
+		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8); //check blower
 
 		//Waiting for A/D conversion complete
 		if(Chip_ADC_ReadStatus(LPC_ADC, ADC_CH2, ADC_DR_DONE_STAT) != SET) { }
@@ -273,12 +274,12 @@ int main(void)
 		bool rear = pin4;
 		bool blinkLeft = !pin10;
 		bool blinkRight = !pin1;
-		bool dnr_D = !pin13;
-		bool dnr_N = !pin9;
-		bool dnr_R = !pin6;
+		bool dnr_D = !pin21;
+		bool dnr_N = !pin22;
+		bool dnr_R = !pin16;
 		bool washer = pin2;
 		bool button = !pin5;
-		bool blower = false;
+		bool blower = !pin28;
 		bool alarm = false;
 		bool wiper = false; //TO BE REMOVED
 		bool wiperInterval = false;
@@ -431,32 +432,47 @@ int main(void)
 		if(dnr_D != dnr_DOn)
 		{
 			dnr_DOn = dnr_D;
-			SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 1;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			if(dnr_D)
+			{
+				SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 1;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 4);
+			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, true);	//DNR_D_led
 		}
 		if(dnr_N != dnr_NOn)
 		{
 			dnr_NOn = dnr_N;
-			SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 2;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			if(dnr_N)
+			{
+				SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 2;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, true);
+			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 9);	//DNR_N_led
 		}
 		if(dnr_R != dnr_ROn)
 		{
 			dnr_ROn = dnr_R;
-			SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 3;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			if(dnr_R)
+			{
+				SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 3;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, true);
+			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 14);	//DNR_R_led
 		}
 
 		if(rear != rearOn)

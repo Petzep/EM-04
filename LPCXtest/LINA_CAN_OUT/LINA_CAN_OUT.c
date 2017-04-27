@@ -35,8 +35,8 @@
 #define DIMMER_ADDRESS		(0x005 + HUD_ADDRESS)
 #define CLOCK_ADDRES		(0x00a + HUD_ADDRESS)
 #define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
-#define MC_SIGNAL1			(0x001 + MC_ADDRESS)
-#define MC_SIGNAL2			(0x002 + MC_ADDRESS)
+#define MC_SPEED_STAT		(0x001 + MC_ADDRESS)
+#define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
@@ -109,12 +109,12 @@ void Delay(unsigned long tick) {
 void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
+void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg){
 
 /**
 * @brief	Baudrate calculator
 * @return	Baudrates on for the CAN
 */
-void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg){
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
 	Chip_Clock_EnablePeriphClock(SYSCTL_CLOCK_CAN);
 	pClk = Chip_Clock_GetMainClockRate();
