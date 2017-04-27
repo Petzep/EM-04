@@ -38,8 +38,8 @@ bool Dashboard::initCan(int can)
 		}
 
 		QCanBusFrame frame;
-		frame.setFrameId(0x001);
-		QByteArray payload("A36E");
+		frame.setFrameId(BROADCAST_ADDRESS);
+		QByteArray payload("Lina");
 		frame.setPayload(payload);
 		canDevice->writeFrame(frame);
 
@@ -98,21 +98,21 @@ void Dashboard::canRx(void)
 			qmlObject->setProperty("rightArrow", canData.data.at(0));
 		else if(canData.id == FRONT_ADDRESS)
 		{
-			qmlObject->setProperty("smallOn", canData.data.at(0));
-			qmlObject->setProperty("dimOn", canData.data.at(1));
-			qmlObject->setProperty("fullOn", canData.data.at(3));
+			qmlObject->setProperty("smallOn", canData.data.at(1));
+			qmlObject->setProperty("dimOn", canData.data.at(0));
+			qmlObject->setProperty("fullOn", canData.data.at(2));
 		}
 		else if(canData.id == MC_DNR)
 		{
 			switch(canData.data.at(0))
 			{
-				case 0:
+				case 1:
 					qmlObject->setProperty("gear", "D");
 					break;
-				case 1:
+				case 2:
 					qmlObject->setProperty("gear", "N");
 					break;
-				case 2:
+				case 3:
 					qmlObject->setProperty("gear", "R");
 					break;
 				default:
