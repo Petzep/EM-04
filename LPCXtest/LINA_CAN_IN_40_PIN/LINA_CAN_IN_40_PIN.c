@@ -441,8 +441,8 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 4);
 			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, true);	//DNR_D_led
+			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 4);
 		}
 		if(dnr_N != dnr_NOn)
 		{
