@@ -38,7 +38,7 @@ Controls the HUD of EM-04
 #define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
-#define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS (0x700)
 
 #define NFC_ADDRESS			0x5ca
 #define NFC_NEPHTALY		0x0476280ada328000

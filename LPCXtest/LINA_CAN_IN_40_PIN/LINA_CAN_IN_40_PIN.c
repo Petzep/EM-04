@@ -39,7 +39,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
 #define ROBOTEQ_ADDRES		(0x050) //80 dec
-#define BROADCAST_ADDRESS	(0x700 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS	(0x700)
 
 #define BLINK_FREQ			750
 

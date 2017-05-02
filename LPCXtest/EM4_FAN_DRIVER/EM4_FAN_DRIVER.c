@@ -36,7 +36,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_SIGNAL1			(0x001 + MC_ADDRESS)
 #define MC_SIGNAL2			(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
-#define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
+#define BROADCAST_ADDRESS (0x700)
 
 #define	ALL_MESSAGE			1
 #define	PERSNOAL_MESSAGE	2
