@@ -218,7 +218,7 @@
       <string>Next</string>
      </property>
     </widget>
-    <widget class="QDial" name="volumeDail">
+    <widget class="QDial" name="volumeDial">
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -365,7 +365,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QDial" name="volumeDail_2">
+    <widget class="QDial" name="volumeDial_2">
      <property name="geometry">
       <rect>
        <x>340</x>
@@ -478,7 +478,7 @@
   <tabstop>stopButton</tabstop>
   <tabstop>prevButton</tabstop>
   <tabstop>nextButton</tabstop>
-  <tabstop>volumeDail</tabstop>
+  <tabstop>volumeDial</tabstop>
   <tabstop>shuffleBox</tabstop>
   <tabstop>loopOneButton</tabstop>
   <tabstop>loopAllButton</tabstop>

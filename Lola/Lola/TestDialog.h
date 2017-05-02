@@ -35,6 +35,7 @@ public slots:
 	void on_prevStationButton_clicked(void);
 	void on_nextStationButton_clicked(void);
 	void on_radioButton_clicked(void);
+	void onRadioStationChanged(int track);
 //MusicPlayer
 	void on_playButton_toggled(bool);
 	void on_stopButton_clicked(void);

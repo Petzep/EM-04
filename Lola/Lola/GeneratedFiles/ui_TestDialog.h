@@ -50,7 +50,7 @@ public:
     QPushButton *stopButton;
     QPushButton *prevButton;
     QPushButton *nextButton;
-    QDial *volumeDail;
+    QDial *volumeDial;
     QListWidget *playlistWidget;
     QRadioButton *loopOneButton;
     QRadioButton *loopAllButton;
@@ -62,7 +62,7 @@ public:
     QPushButton *nextStationButton;
     QPushButton *prevStationButton;
     QListWidget *stationWidget;
-    QDial *volumeDail_2;
+    QDial *volumeDial_2;
     QRadioButton *radioButton;
     QWidget *page_4;
     QSplitter *splitter_2;
@@ -131,10 +131,10 @@ public:
         nextButton = new QPushButton(Music);
         nextButton->setObjectName(QStringLiteral("nextButton"));
         nextButton->setGeometry(QRect(480, 190, 75, 23));
-        volumeDail = new QDial(Music);
-        volumeDail->setObjectName(QStringLiteral("volumeDail"));
-        volumeDail->setGeometry(QRect(400, 170, 50, 64));
-        volumeDail->setMaximum(100);
+        volumeDial = new QDial(Music);
+        volumeDial->setObjectName(QStringLiteral("volumeDial"));
+        volumeDial->setGeometry(QRect(400, 170, 50, 64));
+        volumeDial->setMaximum(100);
         playlistWidget = new QListWidget(Music);
         playlistWidget->setObjectName(QStringLiteral("playlistWidget"));
         playlistWidget->setGeometry(QRect(30, 40, 221, 192));
@@ -179,10 +179,10 @@ public:
         stationWidget->setFocusPolicy(Qt::NoFocus);
         stationWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
         stationWidget->setProperty("showDropIndicator", QVariant(false));
-        volumeDail_2 = new QDial(Radio);
-        volumeDail_2->setObjectName(QStringLiteral("volumeDail_2"));
-        volumeDail_2->setGeometry(QRect(340, 140, 91, 81));
-        volumeDail_2->setMaximum(100);
+        volumeDial_2 = new QDial(Radio);
+        volumeDial_2->setObjectName(QStringLiteral("volumeDial_2"));
+        volumeDial_2->setGeometry(QRect(340, 140, 91, 81));
+        volumeDial_2->setMaximum(100);
         radioButton = new QRadioButton(Radio);
         radioButton->setObjectName(QStringLiteral("radioButton"));
         radioButton->setGeometry(QRect(250, 170, 61, 17));
@@ -223,8 +223,8 @@ public:
         QWidget::setTabOrder(playButton, stopButton);
         QWidget::setTabOrder(stopButton, prevButton);
         QWidget::setTabOrder(prevButton, nextButton);
-        QWidget::setTabOrder(nextButton, volumeDail);
-        QWidget::setTabOrder(volumeDail, shuffleBox);
+        QWidget::setTabOrder(nextButton, volumeDial);
+        QWidget::setTabOrder(volumeDial, shuffleBox);
         QWidget::setTabOrder(shuffleBox, loopOneButton);
         QWidget::setTabOrder(loopOneButton, loopAllButton);
 

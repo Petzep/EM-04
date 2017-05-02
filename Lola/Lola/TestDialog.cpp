@@ -12,13 +12,16 @@ TestDialog::TestDialog(QWidget *parent)
 	m_player->setPlaylist(m_playlist);
 	m_player->setVolume(50);
 	playerBar->setMaximum(m_player->duration()/1000);
-	volumeDail->setValue(m_player->volume());
-	connect(volumeDail, SIGNAL(valueChanged(int)), m_player, SLOT(setVolume(int)));
+	volumeDial->setValue(m_player->volume());
+	volumeDial_2->setValue(m_player->volume());
+	connect(volumeDial, SIGNAL(valueChanged(int)), m_player, SLOT(setVolume(int)));
+	connect(volumeDial_2, SIGNAL(valueChanged(int)), m_player, SLOT(setVolume(int)));
 	connect(m_player, SIGNAL(positionChanged(qint64)), this, SLOT(onPositionChanged(qint64)));
 	connect(m_playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
 	connect(m_player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(onStateChanged(QMediaPlayer::State)));
+	connect(m_radiolist, SIGNAL(currentIndexChanged(int)), this, SLOT(onRadioStationChanged(int)));
 
-	if(!loadMusic("/media"))
+	if(!loadMusic("/media") | !loadRadio())
 		QApplication::beep();
 
 	quickWidget->setSource(QUrl("qrc:/qml/dashboardRect.qml"));
@@ -271,6 +274,12 @@ void TestDialog::on_prevStationButton_clicked(void)
 void TestDialog::on_radioButton_clicked(void)
 {
 	m_player->setPlaylist(m_radiolist);
+	m_player->play();
+}
+
+void TestDialog::onRadioStationChanged(int track)
+{
+	stationWidget->setCurrentRow(track);
 }
 //////////////////////
 /////Music Events/////
@@ -420,7 +429,7 @@ bool TestDialog::loadMusic(QString musicFolder)
 
 bool TestDialog::loadRadio()
 {
-	QDir dir(QString(QDir::currentPath() + "radio"));
+	QDir dir(QString(QDir::currentPath() + "/radio"));
 	QStringList files = dir.entryList(QStringList() << "*.mp3", QDir::Files);
 	if(files.isEmpty())
 		return false;
@@ -429,7 +438,7 @@ bool TestDialog::loadRadio()
 	{
 		content.push_back(QUrl::fromLocalFile(dir.path() + "/" + f));
 		QFileInfo fi(f);
-		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), playlistWidget);
+		QListWidgetItem *item = new QListWidgetItem(fi.fileName().remove(".mp3"), stationWidget);
 	}
 
 	m_radiolist->addMedia(content);
