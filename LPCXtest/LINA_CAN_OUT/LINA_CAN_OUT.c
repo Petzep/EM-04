@@ -39,6 +39,7 @@
 #define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
+#define ROBOTEQ_ADDRES		(0x050)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1

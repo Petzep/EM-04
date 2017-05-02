@@ -39,6 +39,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
+#define ROBOTEQ_ADDRES		(0x050)
 #define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
 
 #define	ALL_MESSAGE			1
@@ -63,6 +64,10 @@ extern "C"
 #endif
 
 volatile unsigned long SysTickCnt;
+volatile unsigned long rotEnc1Cnt;
+volatile unsigned long rotEnc2Cnt;
+volatile unsigned long lastRotEnc1Cnt;
+volatile unsigned long lastRotEnc2Cnt;
 
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 12000000;
@@ -70,7 +75,6 @@ const uint32_t RTCOscRateIn = 32768;
 const int min_dutyCycle = 35;
 const int max_dutyClycle = 99;
 int dutyCycle = 35;
-
 
 CCAN_MSG_OBJ_T msg_obj;
 /**
@@ -100,18 +104,18 @@ void PWMUpdate(int fan, unsigned char ucPercent)
 * @brief	Handle interrupt from 32-bit timer (Fan)
 * @return	Nothing
 */
-void TIMER32_0_IRQHandler(void)
+void TIMER16_0_IRQHandler(void)
 {
-	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, true);
-		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
-	}
-	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
-	{
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, false);
-		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
-	}
+	Chip_TIMER_ClearCapture(LPC_TIMER16_0, 0);
+	lastRotEnc1Cnt = rotEnc1Cnt;
+	rotEnc1Cnt = SysTickCnt;
+}
+
+void TIMER16_1_IRQHandler(void)
+{
+	Chip_TIMER_ClearCapture(LPC_TIMER16_1, 0);
+	lastRotEnc2Cnt = rotEnc2Cnt;
+	rotEnc2Cnt = SysTickCnt;
 }
 
 void TIMER32_1_IRQHandler(void)
@@ -295,12 +299,15 @@ int main(void) {
 	//set the resolution of the ticks to the PWM timer (match register resolution)
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_0, (PWM_PRESCALER - 1));
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_1, (PWM_PRESCALER - 1));
-	//Set the resolution of the ticks for the timer to on nano
+	//Set the resolution of the ticks for the timer to microseconds
 	Chip_TIMER_PrescaleSet(LPC_TIMER16_1, (SystemCoreClock / 1000000));
 	Chip_TIMER_PrescaleSet(LPC_TIMER16_1, (SystemCoreClock / 1000000));
 	//Set Match on capture
 	Chip_TIMER_CaptureRisingEdgeEnable(LPC_TIMER16_0, 0);
 	Chip_TIMER_CaptureRisingEdgeEnable(LPC_TIMER16_1, 0);
+	//Clear capture registers
+	Chip_TIMER_ClearCapture(LPC_TIMER16_0, 0);
+	Chip_TIMER_ClearCapture(LPC_TIMER16_1, 0);
 	//Set Interupt on capture
 	Chip_TIMER_CaptureEnableInt(LPC_TIMER16_0, 0);
 	Chip_TIMER_CaptureEnableInt(LPC_TIMER16_1, 0);
@@ -337,16 +344,30 @@ int main(void) {
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 3);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 10);
 
-	//PinFunction
+	//PinFunction capture
 	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO0_2, IOCON_MODE_PULLUP, IOCON_FUNC2);
 	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_8, IOCON_MODE_PULLUP, IOCON_FUNC1);
 
 	unsigned long lastSystickcnt = 0;
+	unsigned long lastSpeedcnt = 0;
 	PWMUpdate(0, dutyCycle);
 	PWMUpdate(1, dutyCycle);
 
 	for (;;)
 	{
+		if(lastSpeedcnt != 0)
+			if((SysTickCnt - lastSpeedcnt) >= 100)
+			{
+				lastSpeedcnt = SysTickCnt;
+
+				msg_obj.msgobj = 0;
+				msg_obj.mode_id = SPEED_ADDRESS | CAN_MSGOBJ_STD;
+				msg_obj.mask = 0x0;
+				msg_obj.dlc = 1;
+				msg_obj.data[0] = (((rotEnc1Cnt - lastRotEnc1Cnt) + (rotEnc1Cnt - lastRotEnc1Cnt))/2) / 10;
+				LPC_CCAN_API->can_transmit(&msg_obj);
+			}
+
 		if((SysTickCnt - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;

@@ -38,7 +38,8 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
 #define MC_I2C				(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
-#define BROADCAST_ADDRESS	(0x050 + EM_04_CAN_RANGE)
+#define ROBOTEQ_ADDRES		(0x050) //80 dec
+#define BROADCAST_ADDRESS	(0x700 + EM_04_CAN_RANGE)
 
 #define BLINK_FREQ			750
 
@@ -125,7 +126,25 @@ void CAN_IRQHandler(void)
 	if(IntStatus & CAN_ICR_RI)
 	{
 		Chip_CAN_Receive(LPC_CAN, &RcvMsgBuf);
-		//ReplyMessage(&RcvMsgBuf);
+		if(RcvMsgBuf.ID == MC_DNR)
+			if(RcvMsgBuf.Data[0] == 1)
+			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, true);	//DNR_D_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+			}
+			else if(RcvMsgBuf.Data[0] == 2)
+			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, true);	//DNR_N_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+			}
+			else if(RcvMsgBuf.Data[0] == 3)
+			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, true);	//DNR_R_led
+			}
 	}
 }
 
@@ -245,13 +264,13 @@ int main(void)
 		bool pin16 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6); //check R
 		bool pin17 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 29);
 		bool pin18 = Chip_GPIO_ReadPortBit(LPC_GPIO, 4, 28);
-		bool pin19 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8); //check
+		bool pin19 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8);
 		bool pin20 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 7);
 		bool pin21 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 10); //check D
 		bool pin22 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 15); //check N
 		bool pin23 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 0);
 		bool pin24 = false;
-		bool pin25 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 1);
+		bool pin25 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 1); //check alarm
 		bool pin26 = false;
 		bool pin27 = false;
 		bool pin28 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8); //check blower
@@ -280,7 +299,7 @@ int main(void)
 		bool washer = pin2;
 		bool button = !pin5;
 		bool blower = !pin28;
-		bool alarm = false;
+		bool alarm = !pin25;
 		bool wiper = false; //TO BE REMOVED
 		bool wiperInterval = false;
 		bool wiper1 = false;
@@ -331,6 +350,7 @@ int main(void)
 				SendMsgBuf.Data[0] = false;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				lastClick = 0;
 			}
 		}
 
@@ -345,6 +365,7 @@ int main(void)
 				SendMsgBuf.Data[0] = false;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+				lastClick = 0;
 			}
 		}
 
@@ -388,7 +409,7 @@ int main(void)
 		}
 		if(lowBeam != lowBeamOn)
 		{
-			//stadslichten
+			//dimlichten
 			lowBeamOn = lowBeam;
 			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 4;
@@ -416,7 +437,7 @@ int main(void)
 		}
 		if(fogLights != fogLightsOn)
 		{
-			//stadslichten
+			//mistlampen (breetelight)
 			fogLightsOn = fogLights;
 			SendMsgBuf.ID = FRONT_ADDRESS | CAN_MSGOBJ_STD;
 			SendMsgBuf.DLC = 4;
@@ -434,29 +455,27 @@ int main(void)
 			dnr_DOn = dnr_D;
 			if(dnr_D)
 			{
-				SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
 				SendMsgBuf.Data[0] = 1;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, true);	//DNR_D_led
-			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 4);
+			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 4);	//DNR_D_led
 		}
 		if(dnr_N != dnr_NOn)
 		{
 			dnr_NOn = dnr_N;
 			if(dnr_N)
 			{
-				SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
 				SendMsgBuf.Data[0] = 2;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, true);
 			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 9);	//DNR_N_led
 		}
 		if(dnr_R != dnr_ROn)
@@ -464,14 +483,13 @@ int main(void)
 			dnr_ROn = dnr_R;
 			if(dnr_R)
 			{
-				SendMsgBuf.ID = MC_DNR | CAN_MSGOBJ_STD;
+				SendMsgBuf.ID = ROBOTEQ_ADDRES	 | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
 				SendMsgBuf.Data[0] = 3;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, true);
 			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 14);	//DNR_R_led
 		}
 

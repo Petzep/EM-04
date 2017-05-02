@@ -87,7 +87,7 @@ void Dashboard::canRx(void)
 		qWarning("canData.data.at(1): %d", canData.data.at(0));
 		qWarning("canData.data.at(1): %d", canData.data.at(1));
 		qWarning("canData.data.at(2): %d", canData.data.at(2));
-		qWarning("canData.data.at(3): %d", canData.data.at(3));*/
+		qWarning("canData.robodata.at(3): %d", canData.data.at(3));*/
 		if(canData.id == SPEED_ADDRESS)
 			qmlObject->setProperty("kph", canData.data.at(0));
 		else if(canData.id == TEMPERATURE_ADDRESS)
@@ -101,6 +101,20 @@ void Dashboard::canRx(void)
 			qmlObject->setProperty("smallOn", canData.data.at(1));
 			qmlObject->setProperty("dimOn", canData.data.at(0));
 			qmlObject->setProperty("fullOn", canData.data.at(2));
+		}
+		else if(canData.id == BATTERY_ADDRESS)
+		{
+			int batteryVoltage = (canData.data.at(0) << 8) + canData.data.at(1);
+			int min = 40;
+			int max = 57.4;
+			float batteryPercentage = 1 / ((min - max)*(batteryVoltage - min));
+			qmlObject->setProperty("fuel", batteryPercentage);
+			
+			int battery1Amp = (canData.data.at(3) << 8) + canData.data.at(4);
+			int battery2Amp = (canData.data.at(5) << 8) + canData.data.at(6);
+			float batteryAmp = (battery1Amp + battery2Amp) / 2;
+			qmlObject->setProperty("rpm",batteryAmp);
+
 		}
 		else if(canData.id == MC_DNR)
 		{
@@ -127,3 +141,5 @@ void Dashboard::canTx(void)
 {
 	qDebug("Frames written");
 }
+
+//BAT 57.4 max 40 min
