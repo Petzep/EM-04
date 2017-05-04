@@ -25,8 +25,9 @@
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)
 #define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)
-#define CLAXON_ADDRESS		(0x007 + COUT_ADDRESS)
-#define BLOWER_ADDRESS		(0x008 + COUT_ADDRESS)
+#define WASHER_ADDRESS		(0x007 + COUT_ADDRESS)
+#define CLAXON_ADDRESS		(0x008 + COUT_ADDRESS)
+#define BLOWER_ADDRESS		(0x009 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -49,10 +50,11 @@
 #define	LEFT_MESSAGE		5
 #define	RIGHT_MESSAGE		6
 #define WIPER_MESSAGE		7
-#define CLAXON_MESSAGE		8
-#define BLOWER_MESSAGE		9
-#define	PERSNOAL_MESSAGE	10
-#define	TOTAL_MESSAGE		11
+#define WASHER_MESSAGE		8
+#define CLAXON_MESSAGE		9
+#define BLOWER_MESSAGE		10
+#define	PERSNOAL_MESSAGE	11
+#define	TOTAL_MESSAGE		12
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -351,6 +353,14 @@ void CAN_rx(uint8_t msg_obj_num) {
 			}
 		}
 
+		if(msg_obj_num == WASHER_MESSAGE)
+		{
+			if(DEVICE_NR == 0b0100)
+			{
+				setPort(3, msg_obj.data[0]);
+			}
+		}
+
 		if(msg_obj_num == BLOWER_MESSAGE)
 		{
 			if(DEVICE_NR == 0b0100)
@@ -593,7 +603,7 @@ Can rear
 5	1,10	Port 6	Left taillight
 6	2,11	Port 7	Unused (inserted in D-sub)
 
-Can front bottom one
+Can mid bottom one
 
 8	1,7		Port 0	right front indicator
 7	3,3		Port 1	right front door

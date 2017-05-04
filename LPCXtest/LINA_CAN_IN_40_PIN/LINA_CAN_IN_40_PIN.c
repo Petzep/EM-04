@@ -24,8 +24,9 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define LEFT_ADDRESS		(0x004 + COUT_ADDRESS)				//blink left
 #define RIGHT_ADDRESS		(0x005 + COUT_ADDRESS)				//blink right
 #define WIPER_ADDRESS		(0x006 + COUT_ADDRESS)				//whiper speed
-#define CLAXON_ADDRESS		(0x007 + COUT_ADDRESS)
-#define BLOWER_ADDRESS		(0x008 + COUT_ADDRESS)
+#define WASHER_ADDRESS		(0x007 + COUT_ADDRESS)
+#define CLAXON_ADDRESS		(0x008 + COUT_ADDRESS)
+#define BLOWER_ADDRESS		(0x009 + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -300,10 +301,11 @@ int main(void)
 		bool button = !pin5;
 		bool blower = !pin28;
 		bool alarm = !pin25;
-		bool wiper = false; //TO BE REMOVED
-		bool wiperInterval = false;
-		bool wiper1 = false;
-		bool wiper2 = false;
+		bool wiperInterval = !pin13;
+		bool wiper1 = !pin9;
+		bool wiper2 = !pin6;
+		bool wiper = wiperInterval || wiper1 || wiper2;
+		int wiperTime = 300;
 
 		bool can1 = false;
 		bool can2 = false;
@@ -335,6 +337,17 @@ int main(void)
 			SendMsgBuf.ID = BLOWER_ADDRESS;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Data[0] = blowerOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(washerOn != washer)
+		{
+			washerOn = washer;
+
+			SendMsgBuf.ID = WASHER_ADDRESS;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = washerOn;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
@@ -597,48 +610,13 @@ int main(void)
 
 		if(wiper != wiperOn)
 		{
-			//Toggle whiper, send to personal adress from whiper
 			wiperOn = wiper;
-
-			/*// OLD-WHIPER CODE
-			SendMsgBuf.ID = WIPER_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 2;
-			SendMsgBuf.Data[0] = 0;
-			SendMsgBuf.Data[1] = 0;
-			SendMsgBuf.Data[2] = 0;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);//???? Hazard! [3][4] undefined? Are they nessecary
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);//????
-
-			if (wiperOn)
-			{
-			//first disable reset
-			SendMsgBuf.Data[3] = false;
-			SendMsgBuf.Data[4] = false;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-
-			//then set wiper on
-			SendMsgBuf.Data[3] = true;
-			SendMsgBuf.Data[4] = true;
-			Delay(100);
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-			}
-			else
-			{
-			//first set wiper off
-			SendMsgBuf.Data[3] = false;
-			SendMsgBuf.Data[4] = false;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-
-			//then enable reset
-			SendMsgBuf.Data[3] = false;
-			SendMsgBuf.Data[4] = true;
-			Delay(100);
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-			}*/
+			if(wiperInterval)
+				wiperTime = 500;
+			else if(wiper1)
+				wiperTime = 1000;
+			else if(wiper2)
+				wiperTime = 1500;
 		}
 
 		//Send an overview of the inputs
@@ -856,7 +834,7 @@ int main(void)
 		//
 		//Wiper
 		//
-		if(wiperOn && ((LoopTick - lastWipertickcnt) >= 300))
+		if(wiperOn && ((LoopTick - lastWipertickcnt) >= wiperTime))
 		{
 			lastWipertickcnt = SysTickCnt;
 
