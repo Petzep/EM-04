@@ -218,7 +218,7 @@
       <string>Next</string>
      </property>
     </widget>
-    <widget class="QDial" name="volumeDail">
+    <widget class="QDial" name="volumeDial">
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -365,7 +365,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QDial" name="volumeDail_2">
+    <widget class="QDial" name="volumeDial_2">
      <property name="geometry">
       <rect>
        <x>340</x>
@@ -395,7 +395,417 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_4"/>
+   <widget class="QWidget" name="page_4">
+    <widget class="QLCDNumber" name="lcdNumber_2">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>30</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_3">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>30</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_4">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>60</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_5">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>60</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_6">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>60</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_7">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>30</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>30</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Motor 1 Amps(R):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>60</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Motor 2 Amps(L):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_8">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>110</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_9">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>140</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>110</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Battery 1 Amps(R):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_10">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>110</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_11">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>110</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_12">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>140</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_13">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>140</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>140</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string> Battery 2 Amps(L):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>540</x>
+       <y>30</y>
+       <width>16</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>480</x>
+       <y>10</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Value:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>10</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Min:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>10</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Max:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_14">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>230</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>200</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>MCU Temp:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_15">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>230</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_16">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>200</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_17">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>200</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>230</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>MOSFET 1 Temp:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_18">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>200</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_19">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>230</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_20">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>260</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>260</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>MOSFET 2 Temp:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_21">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>260</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_22">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>260</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdNumber_23">
+     <property name="geometry">
+      <rect>
+       <x>700</x>
+       <y>130</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>710</x>
+       <y>110</y>
+       <width>47</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sum:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QSplitter" name="splitter_2">
    <property name="geometry">
@@ -409,32 +819,23 @@
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
-   <widget class="QDial" name="dial">
-    <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
+   <widget class="QLabel" name="dnrLabel">
+    <property name="text">
+     <string>DNR_setting</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="userLabel">
     <property name="text">
      <string>UserName</string>
     </property>
-   </widget>
-   <widget class="QLCDNumber" name="lcdNumber">
-    <property name="font">
-     <font>
-      <strikeout>false</strikeout>
-     </font>
-    </property>
-    <property name="smallDecimalPoint">
-     <bool>true</bool>
-    </property>
-    <property name="segmentStyle">
-     <enum>QLCDNumber::Filled</enum>
-    </property>
-    <property name="value" stdset="0">
-     <double>56.200000000000003</double>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLCDNumber" name="timeLabel"/>
   </widget>
   <widget class="QQuickWidget" name="quickWidget">
    <property name="geometry">
@@ -478,7 +879,7 @@
   <tabstop>stopButton</tabstop>
   <tabstop>prevButton</tabstop>
   <tabstop>nextButton</tabstop>
-  <tabstop>volumeDail</tabstop>
+  <tabstop>volumeDial</tabstop>
   <tabstop>shuffleBox</tabstop>
   <tabstop>loopOneButton</tabstop>
   <tabstop>loopAllButton</tabstop>

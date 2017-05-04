@@ -50,7 +50,7 @@ Window {
 						id: dimIndicator
 						anchors.verticalCenter: parent.verticalCenter
 						width: height
-						height: container.height * 0.1 - gaugeRow.spacing
+						height: container.height * 0.1 * 1.4 - gaugeRow.spacing
 
 						dim: true
 						on: valueSource.dimOn
@@ -60,7 +60,7 @@ Window {
 						id: smallIndicator
 						anchors.verticalCenter: parent.verticalCenter
 						width: height
-						height: container.height * 0.1 - gaugeRow.spacing
+						height: container.height * 0.1 * 1.4 - gaugeRow.spacing
 
 						on: valueSource.smallOn
 					}
@@ -78,7 +78,7 @@ Window {
 						id: fullIndicator
 						anchors.verticalCenter: parent.verticalCenter
 						width: height
-						height: container.height * 0.1 - gaugeRow.spacing
+						height: container.height * 0.1 * 1.4 - gaugeRow.spacing
 
 						dim: false
 						on: valueSource.fullOn
@@ -88,7 +88,7 @@ Window {
 						id: batIndicator
 						anchors.verticalCenter: parent.verticalCenter
 						width: height
-						height: container.height * 0.1 - gaugeRow.spacing
+						height: container.height * 0.1 * 1.4- gaugeRow.spacing
 
 						on: valueSource.batOn
 					}
@@ -103,7 +103,7 @@ Window {
 					id: leftIndicator
 					anchors.verticalCenter: parent.verticalCenter
 					width: height
-					height: container.height * 0.1 - gaugeRow.spacing
+					height: container.height * 0.1 * 1.2 - gaugeRow.spacing
 
 					direction: Qt.LeftArrow
 					on: valueSource.leftArrow;
@@ -111,7 +111,7 @@ Window {
 
 				Item {
 					width: height
-					height: container.height * 0.25 - gaugeRow.spacing
+					height: container.height * 0.25 * 1.4 - gaugeRow.spacing
 					anchors.verticalCenter: parent.verticalCenter
 
 					CircularGauge {
@@ -172,7 +172,7 @@ Window {
 					// because they're laid out horizontally, and that would create
 					// large horizontal gaps between gauges on wide screens.
 					width: height
-					height: container.height * 0.5
+					height: container.height * 0.5 * 1.4
 
 					style: DashboardGaugeStyle {}
 				}
@@ -180,7 +180,7 @@ Window {
 				CircularGauge {
 					id: tachometer
 					width: height
-					height: container.height * 0.25 - gaugeRow.spacing
+					height: container.height * 0.25 * 1.4- gaugeRow.spacing
 					value: valueSource.rpm
 					maximumValue: 160
 					anchors.verticalCenter: parent.verticalCenter
@@ -192,7 +192,7 @@ Window {
 					id: rightIndicator
 					anchors.verticalCenter: parent.verticalCenter
 					width: height
-					height: container.height * 0.1 - gaugeRow.spacing
+					height: container.height * 0.1 * 1.2 - gaugeRow.spacing
 
 					direction: Qt.RightArrow
 					on: valueSource.rightArrow
