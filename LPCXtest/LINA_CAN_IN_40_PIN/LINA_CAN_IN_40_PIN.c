@@ -478,6 +478,10 @@ int main(void)
 			dnr_DOn = dnr_D;
 			if(dnr_D)
 			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+
 				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
@@ -485,13 +489,16 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 4);	//DNR_D_led
 		}
 		if(dnr_N != dnr_NOn)
 		{
 			dnr_NOn = dnr_N;
 			if(dnr_N)
 			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+
 				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
@@ -499,13 +506,16 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 9);	//DNR_N_led
 		}
 		if(dnr_R != dnr_ROn)
 		{
 			dnr_ROn = dnr_R;
 			if(dnr_R)
 			{
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+
 				SendMsgBuf.ID = ROBOTEQ_ADDRES	 | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
@@ -513,7 +523,6 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-			//Chip_GPIO_SetPinToggle(LPC_GPIO, 1, 14);	//DNR_R_led
 		}
 
 		if(rear != rearOn)
