@@ -12,7 +12,7 @@
 
 #include <chip.h>
 
-#define DEVICE_NR			0b0110
+#define DEVICE_NR			0b0100
 #define	EM_04_CAN_RANGE		0x100
 
 #define	EM_04_CAN_RANGE		0x100							
@@ -254,6 +254,21 @@ void CAN_init() {
 
 		msg_obj.msgobj = LIGHT_MESSAGE;
 		msg_obj.mode_id = LIGHT_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = BLOWER_MESSAGE;
+		msg_obj.mode_id = BLOWER_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = WASHER_MESSAGE;
+		msg_obj.mode_id = WASHER_ADDRESS;
+		msg_obj.mask = 0xFFF;
+		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+		msg_obj.msgobj = WIPER_MESSAGE;
+		msg_obj.mode_id = WIPER_ADDRESS;
 		msg_obj.mask = 0xFFF;
 		LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	}

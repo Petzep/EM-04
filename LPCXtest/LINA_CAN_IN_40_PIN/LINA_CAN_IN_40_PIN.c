@@ -352,6 +352,16 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
+		if(wiper != wiperOn)
+		{
+			wiperOn = wiper;
+			SendMsgBuf.ID = WIPER_ADDRESS;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Data[0] = wiperOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
 		if(blinkLeft != blinkLeftOn && !alarm)
 		{
 			blinkLeftOn = blinkLeft;
@@ -608,18 +618,8 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if(wiper != wiperOn)
-		{
-			wiperOn = wiper;
-			if(wiperInterval)
-				wiperTime = 500;
-			else if(wiper1)
-				wiperTime = 1000;
-			else if(wiper2)
-				wiperTime = 1500;
-		}
-
 		//Send an overview of the inputs
+
 		if(send != sendOn)
 		{
 			sendOn = send;
@@ -834,7 +834,7 @@ int main(void)
 		//
 		//Wiper
 		//
-		if(wiperOn && ((LoopTick - lastWipertickcnt) >= wiperTime))
+		/*if(wiperOn && ((LoopTick - lastWipertickcnt) >= wiperTime))
 		{
 			lastWipertickcnt = SysTickCnt;
 
@@ -854,7 +854,7 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
-		}
+		}*/
 
 		//
 		//heartbeat
