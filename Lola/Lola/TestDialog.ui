@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>4</number>
    </property>
    <property name="menuPage">
     <number>2</number>
@@ -396,7 +396,7 @@
     </widget>
    </widget>
    <widget class="QWidget" name="page_4">
-    <widget class="QLCDNumber" name="lcdNumber_2">
+    <widget class="QLCDNumber" name="lcdMot1AmpMin">
      <property name="geometry">
       <rect>
        <x>560</x>
@@ -406,7 +406,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_3">
+    <widget class="QLCDNumber" name="lcdMot1Amp">
      <property name="geometry">
       <rect>
        <x>470</x>
@@ -416,7 +416,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_4">
+    <widget class="QLCDNumber" name="lcdMot2Amp">
      <property name="geometry">
       <rect>
        <x>470</x>
@@ -426,7 +426,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_5">
+    <widget class="QLCDNumber" name="lcdMot2AmpMin">
      <property name="geometry">
       <rect>
        <x>560</x>
@@ -436,7 +436,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_6">
+    <widget class="QLCDNumber" name="lcdMot2AmpMax">
      <property name="geometry">
       <rect>
        <x>630</x>
@@ -446,7 +446,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_7">
+    <widget class="QLCDNumber" name="lcdMot1AmpMax">
      <property name="geometry">
       <rect>
        <x>630</x>
@@ -488,21 +488,21 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_8">
+    <widget class="QLCDNumber" name="lcdBat1AmpMax">
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>110</y>
+       <y>230</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_9">
+    <widget class="QLCDNumber" name="lcdBat2AmpMax">
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>140</y>
+       <y>260</y>
        <width>64</width>
        <height>23</height>
       </rect>
@@ -512,7 +512,7 @@
      <property name="geometry">
       <rect>
        <x>346</x>
-       <y>110</y>
+       <y>230</y>
        <width>101</width>
        <height>20</height>
       </rect>
@@ -524,41 +524,41 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_10">
+    <widget class="QLCDNumber" name="lcdBat1Amp">
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>110</y>
+       <y>230</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_11">
+    <widget class="QLCDNumber" name="lcdBat1AmpMin">
      <property name="geometry">
       <rect>
        <x>560</x>
-       <y>110</y>
+       <y>230</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_12">
+    <widget class="QLCDNumber" name="lcdBat2Amp">
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>140</y>
+       <y>260</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_13">
+    <widget class="QLCDNumber" name="lcdBat2AmpMin">
      <property name="geometry">
       <rect>
        <x>560</x>
-       <y>140</y>
+       <y>260</y>
        <width>64</width>
        <height>23</height>
       </rect>
@@ -568,7 +568,7 @@
      <property name="geometry">
       <rect>
        <x>346</x>
-       <y>140</y>
+       <y>260</y>
        <width>101</width>
        <height>20</height>
       </rect>
@@ -586,7 +586,7 @@
        <x>540</x>
        <y>30</y>
        <width>16</width>
-       <height>261</height>
+       <height>361</height>
       </rect>
      </property>
      <property name="orientation">
@@ -641,11 +641,11 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_14">
+    <widget class="QLCDNumber" name="lcdMos1TempMin">
      <property name="geometry">
       <rect>
        <x>560</x>
-       <y>230</y>
+       <y>330</y>
        <width>64</width>
        <height>23</height>
       </rect>
@@ -655,7 +655,7 @@
      <property name="geometry">
       <rect>
        <x>346</x>
-       <y>200</y>
+       <y>300</y>
        <width>101</width>
        <height>20</height>
       </rect>
@@ -667,31 +667,31 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_15">
+    <widget class="QLCDNumber" name="lcdMos1TempMax">
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>230</y>
+       <y>330</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_16">
+    <widget class="QLCDNumber" name="lcdMCUTempMax">
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>200</y>
+       <y>300</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_17">
+    <widget class="QLCDNumber" name="lcdMCUTemp">
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>200</y>
+       <y>300</y>
        <width>64</width>
        <height>23</height>
       </rect>
@@ -701,7 +701,7 @@
      <property name="geometry">
       <rect>
        <x>346</x>
-       <y>230</y>
+       <y>330</y>
        <width>101</width>
        <height>20</height>
       </rect>
@@ -713,31 +713,31 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_18">
+    <widget class="QLCDNumber" name="lcdMCUTempMin">
      <property name="geometry">
       <rect>
        <x>560</x>
-       <y>200</y>
+       <y>300</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_19">
+    <widget class="QLCDNumber" name="lcdMos1Temp">
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>230</y>
+       <y>330</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_20">
+    <widget class="QLCDNumber" name="lcdMos2TempMax">
      <property name="geometry">
       <rect>
        <x>630</x>
-       <y>260</y>
+       <y>360</y>
        <width>64</width>
        <height>23</height>
       </rect>
@@ -747,7 +747,7 @@
      <property name="geometry">
       <rect>
        <x>346</x>
-       <y>260</y>
+       <y>360</y>
        <width>101</width>
        <height>20</height>
       </rect>
@@ -759,31 +759,31 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_21">
+    <widget class="QLCDNumber" name="lcdMos2Temp">
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>260</y>
+       <y>360</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_22">
+    <widget class="QLCDNumber" name="lcdMos2TempMin">
      <property name="geometry">
       <rect>
        <x>560</x>
-       <y>260</y>
+       <y>360</y>
        <width>64</width>
        <height>23</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLCDNumber" name="lcdNumber_23">
+    <widget class="QLCDNumber" name="lcdBatSum">
      <property name="geometry">
       <rect>
        <x>700</x>
-       <y>130</y>
+       <y>250</y>
        <width>64</width>
        <height>23</height>
       </rect>
@@ -793,7 +793,7 @@
      <property name="geometry">
       <rect>
        <x>710</x>
-       <y>110</y>
+       <y>230</y>
        <width>47</width>
        <height>13</height>
       </rect>
@@ -803,6 +803,216 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdIntVoltMax">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>200</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>170</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Battery Voltage:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdIntVoltMin">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>200</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdIntVolt">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>200</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdBatVoltMax">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>170</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>200</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Internal Voltage</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdBatVoltMin">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>170</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdBatVolt">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>170</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="Line" name="line_2">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>280</y>
+       <width>411</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_3">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>150</y>
+       <width>411</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdMot2PowerMax">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>120</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>120</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Motor 2 Power(L):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdMot1PowerMax">
+     <property name="geometry">
+      <rect>
+       <x>630</x>
+       <y>90</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdMot2PowerMin">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>120</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdMot1PowerMin">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>90</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdMot1Power">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>90</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>346</x>
+       <y>90</y>
+       <width>101</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Motor 1 Power(R):</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLCDNumber" name="lcdMot2Power">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>120</y>
+       <width>64</width>
+       <height>23</height>
+      </rect>
      </property>
     </widget>
    </widget>

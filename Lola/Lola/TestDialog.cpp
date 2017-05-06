@@ -235,6 +235,207 @@ void TestDialog::dashboardClose(void)
 }
 
 //////////////////////
+//////Can Events/////
+//////////////////////
+bool TestDialog::initCan(int can)
+{
+	if(QCanBus::instance()->plugins().contains(QStringLiteral("socketcan").toUtf8()))
+	{
+		QString errorString;
+		canDevice = QCanBus::instance()->createDevice(QStringLiteral("socketcan").toUtf8(), QStringLiteral("can").append(can + '0'), &errorString);
+
+		if(!canDevice)
+		{
+			QMessageBox::StandardButton warningBox;
+			warningBox = QMessageBox::warning(this, "CANerror", (tr("Error creating device '%1', reason: '%2'").arg(QStringLiteral("can").append(can + '0')).arg(errorString)));
+
+			return false;
+		}
+
+		connect(canDevice, SIGNAL(errorOccurred()), this, SLOT(canError()));
+		connect(canDevice, SIGNAL(framesReceived()), this, SLOT(canRx()));
+		connect(canDevice, SIGNAL(framesWritten()), this, SLOT(canTx()));
+
+		canDevice->setConfigurationParameter(QCanBusDevice::BitRateKey, 500000);
+
+		if(!canDevice->connectDevice())
+		{
+			QMessageBox::StandardButton warningBox;
+			warningBox = QMessageBox::warning(this, "CANerror", tr("Connection error: %1\n Device: %2").arg(canDevice->errorString()).arg(QStringLiteral("can").append(can + '0')));
+		}
+
+		QCanBusFrame frame;
+		frame.setFrameId(0x001);
+		QByteArray payload("A36E");
+		frame.setPayload(payload);
+		canDevice->writeFrame(frame);
+
+		return true;
+	}
+	else
+		return false;
+}
+
+void TestDialog::canRx(void)
+{
+	if(!canDevice)
+		return;
+
+	while(canDevice->framesAvailable())
+	{
+		CanLogMsg canData;
+		const QCanBusFrame frame = canDevice->readFrame();
+
+		QString line;
+		line = frame.toString().toLatin1();
+
+		QStringList splitList = line.split(']').first().split('[');
+		canData.dlc = splitList.last().toInt();
+		canData.id = frame.frameId();
+
+		canData.data.clear();
+		for(int i = 0; i < canData.dlc; i++)
+			canData.data.append(frame.payload().at(i));
+		for(int i = canData.dlc; i < 8; i++)
+			canData.data.append(0);
+
+		canData.time = frame.timeStamp().microSeconds();
+
+		if(canData.id == BATTERY_ADDRESS)
+		{
+			float batteryVoltage = ((canData.data.at(0) << 8) + canData.data.at(1)) / 10.0;
+			float battery1Amp = ((canData.data.at(2) << 8) + canData.data.at(3)) / 10.0;
+			float battery2Amp = ((canData.data.at(4) << 8) + canData.data.at(5)) / 10.0;
+			float internalVoltage = ((canData.data.at(6) << 8) + canData.data.at(7)) / 10.0;
+
+			//Battery Stats
+			lcdBatVolt->display(batteryVoltage);
+			if(batteryVoltage < lcdBatVoltMin->value())
+				lcdBatVoltMin->display(batteryVoltage);
+			if(batteryVoltage > lcdBatVoltMax->value())
+				lcdBatVoltMax->display(batteryVoltage);
+			if(batteryVoltage > 57.4)
+				lcdBatVolt->setPalette(Qt::yellow);
+			if(batteryVoltage > 58)
+				lcdBatVolt->setPalette(Qt::red);
+			else
+				lcdBatVolt->setPalette(this->style()->standardPalette());
+
+			lcdBat1Amp->display(battery1Amp);
+			if(battery1Amp < lcdBat1AmpMin->value())
+				lcdBat1AmpMin->display(battery1Amp);
+			if(battery1Amp > lcdBat1AmpMax->value())
+				lcdBat1AmpMax->display(battery1Amp);
+
+			lcdBat2Amp->display(battery2Amp);
+			if(battery2Amp < lcdBat2AmpMin->value())
+				lcdBat2AmpMin->display(battery2Amp);
+			if(battery2Amp > lcdBat2AmpMax->value())
+				lcdBat2AmpMax->display(battery2Amp);
+
+			lcdIntVolt->display(internalVoltage);
+			if(internalVoltage < lcdIntVoltMin->value())
+				lcdIntVoltMin->display(internalVoltage);
+			if(internalVoltage > lcdIntVoltMax->value())
+				lcdIntVoltMax->display(internalVoltage);
+
+			lcdBatSum->display(battery1Amp + battery2Amp);
+			if((battery1Amp + battery2Amp) > 130)
+				lcdBatSum->setPalette(Qt::yellow);
+			if((battery1Amp + battery2Amp) > 150)
+				lcdBatSum->setPalette(Qt::red);
+			else
+				lcdBatSum->setPalette(this->style()->standardPalette());
+		}
+		else if(canData.id == MC_MOTOR_STAT)
+		{
+			float motor1Amp = ((canData.data.at(0) << 8) + canData.data.at(1)) / 10.0;
+			float motor2Amp = ((canData.data.at(2) << 8) + canData.data.at(3)) / 10.0;
+			float motor1Power = ((canData.data.at(4) << 8) + canData.data.at(5)) / 10.0;
+			float motor2Power = ((canData.data.at(6) << 8) + canData.data.at(7)) / 10.0;
+
+			//MotorStats
+			lcdMot1Amp->display(motor1Amp);
+			if(motor1Amp < lcdMot1AmpMin->value())
+				lcdMot1AmpMin->display(motor1Amp);
+			if(motor1Amp > lcdMot1AmpMax->value())
+				lcdMot1AmpMax->display(motor1Amp);
+
+			lcdMot2Amp->display(motor2Amp);
+			if(motor2Amp < lcdMot2AmpMin->value())
+				lcdMot2AmpMin->display(motor2Amp);
+			if(motor2Amp > lcdMot2AmpMax->value())
+				lcdMot2AmpMax->display(motor2Amp);
+
+			lcdMot1Power->display(motor1Power);
+			if(motor1Power < lcdMot1PowerMin->value())
+				lcdMot1PowerMin->display(motor1Power);
+			if(motor1Power > lcdMot1PowerMax->value())
+				lcdMot1PowerMax->display(motor1Power);
+
+			lcdMot2Power->display(motor2Power);
+			if(motor2Power < lcdMot2PowerMin->value())
+				lcdMot2PowerMin->display(motor2Power);
+			if(motor2Power > lcdMot2PowerMax->value())
+				lcdMot2PowerMax->display(motor2Power);
+		}
+		else if(canData.id == TEMPERATURE_ADDRESS)
+		{
+			float MCUTemp = ((canData.data.at(0) << 8) + canData.data.at(1)) / 10.0;
+			float heatSink1Temp = ((canData.data.at(2) << 8) + canData.data.at(3)) / 10.0;
+			float heatSink2Temp = ((canData.data.at(4) << 8) + canData.data.at(5)) / 10.0;
+
+			//Temperature
+			lcdMCUTemp->display(MCUTemp);
+			if(MCUTemp < lcdMCUTempMin->value())
+				lcdMCUTempMin->display(MCUTemp);
+			if(MCUTemp > lcdMCUTempMax->value())
+				lcdMCUTempMax->display(MCUTemp);
+			if(MCUTemp == 0)
+				lcdMCUTemp->setPalette(Qt::yellow);
+			if(MCUTemp > 40)
+				lcdMCUTemp->setPalette(Qt::red);
+
+			lcdMos1Temp->display(heatSink1Temp);
+			if(heatSink1Temp < lcdMos1TempMin->value())
+				lcdMos1TempMin->display(heatSink1Temp);
+			if(heatSink1Temp > lcdMos1TempMax->value())
+				lcdMos1TempMax->display(heatSink1Temp);
+			if(heatSink1Temp > 50)
+				lcdMos1Temp->setPalette(Qt::yellow);
+			if(heatSink1Temp > 60)
+				lcdMos1Temp->setPalette(Qt::red);
+			else
+				lcdMos1Temp->setPalette(this->style()->standardPalette());
+
+
+			lcdMos2Temp->display(heatSink2Temp);
+			if(heatSink2Temp < lcdMos2TempMin->value())
+				lcdMos2TempMin->display(heatSink2Temp);
+			if(heatSink2Temp > lcdMos2TempMax->value())
+				lcdMos2TempMax->display(heatSink2Temp);
+			if(heatSink2Temp > 50)
+				lcdMos2Temp->setPalette(Qt::yellow);
+			if(heatSink2Temp > 60)
+				lcdMos2Temp->setPalette(Qt::red);
+			else
+				lcdMos2Temp->setPalette(this->style()->standardPalette());
+		}
+	}
+}
+
+void TestDialog::canError(void)
+{
+	QMessageBox::StandardButton warningBox;
+	warningBox = QMessageBox::warning(this, "CANerror", tr("Connection error: %1").arg(canDevice->errorString()));
+}
+
+void TestDialog::canTx(void)
+{
+	qDebug("Frames written");
+}
+
+//////////////////////
 /////Debug Events/////
 //////////////////////
 void TestDialog::on_quitButton_clicked(void)

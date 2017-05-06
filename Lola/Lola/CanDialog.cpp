@@ -165,15 +165,13 @@ void CanDialog::canRx(void)
 		dataString.clear();
 		QRegExp rx("(\[0-9a-f]\[0-9a-f] )");
 		int pos = line.lastIndexOf(']'); //only searches after the id
+
+		canData.data.clear();
 		for(int i = 0; i < canData.dlc; i++)
-		{
-			if((pos = rx.indexIn(line, pos)) != -1)
-			{
-				canData.data.append(rx.cap(1).toInt(Q_NULLPTR, 16));
-				dataString.append(rx.cap(1));
-				pos += rx.matchedLength();
-			}
-		}
+			canData.data.append(frame.payload().at(i));
+		for(int i = canData.dlc; i < 8; i++)
+			canData.data.append(0);
+
 		canData.time = frame.timeStamp().microSeconds();
 
 		QModelIndex Qindex = model->index(index, 0, QModelIndex());

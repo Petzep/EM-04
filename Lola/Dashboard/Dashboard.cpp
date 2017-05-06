@@ -105,7 +105,7 @@ void Dashboard::canRx(void)
 		else if(canData.id == BATTERY_ADDRESS)
 		{
 			int batteryVoltage = (canData.data.at(0) << 8) + canData.data.at(1);
-			int min = 40;
+			int min = 42;
 			int max = 57.4;
 			float batteryPercentage = 1 / ((min - max)*(batteryVoltage - min));
 			qmlObject->setProperty("fuel", batteryPercentage);
