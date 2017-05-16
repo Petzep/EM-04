@@ -284,8 +284,8 @@ int main(void) {
 	CAN_init();
 
 	SystemCoreClockUpdate();
-	//Enable and setup SysTick Timer at 1/1000 seconds (1ms)
-	SysTick_Config(SystemCoreClock / 1000);
+	//Enable and setup SysTick Timer at 1/10000 seconds (0.1ms)
+	SysTick_Config(SystemCoreClock / 10000);
 
 	//Enable timer 0 & 1 clock (2 & 3 for speed)
 	Chip_TIMER_Init(LPC_TIMER32_0);
@@ -332,8 +332,8 @@ int main(void) {
 	//Enable the timer
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	Chip_TIMER_Enable(LPC_TIMER32_1);
-	Chip_TIMER_Enable(LPC_TIMER16_0);
-	Chip_TIMER_Enable(LPC_TIMER16_1);
+	//Chip_TIMER_Enable(LPC_TIMER16_0);
+	//Chip_TIMER_Enable(LPC_TIMER16_1);
 	// PWM mode enabled on CT32B0_MAT0
 	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;
 	((LPC_TIMER_T *)LPC_TIMER32_1)->PWMC = 1;
@@ -346,30 +346,140 @@ int main(void) {
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 10);
 
 	//PinFunction capture
-	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO0_2, IOCON_MODE_PULLUP, IOCON_FUNC2);
-	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_8, IOCON_MODE_PULLUP, IOCON_FUNC1);
+	//Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO0_2, IOCON_MODE_PULLUP, IOCON_FUNC2);
+	//Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO1_8, IOCON_MODE_PULLUP, IOCON_FUNC1);
+	//pullup
+	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO0_3, IOCON_MODE_PULLUP, IOCON_FUNC0);
+	Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO2_1, IOCON_MODE_PULLUP, IOCON_FUNC0);
+
+	bool speed1;
+	bool speed2;
 
 	unsigned long lastSystickcnt = 0;
-	unsigned long lastSpeedcnt = 0;
 	PWMUpdate(0, dutyCycle);
 	PWMUpdate(1, dutyCycle);
+	bool sensed1 = false;
+	bool sensed2 = false;
+	int speedBuffer1[10] = { };
+	int speedBuffer2[10] = { };
+	int measurePoint1 = 0;
+	int measurePoint2 = 0;
+	double meanInterval1 = 0;
+	double meanInterval2 = 0;
+	double rps1 = 0;
+	double rps2 = 0;
+	double speedConversion1[9] = { };
+	double speedConversion2[9] = { };
+	double temp = 0;
+	double rpm1 = 0;
+	double rpm2 = 0;
+	int larger = 0;
 
-	for (;;)
+
+	for(;;)
 	{
-		if(lastSpeedcnt != 0)
-			if((SysTickCnt - lastSpeedcnt) >= 100)
+		speed1 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 2);
+		speed2 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
+
+
+		if(speed1 == false && sensed1 == false)
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);
+			speedBuffer1[measurePoint1] = SysTickCnt;
+			measurePoint1++;
+			sensed1 = true;
+		}
+		else if(sensed1 == true && speed1 == false)
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true);
+		}
+		else
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, false);
+			sensed1 = false;
+		}
+
+
+		if(speed2 == false && sensed2 == false)
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);
+			speedBuffer2[measurePoint2] = SysTickCnt;
+			measurePoint2++;
+			sensed2 = true;
+		}
+		else if(sensed2 == true && speed2 == false)
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true);
+		}
+		else
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
+			sensed2 = false;
+		}
+
+
+		if(measurePoint1 == 10)
+		{
+			for(int i = 0; i < 9; i++)
 			{
-				lastSpeedcnt = SysTickCnt;
+				meanInterval1 = meanInterval1 + speedBuffer1[i + 1] - speedBuffer1[i];
+			}
+			rps1 = meanInterval1 / 9 / 10000;		//time for one revolution in seconds
+			measurePoint1 = 0;
+		}
+
+		if(measurePoint2 == 10)
+		{
+			/*for (int i = 0; i < 9; i++) {
+			meanInterval2 = meanInterval2 + speedBuffer2[i + 1] - speedBuffer2[i];
+			}*/
+			for(int i = 0; i < 9; i++)
+			{
+				speedConversion2[i] = speedBuffer2[i + 1] - speedBuffer2[i];
+			}
+			for(int i = 0; i < 9; i++)
+			{
+				larger = 0;
+				for(int j = 0; j < 9; j++)
+				{
+					if(speedConversion2[i] > speedConversion2[j])
+					{
+						larger++;
+					}
+				}
+				if(larger == 8)
+				{
+					temp = speedConversion2[8];
+					speedConversion2[8] = speedConversion2[i];
+					speedConversion2[i] = temp;
+				}
+				else if(larger == 0)
+				{
+					temp = speedConversion2[0];
+					speedConversion2[0] = speedConversion2[i];
+					speedConversion2[i] = temp;
+				}
+			}
+			for(int i = 1; i < 8; i++)
+			{
+				meanInterval2 = meanInterval2 + speedConversion2[i];
+			}
+			rps2 = 1 / (meanInterval2 / 7 * 10 / 10000);		//revolutions per second
+			rpm2 = rps2 * 60;
+			measurePoint2 = 0;
+			meanInterval2 = 0;
 
 				msg_obj.msgobj = 0;
 				msg_obj.mode_id = SPEED_ADDRESS | CAN_MSGOBJ_STD;
 				msg_obj.mask = 0x0;
 				msg_obj.dlc = 1;
-				msg_obj.data[0] = (((rotEnc1Cnt - lastRotEnc1Cnt) + (rotEnc1Cnt - lastRotEnc1Cnt))/2) / 10;
+				msg_obj.data[0] = rps2*1.7236;
 				LPC_CCAN_API->can_transmit(&msg_obj);
+
+				rps2 = 0;
 			}
 
-		if((SysTickCnt - lastSystickcnt) >= 1000)
+		if((SysTickCnt - lastSystickcnt) >= 10000)
 		{
 			lastSystickcnt = SysTickCnt;
 

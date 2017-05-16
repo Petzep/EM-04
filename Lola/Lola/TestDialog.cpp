@@ -303,10 +303,10 @@ void TestDialog::canRx(void)
 
 		if(canData.id == BATTERY_ADDRESS)
 		{
-			float batteryVoltage = ((canData.data.at(0) << 8) + canData.data.at(1)) / 10.0;
-			float battery1Amp = ((canData.data.at(2) << 8) + canData.data.at(3)) / 10.0;
-			float battery2Amp = ((canData.data.at(4) << 8) + canData.data.at(5)) / 10.0;
-			float internalVoltage = ((canData.data.at(6) << 8) + canData.data.at(7)) / 10.0;
+			float batteryVoltage = (canData.data.at(0) + (canData.data.at(1) << 8)) / 10.0;
+			float battery1Amp = (canData.data.at(2) + (canData.data.at(3) << 8)) / 10.0;
+			float battery2Amp = (canData.data.at(4) + (canData.data.at(5) << 8)) / 10.0;
+			float internalVoltage = (canData.data.at(6) + (canData.data.at(7) << 8)) / 10.0;
 
 			//Battery Stats
 			lcdBatVolt->display(batteryVoltage);
@@ -349,10 +349,10 @@ void TestDialog::canRx(void)
 		}
 		else if(canData.id == MC_MOTOR_STAT)
 		{
-			float motor1Amp = ((canData.data.at(0) << 8) + canData.data.at(1)) / 10.0;
-			float motor2Amp = ((canData.data.at(2) << 8) + canData.data.at(3)) / 10.0;
-			float motor1Power = ((canData.data.at(4) << 8) + canData.data.at(5)) / 10.0;
-			float motor2Power = ((canData.data.at(6) << 8) + canData.data.at(7)) / 10.0;
+			float motor1Amp = (canData.data.at(0) + (canData.data.at(1) << 8)) / 10.0;
+			float motor2Amp = (canData.data.at(2) + (canData.data.at(3) << 8)) / 10.0;
+			float motor1Power = (canData.data.at(4) + (canData.data.at(5) << 8)) / 10.0;
+			float motor2Power = (canData.data.at(6) + (canData.data.at(7) << 8)) / 10.0;
 
 			//MotorStats
 			lcdMot1Amp->display(motor1Amp);
@@ -381,9 +381,9 @@ void TestDialog::canRx(void)
 		}
 		else if(canData.id == TEMPERATURE_ADDRESS)
 		{
-			float MCUTemp = ((canData.data.at(0) << 8) + canData.data.at(1)) / 10.0;
-			float heatSink1Temp = ((canData.data.at(2) << 8) + canData.data.at(3)) / 10.0;
-			float heatSink2Temp = ((canData.data.at(4) << 8) + canData.data.at(5)) / 10.0;
+			float MCUTemp = canData.data.at(0);
+			float heatSink1Temp = canData.data.at(1);
+			float heatSink2Temp = canData.data.at(2);
 
 			//Temperature
 			lcdMCUTemp->display(MCUTemp);
@@ -420,6 +420,29 @@ void TestDialog::canRx(void)
 				lcdMos2Temp->setPalette(Qt::red);
 			else
 				lcdMos2Temp->setPalette(this->style()->standardPalette());
+		}
+		else if(canData.id == SPEED_ADDRESS)
+		{
+			int speed = canData.data.at(0);
+			speedLabel->display(speed);
+		}
+		else if(canData.id == MC_DNR)
+		{
+			switch(canData.data.at(0))
+			{
+				case 1:
+					dnrLabel->setText("D");
+					break;
+				case 2:
+					dnrLabel->setText("N");
+					break;
+				case 3:
+					dnrLabel->setText("R");
+					break;
+				default:
+					dnrLabel->setText("Error");
+					break;
+			}
 		}
 	}
 }

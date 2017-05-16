@@ -4,8 +4,8 @@ Item {
     id: valueSource
 	objectName: "valueSource"
     property real kph: 0
-    property real rpm: 1
-    property real fuel: 0.85
+    property real rpm: 0
+    property real fuel: 0
     property string gear: "N"
     
     property bool leftArrow: false

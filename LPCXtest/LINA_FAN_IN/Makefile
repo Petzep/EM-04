@@ -35,7 +35,7 @@ error:
 	$(error Invalid configuration, please check your inputs)
 endif
 
-SOURCEFILES :=
+SOURCEFILES := $(BSP_ROOT)/Common/startup.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/acmp_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/adc_1125.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/adc_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/chip_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/clock_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/dac_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/gpiogroup_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/gpio_11xx_1.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/gpio_11xx_2.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/i2cm_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/i2c_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/iocon_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/pinint_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/pmu_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/ssp_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/sysctl_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/sysinit_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/timer_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/uart_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/wwdt_11xx.c $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_common/ring_buffer.c $(BSP_ROOT)/LPC11xx/StartupFiles/CHIP_LPC11CXX_cr_startup_lpc11xx.c LINA_FAN_IN.c
 EXTERNAL_LIBS := 
 EXTERNAL_LIBS_COPIED := $(foreach lib, $(EXTERNAL_LIBS),$(BINARYDIR)/$(notdir $(lib)))
 
@@ -179,3 +179,96 @@ $(BINARYDIR)/%.o : %.cxx $(all_make_files) |$(BINARYDIR)
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
 
 #VisualGDB: GeneratedRules				#<--- All lines below are auto-generated
+
+
+$(BINARYDIR)/startup.o : $(BSP_ROOT)/Common/startup.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/acmp_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/acmp_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/adc_1125.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/adc_1125.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/adc_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/adc_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/chip_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/chip_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/clock_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/clock_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/dac_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/dac_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/gpiogroup_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/gpiogroup_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/gpio_11xx_1.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/gpio_11xx_1.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/gpio_11xx_2.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/gpio_11xx_2.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/i2cm_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/i2cm_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/i2c_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/i2c_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/iocon_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/iocon_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/pinint_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/pinint_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/pmu_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/pmu_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/ssp_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/ssp_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/sysctl_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/sysctl_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/sysinit_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/sysinit_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/timer_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/timer_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/uart_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/uart_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/wwdt_11xx.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_11xx/wwdt_11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/ring_buffer.o : $(BSP_ROOT)/LPC11xx/lpc_chip/lpc_chip/chip_common/ring_buffer.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/CHIP_LPC11CXX_cr_startup_lpc11xx.o : $(BSP_ROOT)/LPC11xx/StartupFiles/CHIP_LPC11CXX_cr_startup_lpc11xx.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+

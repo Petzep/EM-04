@@ -91,7 +91,7 @@ void Dashboard::canRx(void)
 		if(canData.id == SPEED_ADDRESS)
 			qmlObject->setProperty("kph", canData.data.at(0));
 		else if(canData.id == TEMPERATURE_ADDRESS)
-			qmlObject->setProperty("temperature", canData.data.at(0));
+			qmlObject->setProperty("temperature", qMax(qMax(canData.data.at(0), canData.data.at(1)), canData.data.at(2)));
 		else if(canData.id == LEFT_ADDRESS)
 			qmlObject->setProperty("leftArrow", canData.data.at(0));
 		else if(canData.id == RIGHT_ADDRESS)
@@ -104,14 +104,14 @@ void Dashboard::canRx(void)
 		}
 		else if(canData.id == BATTERY_ADDRESS)
 		{
-			int batteryVoltage = (canData.data.at(0) << 8) + canData.data.at(1);
+			int batteryVoltage = canData.data.at(0) + (canData.data.at(1) << 8);
 			int min = 42;
 			int max = 57.4;
 			float batteryPercentage = 1 / ((min - max)*(batteryVoltage - min));
 			qmlObject->setProperty("fuel", batteryPercentage);
 			
-			int battery1Amp = (canData.data.at(3) << 8) + canData.data.at(4);
-			int battery2Amp = (canData.data.at(5) << 8) + canData.data.at(6);
+			int battery1Amp = canData.data.at(2) + (canData.data.at(2) << 8);
+			int battery2Amp = canData.data.at(4) + (canData.data.at(5) << 8);
 			float batteryAmp = (battery1Amp + battery2Amp) / 2;
 			qmlObject->setProperty("rpm",batteryAmp);
 

@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>2</number>
    </property>
    <property name="menuPage">
     <number>2</number>
@@ -1039,13 +1039,13 @@
    </widget>
    <widget class="QLabel" name="userLabel">
     <property name="text">
-     <string>UserName</string>
+     <string>TU/Ecomotive</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="timeLabel"/>
+   <widget class="QLCDNumber" name="speedLabel"/>
   </widget>
   <widget class="QQuickWidget" name="quickWidget">
    <property name="geometry">

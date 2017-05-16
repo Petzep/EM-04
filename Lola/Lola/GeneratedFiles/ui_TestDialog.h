@@ -121,7 +121,7 @@ public:
     QSplitter *splitter_2;
     QLabel *dnrLabel;
     QLabel *userLabel;
-    QLCDNumber *timeLabel;
+    QLCDNumber *speedLabel;
     QQuickWidget *quickWidget;
 
     void setupUi(QDialog *TestDialog)
@@ -433,9 +433,9 @@ public:
         userLabel->setObjectName(QStringLiteral("userLabel"));
         userLabel->setAlignment(Qt::AlignCenter);
         splitter_2->addWidget(userLabel);
-        timeLabel = new QLCDNumber(splitter_2);
-        timeLabel->setObjectName(QStringLiteral("timeLabel"));
-        splitter_2->addWidget(timeLabel);
+        speedLabel = new QLCDNumber(splitter_2);
+        speedLabel->setObjectName(QStringLiteral("speedLabel"));
+        splitter_2->addWidget(speedLabel);
         quickWidget = new QQuickWidget(TestDialog);
         quickWidget->setObjectName(QStringLiteral("quickWidget"));
         quickWidget->setGeometry(QRect(0, 0, 800, 480));
@@ -456,7 +456,7 @@ public:
         retranslateUi(TestDialog);
         QObject::connect(qtPieMenu, SIGNAL(itemSelect(int)), stackSlide, SLOT(slideInIdx(int)));
 
-        stackSlide->setCurrentIndex(4);
+        stackSlide->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(TestDialog);
@@ -499,7 +499,7 @@ public:
         label_16->setText(QApplication::translate("TestDialog", "Motor 2 Power(L):", Q_NULLPTR));
         label_17->setText(QApplication::translate("TestDialog", "Motor 1 Power(R):", Q_NULLPTR));
         dnrLabel->setText(QApplication::translate("TestDialog", "DNR_setting", Q_NULLPTR));
-        userLabel->setText(QApplication::translate("TestDialog", "UserName", Q_NULLPTR));
+        userLabel->setText(QApplication::translate("TestDialog", "TU/Ecomotive", Q_NULLPTR));
     } // retranslateUi
 
 };
