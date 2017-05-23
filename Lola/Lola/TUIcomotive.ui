@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
-    <height>298</height>
+    <width>363</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -23,7 +23,7 @@
       <x>10</x>
       <y>10</y>
       <width>341</width>
-      <height>245</height>
+      <height>274</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -93,6 +93,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="closeButton">
+         <property name="text">
+          <string>Cl&amp;ose</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -129,7 +136,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>366</width>
+     <width>363</width>
      <height>21</height>
     </rect>
    </property>

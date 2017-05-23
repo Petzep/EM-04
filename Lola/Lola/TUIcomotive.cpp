@@ -72,6 +72,11 @@ void TUIcomotive::on_dashboardButton_clicked(void)
 	qmlObject->setProperty("temperature", 0.8);
 }
 
+void TUIcomotive::on_closeButton_clicked(void)
+{
+	QApplication::quit();
+}
+
 void TUIcomotive::on_bangaList_currentItemChanged()
 {
 	QListWidgetItem *curItem = ui.bangaList->currentItem();

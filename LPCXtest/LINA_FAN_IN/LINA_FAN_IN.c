@@ -38,7 +38,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
 #define MC_SPEED_STAT		(0x001 + MC_ADDRESS)
 #define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
-#define MC_I2C				(0x003 + MC_ADDRESS)
+#define MC_START			(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
 #define ROBOTEQ_ADDRES		(0x050)
 #define BROADCAST_ADDRESS	(0x700)
@@ -46,7 +46,9 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define	ALL_MESSAGE			1
 #define	PERSNOAL_MESSAGE	2
 #define	FAN_MESSAGE			3
-#define	TOTAL_MESSAGE		4
+#define	WIPER_MESSAGE		4
+#define START_MESSAGE		5
+#define	TOTAL_MESSAGE		6
 
 // To have the timer tick run at 100,000 Hz, the prescaler is SYSTEM CLOCK / 100,000
 #define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
@@ -78,6 +80,9 @@ const int max_dutyClycle = 99;
 int dutyCycle = 35;
 
 CCAN_MSG_OBJ_T msg_obj;
+
+bool wiperStop = false;
+
 /**
 * @brief	Handle interrupt from SysTick timer
 * @return	Nothing
@@ -217,6 +222,16 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = WIPER_MESSAGE;
+	msg_obj.mode_id = WIPER_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = START_MESSAGE;
+	msg_obj.mode_id = MC_START;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -248,6 +263,30 @@ void CAN_rx(uint8_t msg_obj_num) {
 				dutyCycle = map(setting, 0, 100, min_dutyCycle, max_dutyClycle);
 
 			PWMUpdate(msg_obj.data[0], dutyCycle);
+		}
+		if (msg_obj_num == WIPER_MESSAGE)
+		{
+			if(msg_obj.data[1] == 11)
+			{
+				wiperStop = false;
+
+				msg_obj.msgobj = 0;
+				msg_obj.mode_id = WIPER_ADDRESS | CAN_MSGOBJ_STD;
+				msg_obj.mask = 0x0;
+				msg_obj.dlc = 2;
+				msg_obj.data[0] = true;
+				msg_obj.data[1] = 0;
+				LPC_CCAN_API->can_transmit(&msg_obj);
+			}
+			else if (msg_obj.data[1] == 10)
+			{
+				wiperStop = true;
+			}
+		}
+
+		if (msg_obj_num == START_MESSAGE)
+		{
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, msg_obj.data[0]);
 		}
 
 		/*if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -342,6 +381,7 @@ int main(void) {
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 2);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 8);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 8);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 3);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 10);
 
@@ -356,6 +396,7 @@ int main(void) {
 	bool speed2;
 
 	unsigned long lastSystickcnt = 0;
+	unsigned long lastTick = 0;
 	PWMUpdate(0, dutyCycle);
 	PWMUpdate(1, dutyCycle);
 	bool sensed1 = false;
@@ -374,10 +415,25 @@ int main(void) {
 	double rpm1 = 0;
 	double rpm2 = 0;
 	int larger = 0;
+	bool wiperStopPoint = false;
 
 
 	for(;;)
 	{
+		//WIPER
+		wiperStopPoint = Chip_GPIO_ReadPortBit(LPC_GPIO, 2, 8);
+		if(wiperStopPoint && wiperStop)
+		{
+			msg_obj.msgobj = 0;
+			msg_obj.mode_id = WIPER_ADDRESS | CAN_MSGOBJ_STD;
+			msg_obj.mask = 0x0;
+			msg_obj.dlc = 1;
+			msg_obj.data[0] = false;
+			msg_obj.data[0] = 0;
+			LPC_CCAN_API->can_transmit(&msg_obj);
+		}
+		
+		//ENDWIPER
 		speed1 = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 2);
 		speed2 = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 8);
 
@@ -406,6 +462,7 @@ int main(void) {
 			speedBuffer2[measurePoint2] = SysTickCnt;
 			measurePoint2++;
 			sensed2 = true;
+			lastTick = SysTickCnt;
 		}
 		else if(sensed2 == true && speed2 == false)
 		{
@@ -416,7 +473,13 @@ int main(void) {
 			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, false);
 			sensed2 = false;
 		}
-
+		
+		if(SysTickCnt - lastTick > 6000)
+		{
+			measurePoint2 = 10;
+			for(int i = 0; i < 9 ; i++)
+				speedBuffer2[i] = 10000*i;
+		}
 
 		if(measurePoint1 == 10)
 		{
@@ -504,7 +567,7 @@ Ouput pins:
 8	1,7
 7	3,3
 1	2,7
-2	2,8
+2	2,8 (input wiper)
 3	2,1
 4	0,3
 5	0,4

@@ -44,6 +44,7 @@ public:
     QPushButton *styleButton;
     QPushButton *canButton;
     QPushButton *dashboardButton;
+    QPushButton *closeButton;
     QSpacerItem *verticalSpacer;
     QLabel *nameLabel;
     QLabel *emailLabel;
@@ -55,13 +56,13 @@ public:
     {
         if (TUIcomotiveClass->objectName().isEmpty())
             TUIcomotiveClass->setObjectName(QStringLiteral("TUIcomotiveClass"));
-        TUIcomotiveClass->resize(366, 298);
+        TUIcomotiveClass->resize(363, 350);
         TUIcomotiveClass->setContextMenuPolicy(Qt::NoContextMenu);
         centralWidget = new QWidget(TUIcomotiveClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(10, 10, 341, 245));
+        layoutWidget->setGeometry(QRect(10, 10, 341, 274));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -116,6 +117,11 @@ public:
 
         verticalLayout_2->addWidget(dashboardButton);
 
+        closeButton = new QPushButton(layoutWidget);
+        closeButton->setObjectName(QStringLiteral("closeButton"));
+
+        verticalLayout_2->addWidget(closeButton);
+
         verticalSpacer = new QSpacerItem(20, 128, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_2->addItem(verticalSpacer);
@@ -136,7 +142,7 @@ public:
         TUIcomotiveClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(TUIcomotiveClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 366, 21));
+        menuBar->setGeometry(QRect(0, 0, 363, 21));
         TUIcomotiveClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(TUIcomotiveClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -167,6 +173,7 @@ public:
         styleButton->setText(QApplication::translate("TUIcomotiveClass", "&Style Test", Q_NULLPTR));
         canButton->setText(QApplication::translate("TUIcomotiveClass", "&CAN test", Q_NULLPTR));
         dashboardButton->setText(QApplication::translate("TUIcomotiveClass", "&Dashboard", Q_NULLPTR));
+        closeButton->setText(QApplication::translate("TUIcomotiveClass", "Cl&ose", Q_NULLPTR));
         nameLabel->setText(QApplication::translate("TUIcomotiveClass", "<No item selected>", Q_NULLPTR));
         emailLabel->setText(QString());
     } // retranslateUi

@@ -13,7 +13,7 @@ Window {
     color: "#161616"
     title: "Lola Dashboard"
 
-   	signal exit()
+   	signal startDebug()
 
     ValueSource {
         id: valueSource
@@ -29,9 +29,9 @@ Window {
 		focus: true
 		Keys.onPressed: {
         if (event.key == Qt.Key_0) {
-            root.exit()
+            root.startDebug()
             event.accepted = true;
-			console.log("Exiting")
+			console.log("Starting Debug")
 			}
 		}
 		

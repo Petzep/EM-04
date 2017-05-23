@@ -35,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LINA_CAN_OUT", "LINA_CAN_OU
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LINA_FAN_IN", "LINA_FAN_IN\LINA_FAN_IN.vcxproj", "{87E1F192-B2D5-4913-A4B5-70332AA3C1A6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LINA_HUD", "LINA_HUD\LINA_HUD.vcxproj", "{9413112D-57C6-46F8-9C99-B4489DA14322}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -119,6 +121,12 @@ Global
 		{87E1F192-B2D5-4913-A4B5-70332AA3C1A6}.Release|x64.ActiveCfg = Release|Win32
 		{87E1F192-B2D5-4913-A4B5-70332AA3C1A6}.Release|x86.ActiveCfg = Release|Win32
 		{87E1F192-B2D5-4913-A4B5-70332AA3C1A6}.Release|x86.Build.0 = Release|Win32
+		{9413112D-57C6-46F8-9C99-B4489DA14322}.Debug|x64.ActiveCfg = Debug|Win32
+		{9413112D-57C6-46F8-9C99-B4489DA14322}.Debug|x86.ActiveCfg = Debug|Win32
+		{9413112D-57C6-46F8-9C99-B4489DA14322}.Debug|x86.Build.0 = Debug|Win32
+		{9413112D-57C6-46F8-9C99-B4489DA14322}.Release|x64.ActiveCfg = Release|Win32
+		{9413112D-57C6-46F8-9C99-B4489DA14322}.Release|x86.ActiveCfg = Release|Win32
+		{9413112D-57C6-46F8-9C99-B4489DA14322}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

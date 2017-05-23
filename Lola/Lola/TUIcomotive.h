@@ -32,5 +32,6 @@ public slots:
 	void on_styleButton_clicked(void);
 	void on_canButton_clicked(void);
 	void on_dashboardButton_clicked(void);
+	void on_closeButton_clicked(void);
 	void addListItem(QString name, QString email);
 };

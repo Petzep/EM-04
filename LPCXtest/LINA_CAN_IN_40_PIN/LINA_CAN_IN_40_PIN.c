@@ -37,12 +37,13 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define MC_ADDRESS			(0x040 + EM_04_CAN_RANGE)
 #define MC_SPEED_STAT		(0x001 + MC_ADDRESS)
 #define MC_MOTOR_STAT		(0x002 + MC_ADDRESS)
-#define MC_I2C				(0x003 + MC_ADDRESS)
+#define MC_START			(0x003 + MC_ADDRESS)
 #define MC_DNR				(0x004 + MC_ADDRESS)
 #define ROBOTEQ_ADDRES		(0x050) //80 dec
 #define BROADCAST_ADDRESS	(0x700)
 
 #define BLINK_FREQ			750
+#define WIPER_FREQ			2000
 
 #ifndef LPC_GPIO
 #define LPC_GPIO LPC_GPIO_PORT
@@ -215,10 +216,11 @@ int main(void)
 	bool buttonOn = false;
 	bool blowerOn = false;
 	bool alarmOn = false;
-	bool wiperOn = false; //TO BE REMOVED
+	bool wiperOn = false;
 	bool wiper1On = false;
 	bool wiper2On = false;
 	bool wiperInterval = false;
+	bool iginitiOn = false;
 
 	bool sendOn = false;
 	bool can1On = false;
@@ -304,8 +306,8 @@ int main(void)
 		bool wiperInterval = !pin13;
 		bool wiper1 = !pin9;
 		bool wiper2 = !pin6;
-		bool wiper = wiperInterval || wiper1 || wiper2;
-		int wiperTime = 300;
+		bool wiper = wiper1 || wiper2;
+		bool ignition = !pin17;
 
 		bool can1 = false;
 		bool can2 = false;
@@ -356,8 +358,19 @@ int main(void)
 		{
 			wiperOn = wiper;
 			SendMsgBuf.ID = WIPER_ADDRESS;
+			SendMsgBuf.DLC = 2;
+			SendMsgBuf.Data[0] = true;
+			SendMsgBuf.Data[1] = 10+wiper;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(ignition != iginitiOn)
+		{
+			iginitiOn = ignition;
+			SendMsgBuf.ID = MC_START;
 			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Data[0] = wiperOn;
+			SendMsgBuf.Data[1] = iginitiOn;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
@@ -759,32 +772,6 @@ int main(void)
 		}
 
 
-		if(motorController1 != motorController1On)
-		{
-			motorController1On = motorController1;
-
-			SendMsgBuf.ID = (MC_ADDRESS + 1) | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = !motorController1;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-		}
-
-		if(motorController2 != motorController2On)
-		{
-			motorController2On = motorController2;
-
-			SendMsgBuf.ID = (MC_ADDRESS + 2) | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = !motorController2;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-		}
-
-
-
 		//////////////////////////////
 		////////////TIMERS////////////
 		//////////////////////////////
@@ -843,27 +830,17 @@ int main(void)
 		//
 		//Wiper
 		//
-		/*if(wiperOn && ((LoopTick - lastWipertickcnt) >= wiperTime))
+		if(wiperInterval && ((LoopTick - lastWipertickcnt) >= WIPER_FREQ))
 		{
 			lastWipertickcnt = SysTickCnt;
 
 			SendMsgBuf.ID = WIPER_ADDRESS;
-			SendMsgBuf.DLC = 1;
-			if(!wiperState && wiperOn)
-			{
-				wiperState = true;
-				SendMsgBuf.Data[0] = true;
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-			}
-			else
-			{
-				wiperState = false;
-				SendMsgBuf.Data[0] = false;
-				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-			}
-		}*/
+			SendMsgBuf.DLC = 2;
+			SendMsgBuf.Data[0] = true;
+			SendMsgBuf.Data[1] = 10;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
 
 		//
 		//heartbeat
@@ -888,29 +865,7 @@ int main(void)
 		if((LoopTick - lastADCtickcnt) >= 100)
 		{
 			lastADCtickcnt = SysTickCnt;
-
-			SendMsgBuf.ID = DIMMER_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Data[0] = map(dataADC1, 0, 4095, 0, 100);
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-
-			SendMsgBuf.ID = TEMPERATURE_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Data[0] = map(dataADC2, 0, 4095, 0, 100);
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-
-			SendMsgBuf.ID = FAN_ADDRESS | CAN_MSGOBJ_STD;
-			SendMsgBuf.DLC = 2;
-			SendMsgBuf.Type = 0;
-			SendMsgBuf.Data[0] = 0;
-			SendMsgBuf.Data[1] = map(dataADC3, 0, 19, 0, 100);
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
-		}
+		}	
 	}
 	return 0;
 }
@@ -918,6 +873,11 @@ int main(void)
 /*
 Ouput pins:
 -------------
+can IN
+keyOn	!4,29
+keyOff	!0,7
+
+
 Can rear
 
 8	1,7		Port 0	Door 1
@@ -951,12 +911,17 @@ Can mid bottom one
 4	0,3		Port 5	wiper
 5	1,10	Port 6	rechts breedte licht
 6	2,11	Port 7	left front door
+
 Led pins:
 -------------
 led 1 (green) power light
 led 2 (red) 2,10
 led 3 (yellow) 2,2
 led 4 (blue) 0,7
+led D (dashboard) 1,4
+led N (dashboard) 1,9
+led R (dashboard) 1,14
+
 
 DEVICE ID config:
 -------------

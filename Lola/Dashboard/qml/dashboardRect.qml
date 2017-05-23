@@ -11,7 +11,7 @@ Rectangle {
     visible: true
     color: "#161616"
 
-	signal exit()
+	signal startDebug()
 
     ValueSource {
         id: valueSource
@@ -27,9 +27,9 @@ Rectangle {
 		focus: true
 		Keys.onPressed: {
         if (event.key == Qt.Key_0) {
-            root.exit()
+            root.startDebug()
             event.accepted = true;
-			console.log("Exiting")
+			console.log("Starting Debug")
 			}
 		}
 		

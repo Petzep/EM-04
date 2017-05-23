@@ -8,6 +8,7 @@ Dashboard::Dashboard(QObject *parent)
 void Dashboard::setRoot(QObject * root)
 {
 	m_root = root;
+	connect(m_root, SIGNAL(startDebug()), this, SLOT(startDebug()));
 }
 
 bool Dashboard::initCan(int can)
@@ -106,11 +107,11 @@ void Dashboard::canRx(void)
 		{
 			int batteryVoltage = canData.data.at(0) + (canData.data.at(1) << 8);
 			int min = 42;
-			int max = 57.4;
+			int max = 58.4;
 			float batteryPercentage = 1 / ((min - max)*(batteryVoltage - min));
 			qmlObject->setProperty("fuel", batteryPercentage);
 			
-			int battery1Amp = canData.data.at(2) + (canData.data.at(2) << 8);
+			int battery1Amp = canData.data.at(2) + (canData.data.at(3) << 8);
 			int battery2Amp = canData.data.at(4) + (canData.data.at(5) << 8);
 			float batteryAmp = (battery1Amp + battery2Amp) / 2;
 			qmlObject->setProperty("rpm",batteryAmp);
@@ -140,6 +141,11 @@ void Dashboard::canRx(void)
 void Dashboard::canTx(void)
 {
 	qDebug("Frames written");
+}
+
+void Dashboard::startDebug(void)
+{
+	QProcess::startDetached("/home/root/Lola2");
 }
 
 //BAT 57.4 max 40 min

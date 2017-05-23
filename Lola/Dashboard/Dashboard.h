@@ -5,6 +5,7 @@
 #include <qtextstream.h>
 #include <QString>
 #include <QMessageBox>
+#include <QProcess>
 
 #define DEVICE_NR			0b1000
 #define	EM_04_CAN_RANGE		0x100
@@ -64,4 +65,6 @@ public slots:
 	void canError(void);
 	void canRx(void);
 	void canTx(void);
+
+	void startDebug(void);
 };
