@@ -220,7 +220,8 @@ int main(void)
 	bool wiper1On = false;
 	bool wiper2On = false;
 	bool wiperInterval = false;
-	bool iginitiOn = false;
+	bool startupOn = false;
+	bool shutdownOn = false;
 
 	bool sendOn = false;
 	bool can1On = false;
@@ -307,7 +308,8 @@ int main(void)
 		bool wiper1 = !pin9;
 		bool wiper2 = !pin6;
 		bool wiper = wiper1 || wiper2;
-		bool ignition = !pin17;
+		bool startup = !pin17;
+		bool shutdown = !pin20;
 
 		bool can1 = false;
 		bool can2 = false;
@@ -365,14 +367,30 @@ int main(void)
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
 
-		if(ignition != iginitiOn)
+		if(startup != startupOn)
 		{
-			iginitiOn = ignition;
-			SendMsgBuf.ID = MC_START;
-			SendMsgBuf.DLC = 1;
-			SendMsgBuf.Data[1] = iginitiOn;
-			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
-			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			startupOn = startup;
+			if(startup)
+			{
+				SendMsgBuf.ID = MC_START;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Data[0] = true;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
+		}
+
+		if(shutdown != shutdownOn)
+		{
+			shutdownOn = shutdown;
+			if(shutdown)
+			{
+				SendMsgBuf.ID = MC_START;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Data[0] = false;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+			}
 		}
 
 		if(blinkLeft != blinkLeftOn && !alarm)

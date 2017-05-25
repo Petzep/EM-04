@@ -340,11 +340,6 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = SPEED_MESSAGE;
-	msg_obj.mode_id = SPEED_ADDRESS;
-	msg_obj.mask = 0xFFF;
-	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-
 	msg_obj.msgobj = WARNING_MESSAGE;
 	msg_obj.mode_id = WARNING_ADDRESS;
 	msg_obj.mask = 0xFFF;
@@ -543,6 +538,13 @@ void CAN_rx(uint8_t msg_obj_num)
 			//led t7(blue) (full)
 			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[3]);
 		}
+		if(msg_obj_num == SPEED_MESSAGE)
+		{
+			//sevenSeg(false, msg_obj.data[0], true);
+		}
+		//if(msg_obj)
+
+		//DNR(msg_obj.data[4], msg_obj.data[3]);
 	}
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -1076,7 +1078,9 @@ void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool
 	bool bug = false;
 	ledInit();
 	PWMUpdate(0, batPWM);	//BATPWM
-	PWMUpdate(2, rgbPWM);	//RGBPWM
+	PWMUpdate(1, segPWM);	//7SEGPWM
+	PWMUpdate(2, dnrPWM);	//DNRPWM
+	PWMUpdate(3, rgbPWM);	//RGBPWM
 
 
 	while(CLOCK_DEMO)
@@ -1285,9 +1289,14 @@ int main()
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);	//pwm low
 
 	ledInit();
-	
-	clockDemo(1000, 10, 20, 8, 10, false);
+
+	clockDemo(1000, 10, 60, 8, 10, true);
 	//Will not execute when clockDemo is runned
+	PWMUpdate(0, 90);	//BATPWM
+	PWMUpdate(1, 90);	//7SEGPWM
+	PWMUpdate(2, 90);	//DNRPWM
+	PWMUpdate(3, 90);	//RGBPWM
+
 	for(;;)
 	{	
 		if(CLOCK_DEMO)

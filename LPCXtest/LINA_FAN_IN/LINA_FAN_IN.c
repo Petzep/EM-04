@@ -286,7 +286,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 
 		if (msg_obj_num == START_MESSAGE)
 		{
-			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, msg_obj.data[0]);
+			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, msg_obj.data[0]);
 		}
 
 		/*if (msg_obj_num == PERSNOAL_MESSAGE)
@@ -383,7 +383,7 @@ int main(void) {
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 8);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 3);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 1 | 1 << 2 | 1 << 10);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 10);
 
 	//PinFunction capture
 	//Chip_IOCON_PinMux(LPC_IOCON, IOCON_PIO0_2, IOCON_MODE_PULLUP, IOCON_FUNC2);
@@ -415,7 +415,9 @@ int main(void) {
 	double rpm1 = 0;
 	double rpm2 = 0;
 	int larger = 0;
+	int speed = 0;
 	bool wiperStopPoint = false;
+	bool nullSpeed = false;
 
 
 	for(;;)
@@ -531,15 +533,24 @@ int main(void) {
 			rpm2 = rps2 * 60;
 			measurePoint2 = 0;
 			meanInterval2 = 0;
+			speed = rps2*1.7236;
 
+			if(!nullSpeed)
+			{
 				msg_obj.msgobj = 0;
 				msg_obj.mode_id = SPEED_ADDRESS | CAN_MSGOBJ_STD;
 				msg_obj.mask = 0x0;
 				msg_obj.dlc = 1;
 				msg_obj.data[0] = rps2*1.7236;
 				LPC_CCAN_API->can_transmit(&msg_obj);
+			}
 
-				rps2 = 0;
+			rps2 = 0;
+
+			if(speed == 0)
+				nullSpeed = true;
+			else
+				nullSpeed = false;
 			}
 
 		if((SysTickCnt - lastSystickcnt) >= 10000)
