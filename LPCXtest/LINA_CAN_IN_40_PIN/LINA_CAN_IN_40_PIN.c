@@ -56,6 +56,9 @@ extern "C"
 volatile unsigned long SysTickCnt;
 volatile unsigned long lastClick;
 
+int DNR_setting = 0;
+int lastDNR_setting = 0;
+
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 24000000;
 const uint32_t RTCOscRateIn = 32768;
@@ -129,24 +132,7 @@ void CAN_IRQHandler(void)
 	{
 		Chip_CAN_Receive(LPC_CAN, &RcvMsgBuf);
 		if(RcvMsgBuf.ID == MC_DNR)
-			if(RcvMsgBuf.Data[0] == 1)
-			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, true);	//DNR_D_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
-			}
-			else if(RcvMsgBuf.Data[0] == 2)
-			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, true);	//DNR_N_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
-			}
-			else if(RcvMsgBuf.Data[0] == 3)
-			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, true);	//DNR_R_led
-			}
+			DNR_setting = RcvMsgBuf.Data[0];
 	}
 }
 
@@ -385,6 +371,17 @@ int main(void)
 			shutdownOn = shutdown;
 			if(shutdown)
 			{
+				DNR_setting = 0;
+
+				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
+				SendMsgBuf.DLC = 1;
+				SendMsgBuf.Type = 0;
+				SendMsgBuf.Data[0] = 0;
+				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+				Delay(5);
+
 				SendMsgBuf.ID = MC_START;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Data[0] = false;
@@ -507,11 +504,9 @@ int main(void)
 		if(dnr_D != dnr_DOn)
 		{
 			dnr_DOn = dnr_D;
-			if(dnr_D)
+			if(dnr_D && DNR_setting != 1)
 			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+				DNR_setting = 0;
 
 				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
@@ -524,11 +519,9 @@ int main(void)
 		if(dnr_N != dnr_NOn)
 		{
 			dnr_NOn = dnr_N;
-			if(dnr_N)
+			if(dnr_N && DNR_setting != 2)
 			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+				DNR_setting = 0;
 
 				SendMsgBuf.ID = ROBOTEQ_ADDRES | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
@@ -541,12 +534,8 @@ int main(void)
 		if(dnr_R != dnr_ROn)
 		{
 			dnr_ROn = dnr_R;
-			if(dnr_R)
+			if(dnr_R && DNR_setting != 3)
 			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
-				Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
-
 				SendMsgBuf.ID = ROBOTEQ_ADDRES	 | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
@@ -883,7 +872,36 @@ int main(void)
 		if((LoopTick - lastADCtickcnt) >= 100)
 		{
 			lastADCtickcnt = SysTickCnt;
-		}	
+		}
+
+		if(lastDNR_setting != DNR_setting)
+		{
+			lastDNR_setting = DNR_setting;
+
+			switch(DNR_setting)
+			{
+				case 1:
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, true);	//DNR_D_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+					break;
+				case 2:
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, true);	//DNR_N_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+					break;
+				case 3:
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, true);	//DNR_R_led
+					break;
+				default:
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 4, false);	//DNR_D_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 9, false);	//DNR_N_led
+					Chip_GPIO_WritePortBit(LPC_GPIO, 1, 14, false);	//DNR_R_led
+					break;
+			}
+		}
 	}
 	return 0;
 }
