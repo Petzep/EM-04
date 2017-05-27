@@ -23,8 +23,6 @@ int main(int argc, char *argv[])
 	QObject *rootObject = engine->rootObjects().first();
 	QObject *qmlObject = rootObject->findChild<QObject*>("valueSource");
 
-	qmlObject->setProperty("temperature", 0.5);
-
 	Dashboard *dashboard = new Dashboard();
 	dashboard->setRoot(rootObject);
 	dashboard->initCan(0);

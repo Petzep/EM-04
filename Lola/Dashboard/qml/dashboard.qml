@@ -117,7 +117,8 @@ Window {
 					CircularGauge {
 						id: fuelGauge
 						value: valueSource.fuel
-						maximumValue: 1
+						minimumValue: 45
+						maximumValue: 58.8
 						y: parent.height / 2 - height / 2 - container.height * 0.01
 						width: parent.width
 						height: parent.height * 0.7
@@ -126,6 +127,7 @@ Window {
 							id: fuelGaugeStyle
 
 							icon: "qrc:/images/elec-icon.png"
+							tickmarkStepSize: (parent.maximumValue-parent.minimumValue)
 							minWarningColor: Qt.rgba(0.5, 0, 0, 1)
 
 							tickmarkLabel: Text {

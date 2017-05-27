@@ -1,7 +1,7 @@
 #include "Dashboard.h"
 
 Dashboard::Dashboard(QObject *parent)
-	: QObject(parent), m_shoeSize(0)
+	: QObject(parent)
 {
 }
 
@@ -105,22 +105,26 @@ void Dashboard::canRx(void)
 		}
 		else if(canData.id == BATTERY_ADDRESS)
 		{
-			int batteryVoltage = canData.data.at(0) + (canData.data.at(1) << 8);
-			int min = 42;
-			int max = 58.4;
-			float batteryPercentage = 1 / ((min - max)*(batteryVoltage - min));
-			qmlObject->setProperty("fuel", batteryPercentage);
+			float batteryVoltage = (canData.data.at(0) + (canData.data.at(1) << 8))/10;
+			qmlObject->setProperty("fuel", (batteryVoltage));
+
+			if (batteryVoltage < 48)
+				qmlObject->setProperty("batOn", true);
+			else
+				qmlObject->setProperty("batOn", false);
 			
-			int battery1Amp = canData.data.at(2) + (canData.data.at(3) << 8);
-			int battery2Amp = canData.data.at(4) + (canData.data.at(5) << 8);
+			float battery1Amp = (canData.data.at(2) + (canData.data.at(3) << 8))/10;
+			float battery2Amp = (canData.data.at(4) + (canData.data.at(5) << 8))/10;
 			float batteryAmp = (battery1Amp + battery2Amp) / 2;
 			qmlObject->setProperty("rpm",batteryAmp);
-
 		}
 		else if(canData.id == MC_DNR)
 		{
 			switch(canData.data.at(0))
 			{
+				case 0:
+					qmlObject->setProperty("gear", "-");
+					break;
 				case 1:
 					qmlObject->setProperty("gear", "D");
 					break;
@@ -135,6 +139,78 @@ void Dashboard::canRx(void)
 					break;
 			}
 		}
+		else if(canData.id == NFC_ADDRESS)
+		{
+			uint8_t id[8] = { canData.data.at(7), canData.data.at(6), canData.data.at(5), canData.data.at(4), canData.data.at(3), canData.data.at(2), canData.data.at(1), canData.data.at(0) };
+			uint64_t totalID = 0;
+			memcpy(&totalID, &id, 8 * sizeof(uint8_t));
+			typedef struct { int r; int g; int b; int w; } rgb;
+			rgb color;
+
+			if(totalID == NFC_NEPHTALY)
+			{
+				color.r = 86;
+				color.g = 2;
+				color.b = 142;
+				color.w = 0;
+				qmlObject->setProperty("gear", "Nephtaly");
+			}
+			else if(totalID == NFC_THOM)
+			{
+				color.r = 255;
+				color.g = 128;
+				color.b = 0;
+				color.w = 0;
+			}
+			else if(totalID == NFC_DANIEL)
+			{
+				color.r = 255;
+				color.g = 255;
+				color.b = 0;
+				color.w = 0;
+			}
+			else if(totalID == NFC_LINDSEY)
+			{
+				color.r = 255;
+				color.g = 0;
+				color.b = 128;
+				color.w = 0;
+			}
+			else if(totalID == NFC_ROEL)
+			{
+				color.r = 0;
+				color.g = 255;
+				color.b = 255;
+				color.w = 0;
+			}
+			else if(totalID == NFC_QUINTEN)
+			{
+				color.r = 0;
+				color.g = 158;
+				color.b = 255;
+				color.w = 0;
+			}
+			else if(totalID == NFC_LOES)
+			{
+				color.r = 255;
+				color.g = 0;
+				color.b = 0;
+				color.w = 0;
+			}
+			else
+			{
+				color.r = 0;
+				color.g = 0;
+				color.b = 0;
+				color.w = 1;
+				qmlObject->setProperty("gear", "NFC");
+			}
+
+			QProcess::startDetached(QString("echo ") + QString(color.w) + QString("> /sys/class/backlight/backlight.17/brightness")); //wit
+			QProcess::startDetached(QString("echo ") + QString(color.r) + QString("> /sys/class/leds/PWM2/brightness")); //rood
+			QProcess::startDetached(QString("echo ") + QString(color.g) + QString("> /sys/class/leds/PWM1/brightness")); //groen
+			QProcess::startDetached(QString("echo ") + QString(color.b) + QString("> /sys/class/leds/PWM3/brightness")); //blauw
+		}
 	}
 }
 
@@ -146,6 +222,9 @@ void Dashboard::canTx(void)
 void Dashboard::startDebug(void)
 {
 	QProcess::startDetached("/home/root/Lola2");
+	canDevice->disconnectDevice();
+	QProcess::startDetached("killall -e Lola");
+
 }
 
-//BAT 57.4 max 40 min
+//BAT 58.4 max 40 min

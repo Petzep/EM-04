@@ -430,6 +430,9 @@ void TestDialog::canRx(void)
 		{
 			switch(canData.data.at(0))
 			{
+				case 0:
+					dnrLabel->setText("-");
+					break;
 				case 1:
 					dnrLabel->setText("D");
 					break;

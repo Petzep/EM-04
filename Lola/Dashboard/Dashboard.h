@@ -37,6 +37,15 @@
 #define ROBOTEQ_ADDRES		(0x050)
 #define BROADCAST_ADDRESS	(0x700)
 
+#define NFC_ADDRESS			0x5ca
+#define NFC_NEPHTALY		0x0476280ada328000
+#define NFC_LINDSEY			0x047b5a02da328000
+#define NFC_ROEL			0x04213d929e318000
+#define NFC_THOM			0x046d89929e318000
+#define NFC_DANIEL			0x047c7a72f93b8000
+#define NFC_QUINTEN			0xdeadbeefb00b1355
+#define NFC_LOES			0x044d6d0a07348000
+
 struct CanLogMsg
 {
 	long long time;
@@ -56,8 +65,6 @@ public:
 	bool initCan(int can);
 
 private:
-	QString m_name;
-	int m_shoeSize;
 	QCanBusDevice *canDevice;
 	QObject *m_root;
 
