@@ -115,7 +115,7 @@ void Dashboard::canRx(void)
 			
 			float battery1Amp = (canData.data.at(2) + (canData.data.at(3) << 8))/10;
 			float battery2Amp = (canData.data.at(4) + (canData.data.at(5) << 8))/10;
-			float batteryAmp = (battery1Amp + battery2Amp) / 2;
+			float batteryAmp = battery1Amp + battery2Amp;
 			qmlObject->setProperty("rpm",batteryAmp);
 		}
 		else if(canData.id == MC_DNR)
