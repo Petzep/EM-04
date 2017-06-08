@@ -268,3 +268,9 @@ extern ErrorCode_t mwDFU_init(USBD_HANDLE_T hUsb, USBD_DFU_INIT_PARAM_T* param, 
 /** @endcond */
 
 #endif  /* __DFUUSER_H__ */
+
+
+
+
+
+

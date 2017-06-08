@@ -18,7 +18,7 @@ void __attribute__ ((weak)) NMI_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void NMI_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) HardFault_Handler() 
 {
@@ -26,7 +26,7 @@ void __attribute__ ((weak)) HardFault_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void HardFault_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SVC_Handler() 
 {
@@ -34,7 +34,7 @@ void __attribute__ ((weak)) SVC_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SVC_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) PendSV_Handler() 
 {
@@ -42,7 +42,7 @@ void __attribute__ ((weak)) PendSV_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void PendSV_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SysTick_Handler() 
 {
@@ -50,7 +50,7 @@ void __attribute__ ((weak)) SysTick_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SysTick_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT0_IRQHandler() 
 {
@@ -58,7 +58,7 @@ void __attribute__ ((weak)) FLEX_INT0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT1_IRQHandler() 
 {
@@ -66,7 +66,7 @@ void __attribute__ ((weak)) FLEX_INT1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT2_IRQHandler() 
 {
@@ -74,7 +74,7 @@ void __attribute__ ((weak)) FLEX_INT2_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT2_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT3_IRQHandler() 
 {
@@ -82,7 +82,7 @@ void __attribute__ ((weak)) FLEX_INT3_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT3_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT4_IRQHandler() 
 {
@@ -90,7 +90,7 @@ void __attribute__ ((weak)) FLEX_INT4_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT4_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT5_IRQHandler() 
 {
@@ -98,7 +98,7 @@ void __attribute__ ((weak)) FLEX_INT5_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT5_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT6_IRQHandler() 
 {
@@ -106,7 +106,7 @@ void __attribute__ ((weak)) FLEX_INT6_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT6_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FLEX_INT7_IRQHandler() 
 {
@@ -114,7 +114,7 @@ void __attribute__ ((weak)) FLEX_INT7_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FLEX_INT7_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) GINT0_IRQHandler() 
 {
@@ -122,7 +122,7 @@ void __attribute__ ((weak)) GINT0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void GINT0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) GINT1_IRQHandler() 
 {
@@ -130,7 +130,7 @@ void __attribute__ ((weak)) GINT1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void GINT1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SSP1_IRQHandler() 
 {
@@ -138,7 +138,7 @@ void __attribute__ ((weak)) SSP1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SSP1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) I2C_IRQHandler() 
 {
@@ -146,7 +146,7 @@ void __attribute__ ((weak)) I2C_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void I2C_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER16_0_IRQHandler() 
 {
@@ -154,7 +154,7 @@ void __attribute__ ((weak)) TIMER16_0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER16_0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER16_1_IRQHandler() 
 {
@@ -162,7 +162,7 @@ void __attribute__ ((weak)) TIMER16_1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER16_1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER32_0_IRQHandler() 
 {
@@ -170,7 +170,7 @@ void __attribute__ ((weak)) TIMER32_0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER32_0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER32_1_IRQHandler() 
 {
@@ -178,7 +178,7 @@ void __attribute__ ((weak)) TIMER32_1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER32_1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SSP0_IRQHandler() 
 {
@@ -186,15 +186,15 @@ void __attribute__ ((weak)) SSP0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SSP0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
-void __attribute__ ((weak)) USART_IRQHandler() 
+void __attribute__ ((weak)) UART_IRQHandler() 
 {
 	//If you hit the breakpoint below, one of the interrupts was unhandled in your code. 
 	//Define the following function in your code to handle it:
-	//	extern "C" void USART_IRQHandler();
+	//	extern "C" void UART_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) ADC_IRQHandler() 
 {
@@ -202,7 +202,7 @@ void __attribute__ ((weak)) ADC_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void ADC_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WDT_IRQHandler() 
 {
@@ -210,7 +210,7 @@ void __attribute__ ((weak)) WDT_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WDT_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) BOD_IRQHandler() 
 {
@@ -218,7 +218,7 @@ void __attribute__ ((weak)) BOD_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void BOD_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FMC_IRQHandler() 
 {
@@ -226,15 +226,7 @@ void __attribute__ ((weak)) FMC_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FMC_IRQHandler();
 	asm("bkpt 255");
-};
-
-void __attribute__ ((weak)) IOH_IRQHandler() 
-{
-	//If you hit the breakpoint below, one of the interrupts was unhandled in your code. 
-	//Define the following function in your code to handle it:
-	//	extern "C" void IOH_IRQHandler();
-	asm("bkpt 255");
-};
+}
 
 #else
 void NMI_Handler()           __attribute__ ((weak, alias ("Default_Handler")));
@@ -259,15 +251,14 @@ void TIMER16_1_IRQHandler()  __attribute__ ((weak, alias ("Default_Handler")));
 void TIMER32_0_IRQHandler()  __attribute__ ((weak, alias ("Default_Handler")));
 void TIMER32_1_IRQHandler()  __attribute__ ((weak, alias ("Default_Handler")));
 void SSP0_IRQHandler()       __attribute__ ((weak, alias ("Default_Handler")));
-void USART_IRQHandler()      __attribute__ ((weak, alias ("Default_Handler")));
+void UART_IRQHandler()       __attribute__ ((weak, alias ("Default_Handler")));
 void ADC_IRQHandler()        __attribute__ ((weak, alias ("Default_Handler")));
 void WDT_IRQHandler()        __attribute__ ((weak, alias ("Default_Handler")));
 void BOD_IRQHandler()        __attribute__ ((weak, alias ("Default_Handler")));
 void FMC_IRQHandler()        __attribute__ ((weak, alias ("Default_Handler")));
-void IOH_IRQHandler()        __attribute__ ((weak, alias ("Default_Handler")));
 #endif
 
-void * g_pfnVectors[0x30] __attribute__ ((section (".isr_vector"))) = 
+void * g_pfnVectors[0x30] __attribute__ ((section (".isr_vector"), used)) = 
 {
 	&_estack,
 	&Reset_Handler,
@@ -306,7 +297,7 @@ void * g_pfnVectors[0x30] __attribute__ ((section (".isr_vector"))) =
 	&TIMER32_0_IRQHandler,
 	&TIMER32_1_IRQHandler,
 	&SSP0_IRQHandler,
-	&USART_IRQHandler,
+	&UART_IRQHandler,
 	NULL,
 	NULL,
 	&ADC_IRQHandler,
@@ -316,7 +307,7 @@ void * g_pfnVectors[0x30] __attribute__ ((section (".isr_vector"))) =
 	NULL,
 	NULL,
 	NULL,
-	&IOH_IRQHandler,
+	NULL,
 };
 
 void SystemInit();

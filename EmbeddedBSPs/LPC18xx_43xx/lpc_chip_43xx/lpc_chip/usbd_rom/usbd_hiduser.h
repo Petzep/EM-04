@@ -419,3 +419,9 @@ extern ErrorCode_t mwHID_init(USBD_HANDLE_T hUsb, USBD_HID_INIT_PARAM_T* param);
 /** @endcond */
 
 #endif  /* __HIDUSER_H__ */
+
+
+
+
+
+

@@ -9,6 +9,10 @@ void Dashboard::setRoot(QObject * root)
 {
 	m_root = root;
 	connect(m_root, SIGNAL(startDebug()), this, SLOT(startDebug()));
+
+	//int color = 242;
+	//QString test = QString("echo ") + QString::number(color, 10) + QString(" > /sys/class/leds/PWM2/brightness");
+	//QProcess::startDetached(QString("echo ") + QString::number(color) + QString(" > /sys/class/leds/PWM2/brightness"));
 }
 
 bool Dashboard::initCan(int can)
@@ -149,6 +153,7 @@ void Dashboard::canRx(void)
 
 			if(totalID == NFC_NEPHTALY)
 			{
+				//Purple
 				color.r = 86;
 				color.g = 2;
 				color.b = 142;
@@ -157,59 +162,123 @@ void Dashboard::canRx(void)
 			}
 			else if(totalID == NFC_THOM)
 			{
+				//DonkerPaars
+				color.r = 59;
+				color.g = 0;
+				color.b = 88;
+				color.w = 0;
+				qmlObject->setProperty("gear", "Thom");
+			}
+			else if(totalID == NFC_DANIEL)
+			{
+				//geel (wordt oranje)
 				color.r = 255;
 				color.g = 128;
 				color.b = 0;
 				color.w = 0;
-			}
-			else if(totalID == NFC_DANIEL)
-			{
-				color.r = 255;
-				color.g = 255;
-				color.b = 0;
-				color.w = 0;
+				qmlObject->setProperty("gear", "Daniel");
 			}
 			else if(totalID == NFC_LINDSEY)
 			{
+				//LindseyRoze
 				color.r = 255;
 				color.g = 0;
 				color.b = 128;
 				color.w = 0;
+				qmlObject->setProperty("gear", "Lindsey");
 			}
 			else if(totalID == NFC_ROEL)
 			{
+				//lichtblauw
 				color.r = 0;
 				color.g = 255;
 				color.b = 255;
 				color.w = 0;
+				qmlObject->setProperty("gear", "Roel");
 			}
 			else if(totalID == NFC_QUINTEN)
 			{
-				color.r = 0;
-				color.g = 158;
-				color.b = 255;
-				color.w = 0;
+				//Oranje
+				color.r = 255;
+				color.g = 165;
+				color.b = 0;
+				color.w = 1;
+				qmlObject->setProperty("gear", "Quinten");
 			}
 			else if(totalID == NFC_LOES)
 			{
+				//Roze
+				color.r = 255;
+				color.g = 0;
+				color.b = 255;
+				color.w = 1;
+				qmlObject->setProperty("gear", "Loes");
+			}
+			else if(totalID == NFC_BAS)
+			{
+				//RAL 6011
+				color.r = 108;
+				color.g = 124;
+				color.b = 89;
+				color.w = 0;
+				qmlObject->setProperty("gear", "Bas");
+			}
+			else if(totalID == NFC_TIMO)
+			{
+				//Geel maar neigt naar ecomGroen
+				color.r = 255;
+				color.g = 255;
+				color.b = 0;
+				color.w = 0;
+				qmlObject->setProperty("gear", "Timo");
+			}
+			else if(totalID == NFC_JELLE)
+			{
+				//Blauw+Wit
+				color.r = 0;
+				color.g = 0;
+				color.b = 255;
+				color.w = 1;
+				qmlObject->setProperty("gear", "Jelle");
+			}
+			else if(totalID == NFC_YANICK)
+			{
+				//Rood
 				color.r = 255;
 				color.g = 0;
 				color.b = 0;
 				color.w = 0;
+				qmlObject->setProperty("gear", "Yanick");
 			}
 			else
 			{
+				//Normal Wit
 				color.r = 0;
 				color.g = 0;
 				color.b = 0;
 				color.w = 1;
 				qmlObject->setProperty("gear", "NFC");
 			}
+			
+			QFile pwmrFile("/sys/class/leds/PWM2/brightness");
+			pwmrFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+			pwmrFile.write(QString::number(color.r).toUtf8());
+			pwmrFile.close();
 
-			QProcess::startDetached(QString("echo ") + QString(color.w) + QString("> /sys/class/backlight/backlight.17/brightness")); //wit
-			QProcess::startDetached(QString("echo ") + QString(color.r) + QString("> /sys/class/leds/PWM2/brightness")); //rood
-			QProcess::startDetached(QString("echo ") + QString(color.g) + QString("> /sys/class/leds/PWM1/brightness")); //groen
-			QProcess::startDetached(QString("echo ") + QString(color.b) + QString("> /sys/class/leds/PWM3/brightness")); //blauw
+			QFile pwmgFile("/sys/class/leds/PWM1/brightness");
+			pwmgFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+			pwmgFile.write(QString::number(color.g).toUtf8());
+			pwmgFile.close();
+
+			QFile pwmbFile("/sys/class/leds/PWM3/brightness");
+			pwmbFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+			pwmbFile.write(QString::number(color.b).toUtf8());
+			pwmbFile.close();
+
+			QFile pwmwFile("/sys/class/backlight/backlight.17/brightness");
+			pwmwFile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+			pwmwFile.write(QString::number(color.w).toUtf8());
+			pwmwFile.close();
 		}
 	}
 }

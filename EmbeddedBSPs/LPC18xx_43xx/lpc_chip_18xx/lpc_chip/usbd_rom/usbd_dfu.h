@@ -118,3 +118,9 @@ typedef struct _DFU_STATUS DFU_STATUS_T;
 
 
 #endif  /* __MW_USBD_DFU_H__ */
+
+
+
+
+
+

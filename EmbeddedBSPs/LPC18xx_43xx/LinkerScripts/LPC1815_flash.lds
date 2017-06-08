@@ -123,5 +123,23 @@ SECTIONS
 
 	PROVIDE(end = .);
 
+	.heap (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__heap_start__ = .);
+		KEEP(*(.heap))
+		. = ALIGN(4);
+		PROVIDE(__heap_end__ = .);
+	} > SRAM
+
+	.reserved_for_stack (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__reserved_for_stack_start__ = .);
+		KEEP(*(.reserved_for_stack))
+		. = ALIGN(4);
+		PROVIDE(__reserved_for_stack_end__ = .);
+	} > SRAM
+
 }
 

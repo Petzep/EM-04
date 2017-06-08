@@ -18,7 +18,7 @@ void __attribute__ ((weak)) NMI_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void NMI_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) HardFault_Handler() 
 {
@@ -26,7 +26,7 @@ void __attribute__ ((weak)) HardFault_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void HardFault_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SVC_Handler() 
 {
@@ -34,7 +34,7 @@ void __attribute__ ((weak)) SVC_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SVC_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) PendSV_Handler() 
 {
@@ -42,7 +42,7 @@ void __attribute__ ((weak)) PendSV_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void PendSV_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SysTick_Handler() 
 {
@@ -50,7 +50,7 @@ void __attribute__ ((weak)) SysTick_Handler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SysTick_Handler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP0_IRQHandler() 
 {
@@ -58,7 +58,7 @@ void __attribute__ ((weak)) WAKEUP0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP1_IRQHandler() 
 {
@@ -66,7 +66,7 @@ void __attribute__ ((weak)) WAKEUP1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP2_IRQHandler() 
 {
@@ -74,7 +74,7 @@ void __attribute__ ((weak)) WAKEUP2_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP2_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP3_IRQHandler() 
 {
@@ -82,7 +82,7 @@ void __attribute__ ((weak)) WAKEUP3_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP3_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP4_IRQHandler() 
 {
@@ -90,7 +90,7 @@ void __attribute__ ((weak)) WAKEUP4_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP4_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP5_IRQHandler() 
 {
@@ -98,7 +98,7 @@ void __attribute__ ((weak)) WAKEUP5_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP5_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP6_IRQHandler() 
 {
@@ -106,7 +106,7 @@ void __attribute__ ((weak)) WAKEUP6_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP6_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP7_IRQHandler() 
 {
@@ -114,7 +114,7 @@ void __attribute__ ((weak)) WAKEUP7_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP7_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP8_IRQHandler() 
 {
@@ -122,7 +122,7 @@ void __attribute__ ((weak)) WAKEUP8_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP8_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP9_IRQHandler() 
 {
@@ -130,7 +130,7 @@ void __attribute__ ((weak)) WAKEUP9_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP9_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP10_IRQHandler() 
 {
@@ -138,7 +138,7 @@ void __attribute__ ((weak)) WAKEUP10_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP10_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP11_IRQHandler() 
 {
@@ -146,7 +146,7 @@ void __attribute__ ((weak)) WAKEUP11_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP11_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WAKEUP12_IRQHandler() 
 {
@@ -154,7 +154,7 @@ void __attribute__ ((weak)) WAKEUP12_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WAKEUP12_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) ADC_B_IRQHandler() 
 {
@@ -162,7 +162,7 @@ void __attribute__ ((weak)) ADC_B_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void ADC_B_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SSP1_IRQHandler() 
 {
@@ -170,7 +170,7 @@ void __attribute__ ((weak)) SSP1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SSP1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) I2C_IRQHandler() 
 {
@@ -178,7 +178,7 @@ void __attribute__ ((weak)) I2C_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void I2C_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER_16_0_IRQHandler() 
 {
@@ -186,7 +186,7 @@ void __attribute__ ((weak)) TIMER_16_0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER_16_0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER_16_1_IRQHandler() 
 {
@@ -194,7 +194,7 @@ void __attribute__ ((weak)) TIMER_16_1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER_16_1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER_32_0_IRQHandler() 
 {
@@ -202,7 +202,7 @@ void __attribute__ ((weak)) TIMER_32_0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER_32_0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) TIMER_32_1_IRQHandler() 
 {
@@ -210,7 +210,7 @@ void __attribute__ ((weak)) TIMER_32_1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void TIMER_32_1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) SSP0_IRQHandler() 
 {
@@ -218,7 +218,7 @@ void __attribute__ ((weak)) SSP0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void SSP0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) UART0_IRQHandler() 
 {
@@ -226,7 +226,7 @@ void __attribute__ ((weak)) UART0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void UART0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) UART1_IRQHandler() 
 {
@@ -234,7 +234,7 @@ void __attribute__ ((weak)) UART1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void UART1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) UART2_IRQHandler() 
 {
@@ -242,7 +242,7 @@ void __attribute__ ((weak)) UART2_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void UART2_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) ADC_A_IRQHandler() 
 {
@@ -250,7 +250,7 @@ void __attribute__ ((weak)) ADC_A_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void ADC_A_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) WDT_IRQHandler() 
 {
@@ -258,7 +258,7 @@ void __attribute__ ((weak)) WDT_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void WDT_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) BOD_IRQHandler() 
 {
@@ -266,7 +266,7 @@ void __attribute__ ((weak)) BOD_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void BOD_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) FMC_IRQHandler() 
 {
@@ -274,7 +274,7 @@ void __attribute__ ((weak)) FMC_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void FMC_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) EINT3_IRQHandler() 
 {
@@ -282,7 +282,7 @@ void __attribute__ ((weak)) EINT3_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void EINT3_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) EINT2_IRQHandler() 
 {
@@ -290,7 +290,7 @@ void __attribute__ ((weak)) EINT2_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void EINT2_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) EINT1_IRQHandler() 
 {
@@ -298,7 +298,7 @@ void __attribute__ ((weak)) EINT1_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void EINT1_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 void __attribute__ ((weak)) EINT0_IRQHandler() 
 {
@@ -306,7 +306,7 @@ void __attribute__ ((weak)) EINT0_IRQHandler()
 	//Define the following function in your code to handle it:
 	//	extern "C" void EINT0_IRQHandler();
 	asm("bkpt 255");
-};
+}
 
 #else
 void NMI_Handler()            __attribute__ ((weak, alias ("Default_Handler")));
@@ -348,7 +348,7 @@ void EINT1_IRQHandler()       __attribute__ ((weak, alias ("Default_Handler")));
 void EINT0_IRQHandler()       __attribute__ ((weak, alias ("Default_Handler")));
 #endif
 
-void * g_pfnVectors[0x30] __attribute__ ((section (".isr_vector"))) = 
+void * g_pfnVectors[0x30] __attribute__ ((section (".isr_vector"), used)) = 
 {
 	&_estack,
 	&Reset_Handler,

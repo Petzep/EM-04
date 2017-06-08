@@ -148,3 +148,9 @@ typedef LPC43XX_M0_IRQn_Type IRQn_Type;
 #endif
 
 #endif /* ifndef __CMSIS_43XX_H_ */
+
+
+
+
+
+

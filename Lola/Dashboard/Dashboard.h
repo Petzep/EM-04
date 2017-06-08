@@ -6,6 +6,7 @@
 #include <QString>
 #include <QMessageBox>
 #include <QProcess>
+#include <QFile>
 
 #define DEVICE_NR			0b1000
 #define	EM_04_CAN_RANGE		0x100
@@ -43,8 +44,12 @@
 #define NFC_ROEL			0x04213d929e318000
 #define NFC_THOM			0x046d89929e318000
 #define NFC_DANIEL			0x047c7a72f93b8000
-#define NFC_QUINTEN			0xdeadbeefb00b1355
+#define NFC_QUINTEN			0x042453227b498000
 #define NFC_LOES			0x044d6d0a07348000
+#define NFC_BAS				0x04915b929e318000
+#define NFC_TIMO			0x048c21929e318000
+#define NFC_JELLE			0x044f19929e318000
+#define NFC_YANICK			0x0457922a7b498000
 
 struct CanLogMsg
 {

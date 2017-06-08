@@ -583,3 +583,9 @@ extern void mwUSB_StallEp0(USBD_HANDLE_T hUsb);
 /** @endcond */
 
 #endif  /* __MW_USBD_CORE_H__ */
+
+
+
+
+
+

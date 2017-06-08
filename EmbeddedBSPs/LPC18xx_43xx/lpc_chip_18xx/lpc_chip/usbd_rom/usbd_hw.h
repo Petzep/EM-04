@@ -455,3 +455,9 @@ extern ErrorCode_t  hwUSB_EnableEvent(USBD_HANDLE_T hUsb, uint32_t EPNum, uint32
 
 
 #endif  /* __USBHW_H__ */
+
+
+
+
+
+

@@ -7,7 +7,7 @@ ENTRY(Reset_Handler)
 
 MEMORY
 {
-	FLASH (RX)     : ORIGIN = 0x00000000, LENGTH = 16K
+	FLASH (RX)     : ORIGIN = 0x00000000, LENGTH = 24K
 	SRAM (RWX)     : ORIGIN = 0x10000000, LENGTH = 4K
 	USB_SRAM (RWX) : ORIGIN = 0x20004000, LENGTH = 2K
 }
@@ -118,6 +118,24 @@ SECTIONS
 	} > SRAM
 
 	PROVIDE(end = .);
+
+	.heap (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__heap_start__ = .);
+		KEEP(*(.heap))
+		. = ALIGN(4);
+		PROVIDE(__heap_end__ = .);
+	} > SRAM
+
+	.reserved_for_stack (NOLOAD) :
+	{
+		. = ALIGN(4);
+		PROVIDE(__reserved_for_stack_start__ = .);
+		KEEP(*(.reserved_for_stack))
+		. = ALIGN(4);
+		PROVIDE(__reserved_for_stack_end__ = .);
+	} > SRAM
 
 }
 

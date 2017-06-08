@@ -527,3 +527,9 @@ extern ErrorCode_t mwCDC_SendNotification (USBD_HANDLE_T hCdc, uint8_t bNotifica
 
 
 #endif  /* __CDCUSER_H__ */ 
+
+
+
+
+
+

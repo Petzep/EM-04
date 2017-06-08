@@ -27,6 +27,7 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define WASHER_ADDRESS		(0x007 + COUT_ADDRESS)
 #define CLAXON_ADDRESS		(0x008 + COUT_ADDRESS)
 #define BLOWER_ADDRESS		(0x009 + COUT_ADDRESS)
+#define BUTTON_ADDRESS		(0x00a + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -338,6 +339,17 @@ int main(void)
 			SendMsgBuf.ID = WASHER_ADDRESS;
 			SendMsgBuf.DLC = 1;
 			SendMsgBuf.Data[0] = washerOn;
+			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
+			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+		}
+
+		if(button != buttonOn)
+		{
+			buttonOn = button;
+			SendMsgBuf.ID = BUTTON_ADDRESS | CAN_MSGOBJ_STD;
+			SendMsgBuf.DLC = 1;
+			SendMsgBuf.Type = 0;
+			SendMsgBuf.Data[0] = buttonOn;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
