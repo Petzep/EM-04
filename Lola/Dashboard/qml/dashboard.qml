@@ -132,7 +132,7 @@ Window {
 
 							tickmarkLabel: Text {
 								color: "white"
-								visible: styleData.value === 0 || styleData.value === 1
+								visible: styleData.value === 45 || styleData.value === 58.8
 								font.pixelSize: fuelGaugeStyle.toPixels(0.225)
 								text: styleData.value === 0 ? "E" : (styleData.value === 1 ? "F" : "")
 							}

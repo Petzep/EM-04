@@ -2,7 +2,7 @@
 <EmbeddedProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
   <BspID>com.sysprogs.arm.nxp_lpc</BspID>
-  <BspVersion>2.1</BspVersion>
+  <BspVersion>2.2</BspVersion>
   <McuID>LPC11C24</McuID>
   <MCUDefinitionFile>LPC11xx/DeviceDefinitions/LPC11CXX.xml</MCUDefinitionFile>
   <MCUProperties>

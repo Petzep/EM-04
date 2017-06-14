@@ -64,7 +64,8 @@ Controls the HUD of EM-04
 #define	RIGHT_MESSAGE		11
 #define LIGHT_MESSAGE		12
 #define FRONT_MESSAGE		13
-#define	TOTAL_MESSAGE		14
+#define DNR_MESSAGE			14
+#define	TOTAL_MESSAGE		15
 
 #define RGB_TOP 1
 #define RGB_BOT 0
@@ -380,6 +381,16 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = DNR_MESSAGE;
+	msg_obj.mode_id = MC_DNR;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = DNR_MESSAGE;
+	msg_obj.mode_id = MC_DNR;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	/* Enable the CAN Interrupt */
 	NVIC_EnableIRQ(CAN_IRQn);
 }
@@ -538,9 +549,40 @@ void CAN_rx(uint8_t msg_obj_num)
 			//led t7(blue) (full)
 			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[3]);
 		}
-		if(msg_obj_num == SPEED_MESSAGE)
+		if(!CLOCK_DEMO)
 		{
-			//sevenSeg(false, msg_obj.data[0], true);
+			if(msg_obj_num == SPEED_MESSAGE)
+				sevenSeg(false, msg_obj.data[0], true);
+
+			if(msg_obj_num == DNR_MESSAGE)
+			{
+				char dnr = 0;
+				switch(msg_obj.data[0])
+				{
+					case 0:
+						dnr = '-';
+						break;
+					case 1:
+						dnr = 'D';
+						break;
+					case 2:
+						dnr = 'N';
+						break;
+					case 3:
+						dnr = 'R';
+						break;
+					default:
+						dnr = 'X';
+						break;
+				}
+				DNR(dnr, true);
+			}
+			if(msg_obj_num == BATTERY_MESSAGE)
+			{
+				int batteryVoltage = (msg_obj.data[0] + (msg_obj.data[1] << 8));
+				BatClock(map(batteryVoltage, 450, 588, 0, 10));
+			}
+			
 		}
 		//if(msg_obj)
 
@@ -943,6 +985,9 @@ void DNR(char ch, bool mirror)
 		case '9':
 			value = 0b0011001011101101;
 			break;
+		case '-':
+			value = 0b1000000000000001;
+			break; 
 		default:
 			value = NULL;
 			break;
