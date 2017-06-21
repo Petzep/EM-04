@@ -27,6 +27,7 @@ Controls the HUD of EM-04
 #define WASHER_ADDRESS		(0x007 + COUT_ADDRESS)
 #define CLAXON_ADDRESS		(0x008 + COUT_ADDRESS)
 #define BLOWER_ADDRESS		(0x009 + COUT_ADDRESS)
+#define BUTTON_ADDRESS		(0x00a + COUT_ADDRESS)
 #define HUD_ADDRESS			(0x030 + COUT_ADDRESS)
 #define SPEED_ADDRESS		(0x001 + HUD_ADDRESS)
 #define WARNING_ADDRESS		(0x002 + HUD_ADDRESS)
@@ -65,7 +66,8 @@ Controls the HUD of EM-04
 #define LIGHT_MESSAGE		12
 #define FRONT_MESSAGE		13
 #define DNR_MESSAGE			14
-#define	TOTAL_MESSAGE		15
+#define BUTTON_MESSAGE		15
+#define	TOTAL_MESSAGE		16
 
 #define RGB_TOP 1
 #define RGB_BOT 0
@@ -115,6 +117,12 @@ void SysTick_Handler(void)
 {
 	SysTickCnt++;
 }
+
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 
 /**
 * @brief	Updated the PWM dutycycle
@@ -386,8 +394,8 @@ void CAN_init()
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
-	msg_obj.msgobj = DNR_MESSAGE;
-	msg_obj.mode_id = MC_DNR;
+	msg_obj.msgobj = BUTTON_MESSAGE;
+	msg_obj.mode_id = BUTTON_ADDRESS;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
@@ -424,7 +432,8 @@ void CAN_rx(uint8_t msg_obj_num)
 		}
 		if(msg_obj_num == TEMPERATURE_MESSAGE && !CLOCK_DEMO)
 		{
-			rgbLed(RGB_BOT, msg_obj.data[0]);
+			int temperature = MAX(MAX(msg_obj.data[0], msg_obj.data[1]), msg_obj.data[2]);
+			rgbLed(RGB_BOT, map(temperature, 0, 80, 0, 255));
 
 		}
 		if(msg_obj_num == PERSNOAL_MESSAGE)
@@ -540,14 +549,19 @@ void CAN_rx(uint8_t msg_obj_num)
 		{
 			//niks
 		}
+		if(msg_obj_num == BUTTON_MESSAGE)
+		{
+			if(msg_obj.data[0])
+				CLOCK_DEMO != CLOCK_DEMO;			
+		}
 		if(msg_obj_num == FRONT_MESSAGE)
 		{
-			//led t5(green) (city)
-			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, msg_obj.data[0]);
-			//led t6(green) (dim)
-			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, msg_obj.data[1]);
+			//led t6(green) (city)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 2, msg_obj.data[0]);
+			//led t5(green) (dim)
+			Chip_GPIO_WritePortBit(LPC_GPIO, 1, 1, msg_obj.data[1]);
 			//led t7(blue) (full)
-			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[3]);
+			Chip_GPIO_WritePortBit(LPC_GPIO, 3, 0, msg_obj.data[2]);
 		}
 		if(!CLOCK_DEMO)
 		{
@@ -1103,12 +1117,6 @@ void ledInit()
 	}
 }
 
-long map(long x, long in_min, long in_max, long out_min, long out_max)
-{
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-
 //Set the HUD as a clock
 void clockDemo(int CLKTIME, int batPWM, int segPWM, int dnrPWM, int rgbPWM, bool mirror)
 {
@@ -1335,17 +1343,13 @@ int main()
 
 	ledInit();
 
-	clockDemo(1000, 10, 60, 8, 10, true);
+	clockDemo(1000, 80, 100, 100, 100, true);
 	//Will not execute when clockDemo is runned
-	PWMUpdate(0, 90);	//BATPWM
-	PWMUpdate(1, 90);	//7SEGPWM
-	PWMUpdate(2, 90);	//DNRPWM
-	PWMUpdate(3, 90);	//RGBPWM
 
 	for(;;)
 	{	
 		if(CLOCK_DEMO)
-			clockDemo(1000, 10, 20, 8, 10, CLOCK_MIRROR);
+			clockDemo(1000, 80, 100, 100, 100, CLOCK_MIRROR);
 		if((SysTickCnt - lastSystickcnt) >= 1000)
 		{
 			lastSystickcnt = SysTickCnt;

@@ -229,6 +229,28 @@ int main(void)
 	bool motorController1On = false;
 	bool motorController2On = false;
 
+	bool fogLights
+		, cityLight
+		, lowBeam
+		, highBeam
+		, claxon
+		, rear
+		, blinkLeft
+		, blinkRight
+		, dnr_D
+		, dnr_N
+		, dnr_R
+		, washer
+		, button
+		, blower
+		, alarm
+		, wiperInterval
+		, wiper1
+		, wiper2
+		, wiper
+		, startup
+		, shutdown;
+
 	unsigned long lastSystickcnt = 0;
 	unsigned long lastADCtickcnt = 0;
 	unsigned long lastWipertickcnt = 0;
@@ -276,27 +298,51 @@ int main(void)
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH6, &dataADC2);
 		Chip_ADC_ReadValue(LPC_ADC, ADC_CH5, &dataADC3);
 
-		bool fogLights = !pin7;
-		bool cityLight = !pin15;
-		bool lowBeam = !pin8;
-		bool highBeam = !pin11;
-		bool claxon = !pin12;
-		bool rear = pin4;
-		bool blinkLeft = !pin10;
-		bool blinkRight = !pin1;
-		bool dnr_D = !pin21;
-		bool dnr_N = !pin22;
-		bool dnr_R = !pin16;
-		bool washer = pin2;
-		bool button = !pin5;
-		bool blower = !pin28;
-		bool alarm = !pin25;
-		bool wiperInterval = !pin13;
-		bool wiper1 = !pin9;
-		bool wiper2 = !pin6;
-		bool wiper = wiper1 || wiper2;
-		bool startup = !pin17;
-		bool shutdown = !pin20;
+		if(startup)
+		{
+			fogLights = false; //!pin7; RDW UitENZo
+			cityLight = !pin15;
+			lowBeam = !pin8;
+			highBeam = !pin11;
+			rear = pin4;
+			blinkLeft = !pin10;
+			blinkRight = !pin1;
+			dnr_D = !pin21;
+			dnr_N = !pin22;
+			dnr_R = !pin16;
+			washer = pin2;
+			button = !pin5;
+			blower = !pin28;
+			wiperInterval = !pin13;
+			wiper1 = !pin9;
+			wiper2 = !pin6;
+			wiper = wiper1 || wiper2;
+		}
+		else
+		{
+			fogLights = false;
+			cityLight = false;
+			lowBeam = false;
+			highBeam = false;
+			rear = false;
+			blinkLeft = false;
+			blinkRight = false;
+			dnr_D = false;
+			dnr_N = false;
+			dnr_R = false;
+			washer = false;
+			button = false;
+			blower = false;
+			wiperInterval = false;
+			wiper1 = false;
+			wiper2 = false;
+			wiper = false;
+		}
+
+		claxon = !pin12;
+		alarm = !pin25;
+		startup = !pin17;
+		shutdown = !pin20;
 
 		bool can1 = false;
 		bool can2 = false;
@@ -376,6 +422,32 @@ int main(void)
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 			}
+
+			blinkLeftOn ^= true;
+			blinkLeftState ^= true;
+			blinkRightOn ^= true;
+			blinkRightState ^= true;
+			wiperState ^= true;
+
+			fogLightsOn ^= true;
+			cityLightOn ^= true;
+			lowBeamOn ^= true;
+			highBeamOn ^= true;
+			claxonOn ^= true;
+			dnr_DOn ^= true;
+			dnr_NOn ^= true;
+			dnr_ROn ^= true;
+			rearOn ^= true;
+			washerOn ^= true;
+			buttonOn ^= true;
+			blowerOn ^= true;
+			alarmOn ^= true;
+			wiperOn ^= true;
+			wiper1On ^= true;
+			wiper2On ^= true;
+			wiperInterval ^= true;
+			startupOn ^= true;
+			shutdownOn ^= true;
 		}
 
 		if(shutdown != shutdownOn)
@@ -516,7 +588,7 @@ int main(void)
 		if(dnr_D != dnr_DOn)
 		{
 			dnr_DOn = dnr_D;
-			if(dnr_D && DNR_setting != 1)
+			if(dnr_D && DNR_setting != 1 && !shutdown)
 			{
 				DNR_setting = 0;
 
@@ -531,7 +603,7 @@ int main(void)
 		if(dnr_N != dnr_NOn)
 		{
 			dnr_NOn = dnr_N;
-			if(dnr_N && DNR_setting != 2)
+			if(dnr_N && DNR_setting != 2 && !shutdown)
 			{
 				DNR_setting = 0;
 
@@ -546,8 +618,10 @@ int main(void)
 		if(dnr_R != dnr_ROn)
 		{
 			dnr_ROn = dnr_R;
-			if(dnr_R && DNR_setting != 3)
+			if(dnr_R && DNR_setting != 3 && !shutdown)
 			{
+				DNR_setting = 0;
+
 				SendMsgBuf.ID = ROBOTEQ_ADDRES	 | CAN_MSGOBJ_STD;
 				SendMsgBuf.DLC = 1;
 				SendMsgBuf.Type = 0;
