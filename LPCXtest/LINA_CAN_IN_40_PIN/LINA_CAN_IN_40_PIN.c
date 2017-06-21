@@ -244,7 +244,6 @@ int main(void)
 		, button
 		, blower
 		, alarm
-		, wiperInterval
 		, wiper1
 		, wiper2
 		, wiper
@@ -313,9 +312,9 @@ int main(void)
 			washer = pin2;
 			button = !pin5;
 			blower = !pin28;
-			wiperInterval = !pin13;
-			wiper1 = !pin9;
-			wiper2 = !pin6;
+			wiperInterval = !pin9;//!pin13; pin13 broken
+			wiper1 = !pin6;
+			wiper2 = false; // !pin6;
 			wiper = wiper1 || wiper2;
 		}
 		else
@@ -406,7 +405,7 @@ int main(void)
 			SendMsgBuf.ID = WIPER_ADDRESS;
 			SendMsgBuf.DLC = 2;
 			SendMsgBuf.Data[0] = true;
-			SendMsgBuf.Data[1] = 10+wiper;
+			SendMsgBuf.Data[1] = 10 + wiper;
 			TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 			Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
 		}
@@ -421,33 +420,30 @@ int main(void)
 				SendMsgBuf.Data[0] = true;
 				TxBuf = Chip_CAN_GetFreeTxBuf(LPC_CAN);
 				Chip_CAN_Send(LPC_CAN, TxBuf, &SendMsgBuf);
+
+				blinkLeftOn ^= true;
+				blinkLeftState ^= true;
+				blinkRightOn ^= true;
+				blinkRightState ^= true;
+				wiperState ^= true;
+
+				fogLightsOn ^= true;
+				cityLightOn ^= true;
+				lowBeamOn ^= true;
+				highBeamOn ^= true;
+				claxonOn ^= true;
+				dnr_DOn ^= true;
+				dnr_NOn ^= true;
+				dnr_ROn ^= true;
+				rearOn ^= true;
+				washerOn ^= true;
+				buttonOn ^= true;
+				blowerOn ^= true;
+				alarmOn ^= true;
+				wiperOn ^= true;
+				wiper1On ^= true;
+				wiper2On ^= true;				
 			}
-
-			blinkLeftOn ^= true;
-			blinkLeftState ^= true;
-			blinkRightOn ^= true;
-			blinkRightState ^= true;
-			wiperState ^= true;
-
-			fogLightsOn ^= true;
-			cityLightOn ^= true;
-			lowBeamOn ^= true;
-			highBeamOn ^= true;
-			claxonOn ^= true;
-			dnr_DOn ^= true;
-			dnr_NOn ^= true;
-			dnr_ROn ^= true;
-			rearOn ^= true;
-			washerOn ^= true;
-			buttonOn ^= true;
-			blowerOn ^= true;
-			alarmOn ^= true;
-			wiperOn ^= true;
-			wiper1On ^= true;
-			wiper2On ^= true;
-			wiperInterval ^= true;
-			startupOn ^= true;
-			shutdownOn ^= true;
 		}
 
 		if(shutdown != shutdownOn)

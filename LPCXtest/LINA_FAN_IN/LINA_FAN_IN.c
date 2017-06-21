@@ -49,7 +49,8 @@ Rewritten for Visual Studio and LPCOpen v2.xx
 #define	FAN_MESSAGE			3
 #define	WIPER_MESSAGE		4
 #define START_MESSAGE		5
-#define	TOTAL_MESSAGE		6
+#define TEMPERATURE_MESSAGE	6
+#define	TOTAL_MESSAGE		7
 
 // To have the timer tick run at 100,000 Hz, the prescaler is SYSTEM CLOCK / 100,000
 #define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
@@ -123,6 +124,24 @@ void TIMER16_1_IRQHandler(void)
 	Chip_TIMER_ClearCapture(LPC_TIMER16_1, 0);
 	lastRotEnc2Cnt = rotEnc2Cnt;
 	rotEnc2Cnt = SysTickCnt;
+}
+
+/**
+* @brief	Handle interrupt from 32-bit timer (Fan)
+* @return	Nothing
+*/
+void TIMER32_0_IRQHandler(void)
+{
+	if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 0))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, true);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 0);
+	}
+	else if(Chip_TIMER_MatchPending(LPC_TIMER32_0, 1))
+	{
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 3, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER32_0, 1);
+	}
 }
 
 void TIMER32_1_IRQHandler(void)
@@ -228,6 +247,11 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 
+	msg_obj.msgobj = TEMPERATURE_MESSAGE;
+	msg_obj.mode_id = TEMPERATURE_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
 	msg_obj.msgobj = START_MESSAGE;
 	msg_obj.mode_id = MC_START;
 	msg_obj.mask = 0xFFF;
@@ -290,6 +314,13 @@ void CAN_rx(uint8_t msg_obj_num) {
 			Chip_GPIO_WritePortBit(LPC_GPIO, 2, 0, msg_obj.data[0]);
 		}
 
+		if(msg_obj_num == TEMPERATURE_MESSAGE)
+		{
+			int fanspeed = map(MAX(MAX(msg_obj.data[0], msg_obj.data[1]), msg_obj.data[2]), 30, 40, min_dutyCycle, max_dutyClycle);
+			PWMUpdate(0, fanspeed);
+			PWMUpdate(1, fanspeed);
+		}
+
 		/*if (msg_obj_num == PERSNOAL_MESSAGE)
 		{
 		
@@ -327,31 +358,15 @@ int main(void) {
 	//Enable and setup SysTick Timer at 1/10000 seconds (0.1ms)
 	SysTick_Config(SystemCoreClock / 10000);
 
-	//Enable timer 0 & 1 clock (2 & 3 for speed)
+	//Enable timer 0 & 1 clock 
 	Chip_TIMER_Init(LPC_TIMER32_0);
 	Chip_TIMER_Init(LPC_TIMER32_1);
-	Chip_TIMER_Init(LPC_TIMER16_0);
-	Chip_TIMER_Init(LPC_TIMER16_1);
 	//Reset any timer pending
 	Chip_TIMER_Reset(LPC_TIMER32_0);
 	Chip_TIMER_Reset(LPC_TIMER32_1);
-	Chip_TIMER_Reset(LPC_TIMER16_0);
-	Chip_TIMER_Reset(LPC_TIMER16_1);
 	//set the resolution of the ticks to the PWM timer (match register resolution)
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_0, (PWM_PRESCALER - 1));
 	Chip_TIMER_PrescaleSet(LPC_TIMER32_1, (PWM_PRESCALER - 1));
-	//Set the resolution of the ticks for the timer to microseconds
-	Chip_TIMER_PrescaleSet(LPC_TIMER16_1, (SystemCoreClock / 1000000));
-	Chip_TIMER_PrescaleSet(LPC_TIMER16_1, (SystemCoreClock / 1000000));
-	//Set Match on capture
-	Chip_TIMER_CaptureRisingEdgeEnable(LPC_TIMER16_0, 0);
-	Chip_TIMER_CaptureRisingEdgeEnable(LPC_TIMER16_1, 0);
-	//Clear capture registers
-	Chip_TIMER_ClearCapture(LPC_TIMER16_0, 0);
-	Chip_TIMER_ClearCapture(LPC_TIMER16_1, 0);
-	//Set Interupt on capture
-	Chip_TIMER_CaptureEnableInt(LPC_TIMER16_0, 0);
-	Chip_TIMER_CaptureEnableInt(LPC_TIMER16_1, 0);
 	//Set duty cycle - MR0 default
 	Chip_TIMER_SetMatch(LPC_TIMER32_0, 0, PWM_DC_COUNT(0));
 	Chip_TIMER_SetMatch(LPC_TIMER32_1, 0, PWM_DC_COUNT(0));
@@ -372,18 +387,21 @@ int main(void) {
 	//Enable the timer
 	Chip_TIMER_Enable(LPC_TIMER32_0);
 	Chip_TIMER_Enable(LPC_TIMER32_1);
-	//Chip_TIMER_Enable(LPC_TIMER16_0);
-	//Chip_TIMER_Enable(LPC_TIMER16_1);
 	// PWM mode enabled on CT32B0_MAT0
 	((LPC_TIMER_T *)LPC_TIMER32_0)->PWMC = 1;
 	((LPC_TIMER_T *)LPC_TIMER32_1)->PWMC = 1;
+	/* Enable timer interrupt */
+	NVIC_ClearPendingIRQ(TIMER_32_0_IRQn);
+	NVIC_ClearPendingIRQ(TIMER_32_1_IRQn);
+	NVIC_EnableIRQ(TIMER_32_0_IRQn);
+	NVIC_EnableIRQ(TIMER_32_1_IRQn);
 
 	//setup GPIO
 	Chip_GPIO_Init(LPC_GPIO);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 2);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 8);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 2, 1 << 8);
-	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 3);
+	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 3 | 1 << 7);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 2, 1 << 0 | 1 << 1 | 1 << 2 | 1 << 10);
 
 	//PinFunction capture
@@ -542,7 +560,7 @@ int main(void) {
 				msg_obj.mode_id = SPEED_ADDRESS | CAN_MSGOBJ_STD;
 				msg_obj.mask = 0x0;
 				msg_obj.dlc = 1;
-				msg_obj.data[0] = rps2*1.7236;
+				msg_obj.data[0] = rps2*1.7236*1.3;
 				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
 
