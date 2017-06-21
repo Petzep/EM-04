@@ -122,6 +122,16 @@ void Dashboard::canRx(void)
 			float batteryAmp = battery1Amp + battery2Amp;
 			qmlObject->setProperty("rpm",batteryAmp);
 		}
+		else if(canData.id == MC_START)
+		{
+			if(canData.data.at(0))
+			{
+				qmlObject->setProperty("overlay", false);
+				qmlObject->setProperty("swoop.running", true);
+			}
+			else
+				qmlObject->setProperty("overlay", true);
+		}
 		else if(canData.id == MC_DNR)
 		{
 			switch(canData.data.at(0))

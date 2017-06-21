@@ -3,6 +3,7 @@ import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Extras 1.4
+import QtMultimedia 5.8
 
 Window {
     id: root
@@ -21,7 +22,7 @@ Window {
 
     // Dashboards are typically in a landscape orientation, so we need to ensure
     // our height is never greater than our width.
-    Item {
+	Item {
         id: container
         width: root.width
         height: Math.min(root.width, root.height)
@@ -203,4 +204,33 @@ Window {
 
         }
     }
+		Image {
+		source: "qrc:/images/Ecomotive.PNG"
+		visible: valueSource.overlay
+	}
+		Video {
+		id: bootVideo
+		width : 800
+		height : 480
+		source: "qrc:/images/boot.avi"
+		autoPlay: false
+		autoLoad: true
+		visible: {	
+					var v;
+					if (valueSource.overlay == true)
+					{
+						bootVideo.play();
+						return true;
+					}
+					else
+					{
+						bootVideo.stop();
+						return false;
+					}
+				}
+
+			
+
+		}
+		
 }

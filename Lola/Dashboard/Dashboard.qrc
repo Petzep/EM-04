@@ -14,5 +14,7 @@
         <file>images/elec-icon.png</file>
         <file>images/fuel-icon.png</file>
         <file>images/temperature-icon.png</file>
+        <file>images/Ecomotive.PNG</file>
+        <file>images/boot.avi</file>
     </qresource>
 </RCC>

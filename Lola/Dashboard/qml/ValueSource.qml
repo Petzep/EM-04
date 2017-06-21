@@ -7,6 +7,7 @@ Item {
     property real rpm: 0
     property real fuel: 0
     property string gear: "-"
+	property bool overlay: false
     
     property bool leftArrow: false
 	property bool rightArrow: false
@@ -17,6 +18,7 @@ Item {
 	property bool batOn: false
 
 	SequentialAnimation {
+		id: swoop
 		running: true
         loops: 1
             ParallelAnimation {
@@ -86,6 +88,6 @@ Item {
                     to: 0
                     duration: 1000
                 }
-            }
+        }
 		}
 }
