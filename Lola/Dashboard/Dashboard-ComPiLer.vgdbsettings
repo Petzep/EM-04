@@ -30,6 +30,7 @@
         <string>qmldir</string>
         <string>*.js</string>
         <string>*.png</string>
+        <string>*.avi</string>
       </FileMasks>
       <TransferNewFilesOnly>true</TransferNewFilesOnly>
       <IncludeSubdirectories>true</IncludeSubdirectories>

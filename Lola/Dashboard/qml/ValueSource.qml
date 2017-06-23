@@ -89,5 +89,10 @@ Item {
                     duration: 1000
                 }
         }
+		  PropertyAction {
+            target: valueSource
+            property: "overlay"
+            value: true
+        }
 		}
 }

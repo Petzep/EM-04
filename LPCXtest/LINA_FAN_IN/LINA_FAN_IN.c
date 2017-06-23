@@ -317,6 +317,9 @@ void CAN_rx(uint8_t msg_obj_num) {
 		if(msg_obj_num == TEMPERATURE_MESSAGE)
 		{
 			int fanspeed = map(MAX(MAX(msg_obj.data[0], msg_obj.data[1]), msg_obj.data[2]), 30, 40, min_dutyCycle, max_dutyClycle);
+			if(fanspeed < min_dutyCycle)
+				fanspeed = min_dutyCycle;
+
 			PWMUpdate(0, fanspeed);
 			PWMUpdate(1, fanspeed);
 		}

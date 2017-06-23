@@ -205,10 +205,10 @@ Window {
         }
     }
 		Image {
-		source: "qrc:/images/Ecomotive.PNG"
+		source: "qrc:/images/Ecomotive.png"
 		visible: valueSource.overlay
 	}
-		Video {
+		/*Video {
 		id: bootVideo
 		width : 800
 		height : 480
@@ -231,6 +231,6 @@ Window {
 
 			
 
-		}
+		}*/
 		
 }
