@@ -563,7 +563,7 @@ int main(void) {
 				msg_obj.mode_id = SPEED_ADDRESS | CAN_MSGOBJ_STD;
 				msg_obj.mask = 0x0;
 				msg_obj.dlc = 1;
-				msg_obj.data[0] = rps2*1.7236*1.3;
+				msg_obj.data[0] = rps2*2.128646;
 				LPC_CCAN_API->can_transmit(&msg_obj);
 			}
 

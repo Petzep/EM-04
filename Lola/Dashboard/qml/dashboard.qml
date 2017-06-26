@@ -206,7 +206,18 @@ Window {
     }
 		Image {
 		source: "qrc:/images/Ecomotive.png"
-		visible: valueSource.overlay
+		visible: {	
+					var v;
+					if (valueSource.overlay == true)
+					{
+						return true;
+					}
+					else
+					{
+						valueSource.swoop.start();
+						return false;
+					}
+				}
 	}
 		/*Video {
 		id: bootVideo
