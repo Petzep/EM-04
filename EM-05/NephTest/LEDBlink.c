@@ -41,9 +41,9 @@ int main()
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
 		Delay(500);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 10, false);
-		Delay(250);
+		Delay(300);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 10, true);
-		Delay(250);
+		Delay(300);
 	}
 
 	return 0;
