@@ -26,6 +26,26 @@ const uint32_t RTCOscRateIn = 32768;
 #define LPC_GPIO LPC_GPIO_PORT
 #endif
 
+
+
+void party(void) {
+
+	for (int banana = 0; banana<200; banana++) {
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
+		Delay(15);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 10, true);
+		Delay(15);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, false);
+		Delay(15);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 10, false);
+		Delay(15);
+	}
+}
+
+
+
+
+
 int main()
 {
 	SystemCoreClockUpdate();
@@ -33,7 +53,7 @@ int main()
 	
 	SysTick_Config(SystemCoreClock / 1000);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 10 | 1 << 11);
-
+	volatile static int i = 0;
 	for (;;)
 	{
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 11, true);
@@ -48,6 +68,15 @@ int main()
 		Delay(600);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 10, true);
 		Delay(600);
+		i++;
+		if (i > 40) {
+			party();
+			i = 0;
+
+		}
+
+
+
 	}
 
 	return 0;
