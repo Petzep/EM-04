@@ -113,7 +113,7 @@ typedef struct CCAN_ODENTRY {
 	uint8_t  *val;
 } CCAN_ODENTRY_T;
 
-typedef struct CCAN_CANOPENCFG {
+typedef struct CCAN_CFG {
 	uint8_t   node_id;
 	uint8_t   msgobj_rx;
 	uint8_t   msgobj_tx;

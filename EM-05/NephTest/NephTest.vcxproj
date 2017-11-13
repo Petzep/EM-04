@@ -185,6 +185,7 @@
     <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_msc.h" />
     <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_mscuser.h" />
     <ClInclude Include="..\..\EmbeddedBSPs\LPC17xx_40xx\lpc_chip_17xx\lpc_chip\usbd_rom\usbd_rom_api.h" />
+    <ClInclude Include="PWM.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="nxp_lpc.xml" />

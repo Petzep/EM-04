@@ -385,6 +385,9 @@
     <ClInclude Include="..\..\EmbeddedBSPs\Common\sys_config.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
+    <ClInclude Include="PWM.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="nxp_lpc.xml">
