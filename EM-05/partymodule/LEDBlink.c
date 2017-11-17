@@ -170,9 +170,6 @@ void CAN_error(uint32_t error_info) {
 
 }
 
-
-
-
 volatile unsigned long SysTickCnt;
 
 volatile static int i = 0;
@@ -230,7 +227,38 @@ void Butt(void) {
 	}
 }
 
+void fDelay(int ms, int nr, int Func) {
+	if (!Running[nr]) {
+		Time[nr] = SysTickCnt;
+		Running[nr] = true;
+	}
+	if ((SysTickCnt - Time[nr]) > ms) {
+		Funcdatabase(Func);
+		Running[nr] = false;
+	}
 
+}
+
+Funcdatabase(int Func) {
+	switch (Func) {
+	case 1:
+		ToggleLED(1);
+		break;
+	case 2:
+		ToggleLED(2);
+		break;
+	case 3:
+		ToggleLED(3);
+		break;
+		//case 4:
+		//TIMER_PWMUpdate(0);
+		//break;
+	case 6:
+		i++;
+		break;
+	}
+
+}
 
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 12000000;
@@ -282,32 +310,11 @@ int main()
 	
 	for (;;)
 	{
-		Blink(2500, 1, 1);
-		Blink(900, 2, 2);
-		Blink(3300, 3, 3);
+		fDelay(250, 1, 1);
+		fDelay(900, 2, 2);
+		fDelay(3300, 3, 3);
+		fDelay(4000, 6, 6);
 		Butt();
-
-
-		/*
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
-		Delay(500);
-		Butt();
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, false);
-		Delay(500);
-		Butt();
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
-		Delay(300);
-		Butt();
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-		Delay(300);
-		Butt();
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
-		Delay(600);
-		Butt();
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-		Delay(600);
-		Butt();
-		*/
 
 		//i++;
 		
