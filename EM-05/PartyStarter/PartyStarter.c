@@ -1,14 +1,19 @@
 #include <chip.h>
 //#include "Canny.h"
-#define DEVICE_NR			1
-#define ALL_ADDRESS			0x000
-#define Party_ADDRESS		0x001
+#define	EM_04_CAN_RANGE		0x100
+#define ALL_ADDRESS			(EM_04_CAN_RANGE+0x001)
+#define PARTY_ADDRESS		(EM_04_CAN_RANGE+0x002)
+#define STAHP_ADDRESS		(EM_04_CAN_RANGE+0x003)
+#define DEVICE_NR			2
 #define	PERSNOAL_MESSAGE	6
 #define	ALL_MESSAGE			1
 #define	TOTAL_MESSAGE		8
-#define Party_MESSAGE		2
+#define PARTY_MESSAGE		2
+#define STAHP_MESSAGE		3
 bool PartyButton;
+bool HaltButton;
 bool PartyTime = false;
+bool Halt = false;
 CCAN_MSG_OBJ_T msg_obj;
 
 //data delay
@@ -166,8 +171,8 @@ const uint32_t RTCOscRateIn = 32768;
 
 void Party() {
 	
-		msg_obj.msgobj = Party_MESSAGE;     //__COUNTER__;
-		msg_obj.mode_id = Party_ADDRESS;
+		msg_obj.msgobj = PARTY_MESSAGE;     //__COUNTER__;
+		msg_obj.mode_id = PARTY_ADDRESS;
 		msg_obj.mask = 0x0;
 		msg_obj.dlc = 1;
 		msg_obj.data[0] = true;
@@ -179,6 +184,19 @@ void Party() {
 	PartyTime = false;
 
 }
+void Stahp() {
+	msg_obj.msgobj = STAHP_MESSAGE;     //__COUNTER__;
+	msg_obj.mode_id = STAHP_ADDRESS;
+	msg_obj.mask = 0x0;
+	msg_obj.dlc = 1;
+	msg_obj.data[0] = true;
+	LPC_CCAN_API->can_transmit(&msg_obj);
+
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 0);
+	Delay(100);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 1);
+	Halt = false;
+}
 void partycheck() {
 	if (!PartyTime) {
 		PartyButton = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 7);
@@ -187,6 +205,13 @@ void partycheck() {
 	}
 }
 
+void haltcheck() {
+	if (!Halt) {
+		HaltButton = Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);
+		Halt = !HaltButton;
+
+	}
+}
 
 void Blink(int ms, int nr, int LED) {
 	if (!Running[nr]) {
@@ -225,12 +250,18 @@ int main()
 	SysTick_Config(SystemCoreClock / 1000);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 1, 1 << 10 | 1 << 11);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 7);
+	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 1, 1 << 4);
 	for (;;)
 	{
 		Blink(500, 1, 1);
 		partycheck();
+		haltcheck();
 		if (PartyTime) {
 			Party();
+		}
+		if (Halt) {
+			Stahp();
+
 		}
 
 	}

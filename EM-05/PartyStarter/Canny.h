@@ -4,7 +4,7 @@
 #include <chip.h>
 #define DEVICE_NR			1
 #define ALL_ADDRESS			0x000
-#define Party_ADDRESS		0x001
+#define PARTY_ADDRESS		0x001
 #define	PERSNOAL_MESSAGE	6
 #define	ALL_MESSAGE			1
 #define	TOTAL_MESSAGE		8

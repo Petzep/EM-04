@@ -1,27 +1,30 @@
 #include <chip.h>
 //#include "Cannedy.h"
+#define	EM_04_CAN_RANGE		0x100
+#define ALL_ADDRESS			(EM_04_CAN_RANGE+0x001)
+#define PARTY_ADDRESS		(EM_04_CAN_RANGE+0x002)
+#define STAHP_ADDRESS		(EM_04_CAN_RANGE+0x003)
 #define DEVICE_NR			2
-#define ALL_ADDRESS			0x000
-#define Party_ADDRESS		0x001
 #define	PERSNOAL_MESSAGE	6
 #define	ALL_MESSAGE			1
 #define	TOTAL_MESSAGE		8
-#define Party_MESSAGE		2
+#define PARTY_MESSAGE		2
+#define STAHP_MESSAGE		3
 CCAN_MSG_OBJ_T msg_obj;
 bool Button = true;
-
+bool stahp = false;
 
 //data delay
 bool Running[8];
-unsigned long Time[8];
+volatile unsigned long Time[8];
 //LED states
 bool LEDstate[8];
-
+volatile int i = 0;
 
 
 void party(void) {										//please don't use during work hours
-
-	for (int banana = 0; banana<60; banana++) {
+	
+	for (int banana=0;banana<200;banana++) {
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
 		Delay(50);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, false);
@@ -34,6 +37,7 @@ void party(void) {										//please don't use during work hours
 		Delay(50);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
 		Delay(50);
+		if (stahp) { break;}
 	}
 }
 
@@ -100,10 +104,17 @@ void CAN_init() {
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 	
-	msg_obj.msgobj = Party_MESSAGE;
-	msg_obj.mode_id = Party_ADDRESS;
+	msg_obj.msgobj = PARTY_MESSAGE;
+	msg_obj.mode_id = PARTY_ADDRESS;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+	msg_obj.msgobj = STAHP_MESSAGE;
+	msg_obj.mode_id = STAHP_ADDRESS;
+	msg_obj.mask = 0xFFF;
+	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
+
+
 
 
 	/*
@@ -131,7 +142,7 @@ void CAN_init() {
 
 void CAN_rx(uint8_t msg_obj_num) {
 	// Disable interupts while receiving
-	//NVIC_DisableIRQ(CAN_IRQn);  
+	NVIC_DisableIRQ(CAN_IRQn);  
 	/* Determine which CAN message has been received */
 	msg_obj.msgobj = msg_obj_num;
 
@@ -140,12 +151,16 @@ void CAN_rx(uint8_t msg_obj_num) {
 	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
-		if (msg_obj_num == Party_MESSAGE)
+		if (msg_obj_num == PARTY_MESSAGE)
 		{
-			 Button = false;
+			stahp = false;
+			Button = false;
 		
 		}
 
+		if (msg_obj_num == STAHP_MESSAGE) {
+			stahp = true;
+		}
 
 		// Turn on the yellow led and Enable timer interrupt
 		//Chip_GPIO_WritePortBit(LPC_GPIO, 2, 10, true); //led 2 (yellow)
@@ -172,7 +187,7 @@ void CAN_error(uint32_t error_info) {
 
 volatile unsigned long SysTickCnt;
 
-volatile static int i = 0;
+
 #ifdef __cplusplus
 extern "C"
 #endif
@@ -217,7 +232,7 @@ void ToggleLED(int LED) {
 
 void Butt(void) {
 	if (Button) {
-		Button = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 1);
+		//Button = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 1);
 	}
 	if (!Button) {
 		party();
@@ -250,10 +265,7 @@ Funcdatabase(int Func) {
 	case 3:
 		ToggleLED(3);
 		break;
-		//case 4:
-		//TIMER_PWMUpdate(0);
-		//break;
-	case 6:
+	case 4:
 		i++;
 		break;
 	}
@@ -313,15 +325,14 @@ int main()
 		fDelay(250, 1, 1);
 		fDelay(900, 2, 2);
 		fDelay(3300, 3, 3);
-		fDelay(4000, 6, 6);
+		fDelay(4000, 0, 4);
 		Butt();
-
-		//i++;
+		
 		
 		if (i > 150) {
 			party();
 			i = 0;
-
+		
 		}
 		
 	}
