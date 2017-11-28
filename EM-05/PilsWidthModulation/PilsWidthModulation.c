@@ -16,6 +16,7 @@ bool PartyTime = false;
 bool Halt = false;
 CCAN_MSG_OBJ_T msg_obj;
 bool colour = true;
+uint8_t colouur = 0;
 #define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
 #define PWM_PRESCALER ((unsigned long)SystemCoreClock / (unsigned long)PWM_FREQ_RESHZ)
 
@@ -147,6 +148,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 		if (msg_obj_num == PARTY_MESSAGE)
 		{
 			colour = true;
+			colouur = msg_obj.data[0];
 
 		}
 
@@ -249,7 +251,7 @@ int main()
 		Delay(30);
 		if (colour) {
 			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
-			PWMUpdate(20);
+			PWMUpdate(colouur);
 				}
 		else {
 			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
