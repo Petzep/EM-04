@@ -1,5 +1,5 @@
 #include <chip.h>
-//#include "Cannedy.h"
+
 #define	EM_04_CAN_RANGE		0x100
 #define ALL_ADDRESS			(EM_04_CAN_RANGE+0x001)
 #define PARTY_ADDRESS		(EM_04_CAN_RANGE+0x002)
@@ -10,47 +10,43 @@
 #define	TOTAL_MESSAGE		8
 #define PARTY_MESSAGE		2
 #define STAHP_MESSAGE		3
+bool PartyButton;
+bool HaltButton;
+bool PartyTime = false;
+bool Halt = false;
 CCAN_MSG_OBJ_T msg_obj;
-bool Button = true;
-bool stahp = false;
+bool colour = true;
+#define PWM_FREQ_RESHZ (100000)//Divider to system clock to get PWM prescale value
+#define PWM_PRESCALER ((unsigned long)SystemCoreClock / (unsigned long)PWM_FREQ_RESHZ)
 
-//data delay
-bool Running[8];
-volatile unsigned long Time[8];
-//LED states
-bool LEDstate[8];
-volatile int i = 0;
+#define PWM_PERIOD_HZ (25000)
+#define PWM_PERIOD_COUNT (PWM_FREQ_RESHZ / PWM_PERIOD_HZ)
+#define PWM_DC_COUNT(a) ( (((101-a) * PWM_PERIOD_COUNT) / 100) )
 
+void PWMUpdate(unsigned char ucPercent)
+{
+		Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(ucPercent));
 
-void party(void) {										//please don't use during work hours
+}
+
+void TIMER16_0_IRQHandler(void)
+{
+	if (Chip_TIMER_MatchPending(LPC_TIMER16_0, 0))
+	{
 	
-	for (int banana=0;banana<200;banana++) {
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
-		Delay(50);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, false);
-		Delay(50);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-		Delay(50);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, false);
-		Delay(50);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, false);
+		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 0);
+	}
+	else if (Chip_TIMER_MatchPending(LPC_TIMER16_0, 1))
+	{
+		//Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
+		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
 		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, true);
-		Delay(50);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
-		Delay(50);
-		if (stahp) { break;}
+		Chip_TIMER_ClearMatch(LPC_TIMER16_0, 1);
 	}
 }
 
-
-/**
-* @brief	CCAN Interrupt Handler
-* @return	Nothing
-* @note	The CCAN interrupt handler must be provided by the user application.
-*	It's function is to call the isr() API located in the ROM
-*/
-void CAN_IRQHandler(void) {
-	LPC_CCAN_API->isr();
-}
 
 void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg) {
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
@@ -77,14 +73,11 @@ void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg) {
 	}
 }
 
+
 void CAN_rx(uint8_t msg_obj_num);
 void CAN_tx(uint8_t msg_obj_num);
 void CAN_error(uint32_t error_info);
 
-
-
-/* CAN Initialise */
-/* Initialises the CAN and configures the filters*/
 void CAN_init() {
 	/* Publish CAN Callback Functions */
 	CCAN_CALLBACKS_T callbacks = { CAN_rx, CAN_tx, CAN_error, NULL, NULL, NULL,
@@ -103,7 +96,7 @@ void CAN_init() {
 	msg_obj.mode_id = ALL_ADDRESS;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
-	
+
 	msg_obj.msgobj = PARTY_MESSAGE;
 	msg_obj.mode_id = PARTY_ADDRESS;
 	msg_obj.mask = 0xFFF;
@@ -142,7 +135,7 @@ void CAN_init() {
 
 void CAN_rx(uint8_t msg_obj_num) {
 	// Disable interupts while receiving
-	NVIC_DisableIRQ(CAN_IRQn);  
+	NVIC_DisableIRQ(CAN_IRQn);
 	/* Determine which CAN message has been received */
 	msg_obj.msgobj = msg_obj_num;
 
@@ -153,13 +146,12 @@ void CAN_rx(uint8_t msg_obj_num) {
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
 		if (msg_obj_num == PARTY_MESSAGE)
 		{
-			stahp = false;
-			Button = false;
-		
+			colour = true;
+
 		}
 
 		if (msg_obj_num == STAHP_MESSAGE) {
-			stahp = true;
+			colour = false;
 		}
 
 		// Turn on the yellow led and Enable timer interrupt
@@ -184,11 +176,11 @@ void CAN_error(uint32_t error_info) {
 	//Chip_GPIO_WritePortBit(LPC_GPIO, 2, 2, true); //led 3 (red)
 
 }
+
 void CAN_IRQHandler(void) {
 	LPC_CCAN_API->isr();
 }
 volatile unsigned long SysTickCnt;
-
 
 #ifdef __cplusplus
 extern "C"
@@ -206,74 +198,6 @@ void Delay(unsigned long tick)
 	while ((SysTickCnt - systickcnt) < tick);
 }
 
-void Blink(int ms, int nr, int LED) {
-	if (!Running[nr]) {
-		Time[nr] = SysTickCnt;
-		Running[nr] = true;
-	}
-	if ((SysTickCnt - Time[nr]) > ms) {
-		ToggleLED(LED);
-		Running[nr] = false;
-	}
-}
-
-void ToggleLED(int LED) {
-	LEDstate[LED] = !LEDstate[LED];
-
-
-	if (LED == 1) {
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, LEDstate[LED]);
-	}
-	if (LED == 2) {
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, LEDstate[LED]);
-	}
-	if (LED == 3) {
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, LEDstate[LED]);
-	}
-}
-
-void Butt(void) {
-	if (Button) {
-		//Button = Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 1);
-	}
-	if (!Button) {
-		party();
-		i = 0;
-		Button = true;
-
-	}
-}
-
-void fDelay(int ms, int nr, int Func) {
-	if (!Running[nr]) {
-		Time[nr] = SysTickCnt;
-		Running[nr] = true;
-	}
-	if ((SysTickCnt - Time[nr]) > ms) {
-		Funcdatabase(Func);
-		Running[nr] = false;
-	}
-
-}
-
-Funcdatabase(int Func) {
-	switch (Func) {
-	case 1:
-		ToggleLED(1);
-		break;
-	case 2:
-		ToggleLED(2);
-		break;
-	case 3:
-		ToggleLED(3);
-		break;
-	case 4:
-		i++;
-		break;
-	}
-
-}
-
 const uint32_t ExtRateIn = 0;
 const uint32_t OscRateIn = 12000000;
 const uint32_t RTCOscRateIn = 32768;
@@ -282,61 +206,55 @@ const uint32_t RTCOscRateIn = 32768;
 #define LPC_GPIO LPC_GPIO_PORT
 #endif
 
-
-
-
-
-
 int main()
 {
 	CAN_init();
+
+	//Enable timer 0 & 1 clock 
+	Chip_TIMER_Init(LPC_TIMER16_0);
+	//Reset any timer pending
+	Chip_TIMER_Reset(LPC_TIMER16_0);
+	//set the resolution of the ticks to the PWM timer (match register resolution)
+	Chip_TIMER_PrescaleSet(LPC_TIMER16_0, (PWM_PRESCALER - 1));
+	//Set duty cycle - MR0 default
+	Chip_TIMER_SetMatch(LPC_TIMER16_0, 0, PWM_DC_COUNT(0));
+	//Enable interupt on MR0 & MR1
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 0);
+	Chip_TIMER_MatchEnableInt(LPC_TIMER16_0, 1);
+	//MR0 should not stop or clear the timer
+	Chip_TIMER_ResetOnMatchDisable(LPC_TIMER16_0, 0);
+	//Set period - MR1
+	Chip_TIMER_SetMatch(LPC_TIMER16_0, 1, PWM_PERIOD_COUNT);
+	//MR1 should reset the timer to restart the cycle
+	Chip_TIMER_ResetOnMatchEnable(LPC_TIMER16_0, 1);
+	//Enable the timer
+	Chip_TIMER_Enable(LPC_TIMER16_0);
+	// PWM mode enabled on CT32B0_MAT0
+	((LPC_TIMER_T *)LPC_TIMER16_0)->PWMC = 1;
+	/* Enable timer interrupt */
+	NVIC_ClearPendingIRQ(TIMER_16_0_IRQn);
+	NVIC_EnableIRQ(TIMER_16_0_IRQn);
+
+
 	SystemCoreClockUpdate();
 	Chip_GPIO_Init(LPC_GPIO);
 	
 	SysTick_Config(SystemCoreClock / 1000);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9);
-	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 1);
-	
-	for (int p = 0; p < 7; p++) {
-		Running[p] = false;
-		Time[p] = 0;
 
-	}
-
-
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, false);
-	Delay(500);
-	Butt();
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
-	Delay(500);
-	Butt();
 	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
-	Delay(300);
-	Butt();
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-	Delay(300);
-	Butt();
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
-	Delay(600);
-	Butt();
-	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-	Delay(600);
-	
+	PWMUpdate(20);
 	for (;;)
 	{
-		fDelay(250, 1, 1);
-		fDelay(900, 2, 2);
-		fDelay(3300, 3, 3);
-		fDelay(4000, 0, 4);
-		Butt();
-		
-		
-		if (i > 150) {
-			party();
-			i = 0;
-		
+		Delay(30);
+		if (colour) {
+			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, false);
+			PWMUpdate(20);
+				}
+		else {
+			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
+			PWMUpdate(0);
 		}
-		
 	}
 
 	return 0;

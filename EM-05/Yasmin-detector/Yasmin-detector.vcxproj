@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{08B91F23-86BE-4ADF-B5C2-0D61E081471E}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeIncludeSearchPath>..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\RTOS;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpcusbsio;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_110x;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_1125;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11axx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11cxx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11exx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11uxx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11xxlv;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom;..\..\EmbeddedBSPs\Common;c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0;c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\arm-eabi\thumb\cortex_m0;c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\backward;c:\sysgcc\arm-eabi\lib\gcc\arm-eabi\7.2.0\include;c:\sysgcc\arm-eabi\lib\gcc\arm-eabi\7.2.0\include-fixed;c:\sysgcc\arm-eabi\arm-eabi\sys-include;c:\sysgcc\arm-eabi\arm-eabi\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(ProjectDir)\gcc_Debug.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakePreprocessorDefinitions>__VisualGDB_CFG_Debug;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
+    <NMakeOutput>$(ProjectDir)Yasmin-detector-Debug.vgdbsettings</NMakeOutput>
+    <IncludePath />
+    <ReferencePath />
+    <LibraryPath />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeIncludeSearchPath>..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\RTOS;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpcusbsio;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_110x;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_1125;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11axx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11cxx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11exx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11uxx;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11xxlv;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common;..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom;..\..\EmbeddedBSPs\Common;c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0;c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\arm-eabi\thumb\cortex_m0;c:\sysgcc\arm-eabi\arm-eabi\include\c++\7.2.0\backward;c:\sysgcc\arm-eabi\lib\gcc\arm-eabi\7.2.0\include;c:\sysgcc\arm-eabi\lib\gcc\arm-eabi\7.2.0\include-fixed;c:\sysgcc\arm-eabi\arm-eabi\sys-include;c:\sysgcc\arm-eabi\arm-eabi\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(ProjectDir)\gcc_Release.h;$(VISUALGDB_DIR)\gcc_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakePreprocessorDefinitions>__VisualGDB_CFG_Release;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
+    <NMakeOutput>$(ProjectDir)Yasmin-detector-Release.vgdbsettings</NMakeOutput>
+    <IncludePath />
+    <ReferencePath />
+    <LibraryPath />
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\EmbeddedBSPs\Common\startup.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\acmp_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_1125.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\chip_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\clock_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\dac_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpiogroup_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_1.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_2.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2cm_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2c_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\iocon_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pinint_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pmu_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\ssp_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\sysctl_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\sysinit_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\timer_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\uart_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.c" />
+    <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c" />
+    <ClCompile Include="Pot-meter.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="debug.mak" />
+    <None Include="Makefile" />
+    <None Include="nxp_lpc.mak" />
+    <None Include="release.mak" />
+    <None Include="Yasmin-detector-Debug.vgdbsettings" />
+    <None Include="Yasmin-detector-Release.vgdbsettings" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\EmbeddedBSPs\Common\sys_config.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\arm_common_tables.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\arm_math.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm0.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm0plus.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm3.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm4.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cm4_simd.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cmFunc.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_cmInstr.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_sc000.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\core_sc300.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\RTOS\cmsis_os.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpcusbsio\lpcusbsio_i2c.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\acmp_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_1125.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\adc_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\ccand_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\chip.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\clock_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\cmsis.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_110x\cmsis_110x.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_1125\cmsis_1125.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11axx\cmsis_11axx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11cxx\cmsis_11cxx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11exx\cmsis_11exx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11uxx\cmsis_11uxx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11xxlv\cmsis_11lvxx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\dac_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\fmc_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpiogroup_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_1.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\gpio_11xx_2.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2cm_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2c_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\i2c_common_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\iocon_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pinint_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\pmu_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\romapi_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\ssp_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\sysctl_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\timer_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\uart_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\usbd_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\error.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\lpc_types.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_audio.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_cdc.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_cdcuser.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_core.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_desc.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_dfu.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_dfuuser.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_hid.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_hiduser.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_hw.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_msc.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_mscuser.h" />
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_rom_api.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="nxp_lpc.xml" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
