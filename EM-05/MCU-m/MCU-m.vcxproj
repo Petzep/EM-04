@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{026C95D5-EEEB-4349-AB23-02DE3E7A35BC}</ProjectGuid>
-    <ProjectName>MCU-Chicken_nugget_beer</ProjectName>
+    <ProjectGuid>{253071E4-6D5B-4500-A177-BD4B0DE9B8C7}</ProjectGuid>
+    <ProjectName>MCU-Mowgli</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -44,7 +44,7 @@
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
-    <NMakeOutput>$(ProjectDir)MCU-C-Debug.vgdbsettings</NMakeOutput>
+    <NMakeOutput>$(ProjectDir)MCU-m-Debug.vgdbsettings</NMakeOutput>
     <IncludePath />
     <ReferencePath />
     <LibraryPath />
@@ -56,7 +56,7 @@
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /rebuild "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeReBuildCommandLine>
-    <NMakeOutput>$(ProjectDir)MCU-C-Release.vgdbsettings</NMakeOutput>
+    <NMakeOutput>$(ProjectDir)MCU-m-Release.vgdbsettings</NMakeOutput>
     <IncludePath />
     <ReferencePath />
     <LibraryPath />
@@ -87,13 +87,13 @@
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.c" />
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.c" />
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c" />
-    <ClCompile Include="MCU-Chicken_nugget_beer.c" />
+    <ClCompile Include="MCU-Mowgli.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="debug.mak" />
     <None Include="Makefile" />
-    <None Include="MCU-C-Debug.vgdbsettings" />
-    <None Include="MCU-C-Release.vgdbsettings" />
+    <None Include="MCU-m-Debug.vgdbsettings" />
+    <None Include="MCU-m-Release.vgdbsettings" />
     <None Include="nxp_lpc.mak" />
     <None Include="release.mak" />
   </ItemGroup>

@@ -2,30 +2,30 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source files">
-      <UniqueIdentifier>{cb080d79-6a5d-4bb0-b9a7-e6524b83d17d}</UniqueIdentifier>
+      <UniqueIdentifier>{5cc4c5c3-054a-4671-a654-8f86917b7fe3}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Header files">
-      <UniqueIdentifier>{c0373c26-4a74-4c89-abaa-c721a3729224}</UniqueIdentifier>
+      <UniqueIdentifier>{38c03b53-3220-4868-8d70-6695e7d98077}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource files">
-      <UniqueIdentifier>{801e5627-353d-4319-b4a8-e6e4647f9ead}</UniqueIdentifier>
+      <UniqueIdentifier>{6c0a3b11-00c6-4656-abfb-ad5d1488c34a}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
     <Filter Include="Make files">
-      <UniqueIdentifier>{f13c64e4-4320-4add-9cee-fa2165bf0601}</UniqueIdentifier>
+      <UniqueIdentifier>{89b5d3c7-d2d6-4928-800b-cfc3f6793a41}</UniqueIdentifier>
       <Extensions>*.mak</Extensions>
     </Filter>
     <Filter Include="VisualGDB settings">
-      <UniqueIdentifier>{cc663227-c723-4eb3-94e9-7e06061f407a}</UniqueIdentifier>
+      <UniqueIdentifier>{743fb030-8075-4289-9524-aaaf7fefeab2}</UniqueIdentifier>
       <Extensions>*.vgdbsettings</Extensions>
     </Filter>
     <Filter Include="Source files\Device-specific files">
-      <UniqueIdentifier>{2a454419-f040-46e5-adce-18c9e7b05b11}</UniqueIdentifier>
+      <UniqueIdentifier>{1651e69f-f894-41b0-a2b3-e29cfb28d3ce}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header files\Device-specific files">
-      <UniqueIdentifier>{018eaa69-2194-44b0-8296-0e71332582a5}</UniqueIdentifier>
+      <UniqueIdentifier>{d2c9faa8-bcc9-479b-bfb7-947f3756d7f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +98,7 @@
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
-    <ClCompile Include="MCU-Chicken_nugget_beer.c">
+    <ClCompile Include="MCU-Mowgli.c">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,13 +107,13 @@
     <None Include="debug.mak">
       <Filter>Make files</Filter>
     </None>
-    <None Include="MCU-C-Debug.vgdbsettings">
+    <None Include="MCU-m-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="release.mak">
       <Filter>Make files</Filter>
     </None>
-    <None Include="MCU-C-Release.vgdbsettings">
+    <None Include="MCU-m-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="nxp_lpc.mak">
