@@ -27,7 +27,7 @@ LINUX_PACKAGES +=
 CFLAGS += 
 CXXFLAGS += 
 ASFLAGS += 
-LDFLAGS +=  
+LDFLAGS += --specs=nano.specs --specs=nosys.specs
 COMMONFLAGS += -mcpu=cortex-m0 -mthumb
 LINKER_SCRIPT := $(BSP_ROOT)/LPC11xx/LinkerScripts/LPC11C24_flash.lds
 

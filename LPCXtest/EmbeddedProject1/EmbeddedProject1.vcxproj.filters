@@ -2,35 +2,35 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source files">
-      <UniqueIdentifier>{d2726198-ed20-4485-894c-6a19f9d573ee}</UniqueIdentifier>
+      <UniqueIdentifier>{bbf05e63-6c4a-415f-8d66-c5a24b3c54aa}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Header files">
-      <UniqueIdentifier>{3dcda833-83f6-476d-920b-ce2d96c084fb}</UniqueIdentifier>
+      <UniqueIdentifier>{37172642-e0db-431b-b49e-4dc15505a8f5}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource files">
-      <UniqueIdentifier>{6afdec9d-1aab-4880-9b08-a3d1c7326408}</UniqueIdentifier>
+      <UniqueIdentifier>{b5d0af87-0dbd-41ef-8874-45dd944d5c08}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
     <Filter Include="Make files">
-      <UniqueIdentifier>{bcc8918e-b2ac-4237-95a1-ac2142362026}</UniqueIdentifier>
+      <UniqueIdentifier>{db590228-a3ee-4e1c-8a71-aa127d287284}</UniqueIdentifier>
       <Extensions>*.mak</Extensions>
     </Filter>
     <Filter Include="VisualGDB settings">
-      <UniqueIdentifier>{cf465283-7276-44dd-8819-1f07806d19ec}</UniqueIdentifier>
+      <UniqueIdentifier>{45921e83-dd02-4bc4-92b2-618212c75292}</UniqueIdentifier>
       <Extensions>*.vgdbsettings</Extensions>
     </Filter>
     <Filter Include="Source files\Device-specific files">
-      <UniqueIdentifier>{2d418167-edf2-4ea0-9664-43cd9eb4e5d0}</UniqueIdentifier>
+      <UniqueIdentifier>{9faa46fa-c1b0-447f-9376-bb1bfa3b807c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header files\Device-specific files">
-      <UniqueIdentifier>{f2dcb7c5-c1f9-4c19-850e-5a77f74721ac}</UniqueIdentifier>
+      <UniqueIdentifier>{217d1eb6-b1a3-4452-a4ef-447455e35a01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\EmbeddedBSPs\Common\startup.c">
-      <Filter>Source files\Device-specific files</Filter>
+    <ClCompile Include="LEDBlink.c">
+      <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\acmp_11xx.c">
       <Filter>Source files\Device-specific files</Filter>
@@ -95,35 +95,32 @@
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\ring_buffer.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\EmbeddedBSPs\Common\startup.c">
+      <Filter>Source files\Device-specific files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\EmbeddedBSPs\LPC11xx\StartupFiles\CHIP_LPC11CXX_cr_startup_lpc11xx.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
-    <ClCompile Include="EM4_CAN_OUT.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Makefile" />
     <None Include="debug.mak">
       <Filter>Make files</Filter>
     </None>
-    <None Include="EM4_CAN_OUT-Debug.vgdbsettings">
+    <None Include="EmbeddedProject1-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="release.mak">
       <Filter>Make files</Filter>
     </None>
-    <None Include="EM4_CAN_OUT-Release.vgdbsettings">
+    <None Include="EmbeddedProject1-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="nxp_lpc.mak">
       <Filter>Source files\Device-specific files</Filter>
     </None>
-    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\EmbeddedBSPs\Common\sys_config.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\CMSIS\CMSIS\Include\arm_common_tables.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
@@ -184,27 +181,6 @@
     <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\cmsis.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_110x\cmsis_110x.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_1125\cmsis_1125.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11axx\cmsis_11axx.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11cxx\cmsis_11cxx.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11exx\cmsis_11exx.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11uxx\cmsis_11uxx.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11xxlv\cmsis_11lvxx.h">
-      <Filter>Header files\Device-specific files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\dac_11xx.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
@@ -259,6 +235,27 @@
     <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\wwdt_11xx.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_110x\cmsis_110x.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_1125\cmsis_1125.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11axx\cmsis_11axx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11cxx\cmsis_11cxx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11exx\cmsis_11exx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11uxx\cmsis_11uxx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_11xx\config_11xxlv\cmsis_11lvxx.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\chip_common\error.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\EmbeddedBSPs\LPC11xx\lpc_chip\lpc_chip\usbd_rom\usbd_rom_api.h">
+      <Filter>Header files\Device-specific files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\EmbeddedBSPs\Common\sys_config.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
   </ItemGroup>

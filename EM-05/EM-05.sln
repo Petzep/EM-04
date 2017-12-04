@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "partymodule", "partymodule\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PartyStarter", "PartyStarter\PartyStarter.vcxproj", "{C1D357D4-0BDD-4A3F-AF27-6463C549A589}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCU-la", "MCU-la\MCU-la.vcxproj", "{3B6CA624-3E50-42E2-9280-57030992263F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -32,6 +34,12 @@ Global
 		{C1D357D4-0BDD-4A3F-AF27-6463C549A589}.Release|x64.ActiveCfg = Release|Win32
 		{C1D357D4-0BDD-4A3F-AF27-6463C549A589}.Release|x86.ActiveCfg = Release|Win32
 		{C1D357D4-0BDD-4A3F-AF27-6463C549A589}.Release|x86.Build.0 = Release|Win32
+		{3B6CA624-3E50-42E2-9280-57030992263F}.Debug|x64.ActiveCfg = Debug|Win32
+		{3B6CA624-3E50-42E2-9280-57030992263F}.Debug|x86.ActiveCfg = Debug|Win32
+		{3B6CA624-3E50-42E2-9280-57030992263F}.Debug|x86.Build.0 = Debug|Win32
+		{3B6CA624-3E50-42E2-9280-57030992263F}.Release|x64.ActiveCfg = Release|Win32
+		{3B6CA624-3E50-42E2-9280-57030992263F}.Release|x86.ActiveCfg = Release|Win32
+		{3B6CA624-3E50-42E2-9280-57030992263F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
