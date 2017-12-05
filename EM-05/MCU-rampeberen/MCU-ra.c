@@ -98,7 +98,7 @@ void CAN_rx(uint8_t msg_obj_num) {
 	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
-		
+
 		if (msg_obj_num == LIGHT_MESSAGE)
 		{
 			if (msg_obj.data[0] || msg_obj.data[1] || msg_obj.data[2])
@@ -107,10 +107,10 @@ void CAN_rx(uint8_t msg_obj_num) {
 			}
 			else
 			{
-				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);				
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
 			}
-			
-			if (msg_obj.data[3])
+
+			if (msg_obj.data[4])
 			{
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, false);
 			}
@@ -118,9 +118,9 @@ void CAN_rx(uint8_t msg_obj_num) {
 			{
 				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
 			}
-			
+
 			//Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, msg_obj.data[3]);
-			 Button = false;
+			Button = false;
 		}
 
 
@@ -181,16 +181,16 @@ int main()
 	CAN_init();
 	SystemCoreClockUpdate();
 	Chip_GPIO_Init(LPC_GPIO);
-	
+
 	SysTick_Config(SystemCoreClock / 1000);
 	Chip_GPIO_SetPortDIROutput(LPC_GPIO, 0, 1 << 7 | 1 << 8 | 1 << 9);
 	Chip_GPIO_SetPortDIRInput(LPC_GPIO, 0, 1 << 1);
-	
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
-		Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, true);
-	
-	
+
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 7, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, true);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, true);
+
+
 	for (;;)
 	{
 		Delay(1);
