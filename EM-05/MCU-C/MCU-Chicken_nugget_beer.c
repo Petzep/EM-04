@@ -2,25 +2,32 @@
 
 #define	EM_05_CAN_RANGE		0x100
 #define CENTRAL_ADDRESS		(EM_05_CAN_RANGE+0x001)
-#define LIGHT1_ADDRESS		(EM_05_CAN_RANGE+0x002)
-#define LIGHT2_ADDRESS		(EM_05_CAN_RANGE+0x003)
-#define LIGHT3_ADDRESS		(EM_05_CAN_RANGE+0x004)
-#define LIGHT4_ADDRESS		(EM_05_CAN_RANGE+0x005)
+#define LIGHT_ADDRESS		(EM_05_CAN_RANGE+0x002)
+#define BLOWER_ADDRESS		(EM_05_CAN_RANGE+0x003)
 #define TORADEX_ADDRESS		(EM_05_CAN_RANGE+0x006)
 
 #define CENTRAL_MESSAGE		1
 #define LIGHT_MESSAGE		2
 #define TORADEX_MESSAGE		3
+#define	BLOWER_MESSAGE		4
 #define	TOTAL_MESSAGE		8
-
 CCAN_MSG_OBJ_T msg_obj;
 bool Light[8];
 bool measureLight[8];
 bool knipperend[3];
 bool LightChange = true;
+bool Blowchange = true;
+
+bool wiper_button;
+bool wiper;
+bool spuit_button;
+bool spuit;
+bool n00tn00t_button;
+bool n00tn00t;
 int Time = 0;
 int knipperjob;
 /*
+	Licht data
 0	stadslicht
 1	dimlicht
 2	groot licht
@@ -31,9 +38,24 @@ int knipperjob;
 7
 */
 
+/*
+	Voorruit data
+0	spuit
+1	whiper
+2	toeter
+3	blower
+
+
+*/
+
 volatile unsigned long SysTickCnt;
 volatile unsigned long Knipper = 0;
 bool knipper = 0;
+static ADC_CLOCK_SETUP_T ADCSetup;
+uint16_t dataADC1 = 0; //ADCdata1
+uint16_t dataADC2 = 0; //ADCdata2
+uint8_t	 blowjob = 0; // how hard to suck it
+Status status;
 #ifdef __cplusplus
 extern "C"
 #endif
@@ -148,7 +170,7 @@ void CAN_init() {
 void SendLight() {
 	
 	msg_obj.msgobj = LIGHT_MESSAGE;     //__COUNTER__;
-	msg_obj.mode_id = LIGHT3_ADDRESS;
+	msg_obj.mode_id = LIGHT_ADDRESS;
 	msg_obj.mask = 0x0;
 	msg_obj.dlc = 5;
 	msg_obj.data[0] = Light[0];
@@ -159,10 +181,25 @@ void SendLight() {
 	LPC_CCAN_API->can_transmit(&msg_obj);
 
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 0);
-	Delay(100);
+	Delay(50);
 	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 1);
 }
 
+void SendBobsandVagene() {
+	msg_obj.msgobj = BLOWER_MESSAGE;     //__COUNTER__;
+	msg_obj.mode_id = BLOWER_ADDRESS;
+	msg_obj.mask = 0x0;
+	msg_obj.dlc = 4;
+	msg_obj.data[0] = spuit;
+	msg_obj.data[1] = wiper;
+	blowjob = dataADC2 / 10;
+	msg_obj.data[3] = blowjob;
+	LPC_CCAN_API->can_transmit(&msg_obj);
+
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 0);
+	Delay(50);
+	Chip_GPIO_WritePortBit(LPC_GPIO, 1, 11, 1);
+}
 
 int main()
 {
@@ -181,13 +218,22 @@ int main()
 	for (int i = 0; i <= 7; i++) {
 		measureLight[i] = false;
 	}
+
+	Chip_ADC_Init(LPC_ADC, &ADCSetup);
+	Chip_ADC_SetBurstCmd(LPC_ADC, true);
+
+	//Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO1_1, FUNC2); //ADC2
+	Chip_IOCON_PinMuxSet(LPC_IOCON, IOCON_PIO0_11, FUNC2);	//port 0 pin 11
+	Chip_ADC_EnableChannel(LPC_ADC, ADC_CH0, ENABLE);					// channel of P0pin11
+	Chip_ADC_SetStartMode(LPC_ADC, ADC_START_NOW, ADC_TRIGGERMODE_RISING);
+
 	for (;;)
 	{
 		measureLight[0] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 2);	//stadlicht
 		measureLight[1] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 6);	//dimlicht
 		measureLight[2] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8);	//grootlicht
 		measureLight[3] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 9);	//richting links
-		measureLight[4] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 11);	//richting rechts
+		measureLight[4] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 1, 4);	//richting rechts
 		measureLight[5] = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 7);	//ALARM ERROR STREEEEEEEEESSSS WAAAAAAAAAAAAAAH
 
 		
@@ -240,19 +286,58 @@ int main()
 			LightChange = true;
 		}
 		
+
 		
+		for (int i = 0; i < 500000; i++) {
+			if (Chip_ADC_ReadStatus(LPC_ADC, ADC_CH0, ADC_DR_DONE_STAT) == SET) {
+				break;
+			}
+		}
+		//Read ADC value
+		Chip_ADC_ReadValue(LPC_ADC, ADC_CH0, &dataADC1);
+		status = Chip_ADC_ReadValue(LPC_ADC, ADC_CH0, &dataADC1);
 
-
-		if (LightChange || (Time > 1000))
-		{	
+		if ((dataADC1+40 < dataADC2 ) || (dataADC1-40 > dataADC2)) {
+			dataADC2 = dataADC1;
+			Blowchange = true;
+		}
+		wiper_button = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 8);	//ruitenwisser
+		spuit_button = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 9);	//sproeier
+		n00tn00t_button = !Chip_GPIO_ReadPortBit(LPC_GPIO, 0, 9);	//Claxoon/toeter/n00tn00t
+		if (wiper != wiper_button) {
+			wiper = wiper_button;
+			Blowchange = true;
+		}
+		if (spuit != spuit_button) {
+			spuit = spuit_button;
+			Blowchange = true;
+		}
+		if (n00tn00t != n00tn00t_button) {
+			n00tn00t = n00tn00t_button;
+			Blowchange = true;
+		}
+		
+		
+		if (Time > 1000)
+		{
+			dataADC2 = dataADC1;
+			Blowchange = false;
 			LightChange = false;
-			SendLight();
 			Time = 0;
-			
+			SendBobsandVagene();
+			SendLight();
 		}
 
-		
-
+		if (Blowchange)
+		{
+			Blowchange = false;
+			SendBobsandVagene();
+		}
+		if (LightChange)
+		{
+			LightChange = false;
+			SendLight();
+	}
 	}
 
 	return 0;

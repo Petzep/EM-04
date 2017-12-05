@@ -2,18 +2,27 @@
 
 #define	EM_05_CAN_RANGE		0x100
 #define CENTRAL_ADDRESS		(EM_05_CAN_RANGE+0x001)
-#define LIGHT1_ADDRESS		(EM_05_CAN_RANGE+0x002)
-#define LIGHT2_ADDRESS		(EM_05_CAN_RANGE+0x003)
+#define LIGHT_ADDRESS		(EM_05_CAN_RANGE+0x002)
+//#define LIGHT2_ADDRESS		(EM_05_CAN_RANGE+0x003)
+#define BLOWER_ADDRESS		(EM_05_CAN_RANGE+0x003)
 #define LIGHT3_ADDRESS		(EM_05_CAN_RANGE+0x004)
-#define LIGHT4_ADDRESS		(EM_05_CAN_RANGE+0x005)
+//#define LIGHT4_ADDRESS		(EM_05_CAN_RANGE+0x005)
 #define TORADEX_ADDRESS		(EM_05_CAN_RANGE+0x006)
-#define VOORRUIT_ADDRESS	(EM_05_CAN_RANGE+0x007)
 
 #define CENTRAL_MESSAGE		1
 #define LIGHT_MESSAGE		2
 #define TORADEX_MESSAGE		3
-#define	VOORRUIT_MESSAGE	4
+#define	BLOWER_MESSAGE		4
 #define	TOTAL_MESSAGE		8
+
+/*
+Voorruit data
+0	spuit
+1	whiper
+2	toeter
+3	blower
+
+*/
 
 CCAN_MSG_OBJ_T msg_obj;
 
@@ -26,8 +35,8 @@ CCAN_MSG_OBJ_T msg_obj;
 
 
 volatile unsigned long SysTickCnt;
-int sproei = 2000;
-
+int sproei = 1000;
+bool running = false; 
 
 void baudrateCalculate(uint32_t baud_rate, uint32_t *can_api_timing_cfg) {
 	uint32_t pClk, div, quanta, segs, seg1, seg2, clk_per_bit, can_sjw;
@@ -76,17 +85,26 @@ void CAN_rx(uint8_t msg_obj_num) {
 	if (msg_obj_num < TOTAL_MESSAGE || msg_obj_num > 0)
 	{
 		//Message "Inbox" for all the FRONT_MESSAGES {...}
-		if (msg_obj_num == VOORRUIT_MESSAGE)
+		if (msg_obj_num == BLOWER_MESSAGE)
 		{
+			if (msg_obj.data[3] > 4) {
+				if(!running){
+				Chip_TIMER_Enable(LPC_TIMER16_0);
+				}
+				PWMUpdate(msg_obj.data[3]);
+			}
+			else
+			{
+				Chip_TIMER_Disable(LPC_TIMER16_0);
+				Chip_GPIO_WritePortBit(LPC_GPIO, 0, 9, true); //blower
+			}
 
-			PWMUpdate(msg_obj.data[3]);
-			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, !msg_obj.data[2]); //toeter
-			//Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, msg_obj.data[1]); //whiper
+			//Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, !msg_obj.data[2]); //toeter
+			Chip_GPIO_WritePortBit(LPC_GPIO, 0, 8, !msg_obj.data[1]); //whiper
 			if (msg_obj.data[0]) {
 				sproei = 0;
 			}
 		}
-
 
 
 		// Turn on the yellow led and Enable timer interrupt
@@ -113,8 +131,8 @@ void CAN_init() {
 	/* Configure the CAN callback functions */
 	LPC_CCAN_API->config_calb(&callbacks);
 
-	msg_obj.msgobj = VOORRUIT_MESSAGE;
-	msg_obj.mode_id = VOORRUIT_ADDRESS;
+	msg_obj.msgobj	=	BLOWER_MESSAGE;
+	msg_obj.mode_id	=	BLOWER_ADDRESS;
 	msg_obj.mask = 0xFFF;
 	LPC_CCAN_API->config_rxmsgobj(&msg_obj);
 

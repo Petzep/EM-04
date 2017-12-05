@@ -18,6 +18,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MCU-Mowgli", "MCU-m\MCU-m.v
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chicken-tasting", "chicken-tasting\chicken-tasting.vcxproj", "{EF03F5D6-0E60-4E1E-ACAA-CC019BB7F44D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ONE_WIRE", "ONE_WIRE\ONE_WIRE.vcxproj", "{473A579B-670A-47C5-978E-142F92FD54E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -72,6 +74,12 @@ Global
 		{EF03F5D6-0E60-4E1E-ACAA-CC019BB7F44D}.Release|x64.ActiveCfg = Release|Win32
 		{EF03F5D6-0E60-4E1E-ACAA-CC019BB7F44D}.Release|x86.ActiveCfg = Release|Win32
 		{EF03F5D6-0E60-4E1E-ACAA-CC019BB7F44D}.Release|x86.Build.0 = Release|Win32
+		{473A579B-670A-47C5-978E-142F92FD54E8}.Debug|x64.ActiveCfg = Debug|Win32
+		{473A579B-670A-47C5-978E-142F92FD54E8}.Debug|x86.ActiveCfg = Debug|Win32
+		{473A579B-670A-47C5-978E-142F92FD54E8}.Debug|x86.Build.0 = Debug|Win32
+		{473A579B-670A-47C5-978E-142F92FD54E8}.Release|x64.ActiveCfg = Release|Win32
+		{473A579B-670A-47C5-978E-142F92FD54E8}.Release|x86.ActiveCfg = Release|Win32
+		{473A579B-670A-47C5-978E-142F92FD54E8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
