@@ -49,6 +49,13 @@ VCL_App_Ver = 011
 ;							CONSTANTS
 ;****************************************************************
 
+; Input Current Limits
+Battery_Current_Limit_Ramp_Rate = 1
+Battery_Current_Limiter_enable = 1
+Battery_Power_Limit = 20                ; per 10W
+;; Regen_Battery_Current_Limit
+;; Motor_Power
+
 RESET_PASSWORD                  constant 141        ; password for "reset_controller_remote" to reset controller
 
 DEBOUNCE_INPUTS					constant    5		; this sets the debounce time for switch inputs to 20ms, 4mS/unit
@@ -58,9 +65,11 @@ CAN_EMERGENCY_DELAY_ACK         constant    50      ; Amount of time system wait
 CAN_CYCLIC_RATE					constant    25	    ; this sets the cyclic cycle to every 100 ms, 4mS/unit
 
 ; Timers
-MAX_TIME_GEARCHANGE			    constant    1500    ; Maximum time gear change may take [ms]
+MAX_TIME_GEARCHANGE			    constant    5000    ; Maximum time gear change may take [ms] (normally 70ms + delays)
 STARTUP_DELAY                   constant    3000    ; Delay before system starts up [ms]
-SMESH_FININSHED_DELAY           constant    10      ;
+Main_Loop_Rate                  constant    10
+CAN_NOTHING_RECEIVE_SHUTDOWN_TIME constant  500     ; If slave does receive nothing for this amount of time, interlock turns off [ms]
+SMESH_FININSHED_DELAY           constant    20      ;
 
 ; DNR, Throttle and Brake
 FULL_BRAKE                      constant    32767   ; On a scale of 0-32767, how hard controller will brake
@@ -74,10 +83,13 @@ REVERSE                         constant    4
 ; Current settings
 INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT constant 32767       ; at 0 Battery current, output current limit, 350A /350A*32767
 INITIAL_OUTPUT_REGEN_CURRENT_LIMIT constant 2000        ; at 0 Battery regen current, output current limit,  10A /350A*32767 = 937, minimal 1638
-MAX_DRIVE_INPUT_CURRENT_PER_CTRLR  constant 1404       ; 150A /350A*32767
-MAX_REGEN_INPUT_CURRENT_PER_CTRLR  constant 469        ; 30A /350A*32767
-MARGIN_DRIVE_CURRENT_LIMIT         constant 1300       ; 10A /350A*32767, higher than this input current, the output current will be cutback
-MARGIN_REGEN_CURRENT_LIMIT         constant 350        ; 35A / 350A*32767, higher than this input current, the ouput current will be cutback
+MIN_DRIVE_OUTPUT_CURRENT_PER_CTRLR constant 1640
+MIN_REGEN_OUTPUT_CURRENT_PER_CTRLR constant 1640
+
+MARGIN_DRIVE_INPUT_CURRENT_LIMIT   constant 700       ; 10A /350A*32767, higher than this input current, the output current will be cutback
+MARGIN_REGEN_INPUT_CURRENT_LIMIT   constant 400        ; 35A / 350A*32767, higher than this input current, the ouput current will be cutback
+MAX_DRIVE_INPUT_CURRENT_PER_CTRLR  constant 940       ; 150A /350A*32767
+MAX_REGEN_INPUT_CURRENT_PER_CTRLR  constant 500        ; 30A /350A*32767
 
 
 
@@ -89,16 +101,18 @@ MARGIN_REGEN_CURRENT_LIMIT         constant 350        ; 35A / 350A*32767, highe
 
 ; Accesible from programmer handheld (max. 100 user, 10 bit)
 
-;PAR_Total_Maint_interval		alias P_User1		;Can be saved to non-volatile memory
+Key_Switch_Hard_Reset_Complete		alias P_User1		;Can be saved to non-volatile memory
 
 ;Auto user variables (max. 300 user, 16 bit)
 
 create reset_controller_remote variable
 
-;-------------- Emergency CAN ---------------
+;-------------- CAN ---------------
 
 create RCV_ACK_Fault_System variable
 create RCV_ACK_System_Action variable
+
+create RM_System_Init_Complete variable
 
 ;-------------- Temporaries ---------------
 create  temp_Map_Output_1   variable
@@ -108,7 +122,6 @@ create  temp_Drive_Current_Limit variable
 create  temp_Regen_Current_Limit variable
 
 create test variable
-
 
 
 ;Standard user variables (max. 120 user, 16 bit)
@@ -151,7 +164,13 @@ MAILBOX_SM_MISO2						alias CAN5
 
 MAILBOX_ERROR_MESSAGES                  alias CAN19
 MAILBOX_ERROR_MESSAGES_RCV_ACK          alias CAN20
-MAILBOX_ERROR_MESSAGES_RCV_ACK_received alias CAN20_output
+MAILBOX_ERROR_MESSAGES_RCV_ACK_received alias CAN20_received
+
+MAILBOX_SM_MISO3_Init                   alias CAN21
+MAILBOX_SM_MOSI4_Init                   alias CAN22
+MAILBOX_SM_MOSI4_Init_received          alias CAN22_received
+MAILBOX_RESET_CONTROLLER                alias CAN23
+MAILBOX_RESET_CONTROLLER_received       alias CAN23_received
 
 
 ;----------- User Defined Faults ------------
@@ -166,14 +185,14 @@ Fault_System                 alias      UserFault1
     General_Fault                     bit        Fault_System.64            ; (7, Code 57) Some fault occured generally
     General_Crit_Error                bit        Fault_System.128           ; (8, Code 58) Critical Error occured generally
     
-User_Fault_Action_01 = 1101100000000000b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off
-User_Fault_Action_02 = 1101100000100000b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off, Full brake
-User_Fault_Action_03 = 1101100000000000b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off
+User_Fault_Action_01 = 0000000000011011b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off
+User_Fault_Action_02 = 0000010000011011b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off, Full brake
+User_Fault_Action_03 = 0000000000011011b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off
 User_Fault_Action_04 = 0000000000000000b
 User_Fault_Action_05 = 0000000000000000b
 User_Fault_Action_06 = 0000000000000000b
 User_Fault_Action_07 = 0000000000000000b
-User_Fault_Action_08 = 1101100000000000b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off
+User_Fault_Action_08 = 0000000000011011b            ; Shutdown motor, shut down main contactor, Set Throttle command to 0, Set interlock off
 
 
 ;--------------- INPUTS ----------------
@@ -204,14 +223,20 @@ Fan2OUT				alias PWM3					;Pin J1-04
 ; none
 
 ;--------------- DELAYS -----------------
-Startup_DLY                       alias		DLY1             
-Startup_DLY_output                alias		DLY1_output
+Startup_DLY                       alias     DLY1             
+Startup_DLY_output                alias     DLY1_output
 Smesh_DLY                         alias     DLY2
 Smesh_DLY_output                  alias     DLY2_output
 EMERGENCY_ACK_DLY                 alias     DLY3
 EMERGENCY_ACK_DLY_output          alias     DLY3_output
-General_DLY                       alias     DLY4
-General_DLY_output                alias     DLY4_output
+CAN_INIT_ACK_DLY                  alias     DLY4
+CAN_INIT_ACK_DLY_output           alias     DLY4_output
+CAN_RCV_MASTER_DLY                alias     DLY5
+CAN_RCV_MASTER_DLY_output         alias     DLY5_output
+General_DLY                       alias     DLY6
+General_DLY_output                alias     DLY6_output
+Main_Loop_DLY                     alias     DLY7
+Main_Loop_DLY_output              alias     DLY7_output
 
 
 
@@ -256,16 +281,26 @@ call startup_CAN_System 		;setup and start the CAN communications system
 
 Mainloop:
     
-    call CheckCANMailboxes
-    
-    call DNR_statemachine
-    
-    call faultHandling
-
+    setup_delay(Main_Loop_DLY, Main_Loop_Rate)
+    while (Main_Loop_DLY_output <> 0) {}
     
     if (reset_controller_remote = RESET_PASSWORD) {
         Reset_Controller()
     }
+    
+    call CheckCANMailboxes
+    
+    setup_delay(Main_Loop_DLY, Main_Loop_Rate)
+    while (Main_Loop_DLY_output <> 0) {}
+    
+    call DNR_statemachine
+    
+    setup_delay(Main_Loop_DLY, Main_Loop_Rate)
+    while (Main_Loop_DLY_output <> 0) {}
+    
+    call faultHandling
+    
+    
     
     
     goto Mainloop 
@@ -309,14 +344,14 @@ startup_CAN_System:
 
     Setup_Mailbox(MAILBOX_SM_MISO1, 0, 0, 0x111, C_CYCLIC, C_XMT, 0, 0)
 
-    Setup_Mailbox_Data(MAILBOX_SM_MISO1, 7,			
+    Setup_Mailbox_Data(MAILBOX_SM_MISO1, 6,			
         @System_Action,				        ; DC battery current , calculated not measured
-        @System_Action + USEHB, 
-        @RM_Efficiency,                         ; Efficiency right controller,
+        @System_Action + USEHB,
         @Motor_Temperature_Display,			    ; Motor temperature 0-255°C
         @Controller_Temperature_Display,        ; Controller temperature  0-255°C
         @State_GearChange,                      ; Gear change state
         @Fault_System,
+        0,
         0)                          ; Fault system
 		
 
@@ -393,6 +428,7 @@ startup_CAN_System:
 		0)
         
         
+        
             ; MAILBOX 19
    			; Purpose:		send information: Error messages to Master controller
    			; Type:			PDO6
@@ -425,6 +461,60 @@ startup_CAN_System:
         0,
         0,
         0)
+        
+        
+        
+            ; MAILBOX 21
+   			; Purpose:		Send information: Request for Init
+   			; Type:			MISO3
+   			; Partner:		Master controller
+        
+    Setup_Mailbox(MAILBOX_SM_MISO3_Init, 0, 0, 0x112, C_EVENT, C_XMT, 0, 0)
+    Setup_Mailbox_Data(MAILBOX_SM_MISO3_Init, 1, 		
+        @RM_System_Init_Complete,
+        0,
+        0, 
+        0,
+        0,
+        0,
+        0,
+        0)
+        
+        
+        
+            ; MAILBOX 22
+   			; Purpose:		Receive information: Init Slave controller
+   			; Type:			MOSI4
+   			; Partner:		Master controller
+
+    Setup_Mailbox(MAILBOX_SM_MOSI4_Init, 0, 0, 0x103, C_EVENT, C_RCV, 0, 0)
+    Setup_Mailbox_Data(MAILBOX_SM_MOSI4_Init, 8, 		
+        @Max_Speed_TrqM,
+        @Max_Speed_TrqM + USEHB,				
+        @Accel_Rate_TrqM, 
+        @Accel_Rate_TrqM + USEHB,
+        @Brake_Rate_TrqM,
+        @Brake_Rate_TrqM + USEHB,
+        @Neutral_Braking_TrqM,
+        @Neutral_Braking_TrqM + USEHB)
+        
+            
+            
+            ; MAILBOX 23
+   			; Purpose:		Receive information: reset command
+   			; Type:			PDO6
+   			; Partner:		Master controller
+
+    Setup_Mailbox(MAILBOX_RESET_CONTROLLER, 0, 0, 0x003, C_EVENT, C_RCV, 0, 0)
+    Setup_Mailbox_Data(MAILBOX_RESET_CONTROLLER, 1, 		
+        @reset_controller_remote,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0)
 
 
 
@@ -438,6 +528,31 @@ startup_CAN_System:
 
 CheckCANMailboxes:
     
+    if (MAILBOX_SM_MOSI4_Init_received = ON) {
+        
+        RM_System_Init_Complete = 1
+    }
+    
+    if ( (RM_System_Init_Complete = 0) & (CAN_INIT_ACK_DLY_output = 0) ) {
+        send_mailbox(MAILBOX_SM_MISO3_Init)
+        
+        Setup_Delay(CAN_INIT_ACK_DLY, CAN_EMERGENCY_DELAY_ACK)
+    }
+    
+    if ( (MAILBOX_SM_MOSI1_received = ON) | (MAILBOX_SM_MOSI2_received = ON) | (MAILBOX_SM_MOSI3_received = ON) | (MAILBOX_ERROR_MESSAGES_RCV_ACK_received = ON) | (MAILBOX_SM_MOSI4_Init_received = ON) ) {
+        MAILBOX_SM_MOSI1_received = OFF
+        MAILBOX_SM_MOSI2_received = OFF
+        MAILBOX_SM_MOSI3_received = OFF
+        MAILBOX_ERROR_MESSAGES_RCV_ACK_received = OFF
+        MAILBOX_SM_MOSI4_Init_received = OFF
+        
+        setup_delay(CAN_RCV_MASTER_DLY, CAN_NOTHING_RECEIVE_SHUTDOWN_TIME)
+    }
+    
+    if (CAN_RCV_MASTER_DLY_output = 0) {
+        ; Too much time is elapsed from last CAN Message
+        clear_Interlock()
+    }
     
     
     
@@ -449,49 +564,88 @@ CheckCANMailboxes:
     
     
 faultHandling:
+
+    call calculateTemperature
+
+
+    ;0-12800
+    ; Transform Battery_current to percentage of rated current
+    ;if (Battery_Current >= 0) {
+    ;    temp_Calculation = Map_Two_Points(Battery_Current, 0, 12800, 0, 32767)
+    ;    
+    ;    ; Reduce Current at higher battery current
+    ;    temp_Drive_Current_Limit = Map_Two_Points(temp_Calculation, MARGIN_DRIVE_INPUT_CURRENT_LIMIT, MAX_DRIVE_INPUT_CURRENT_PER_CTRLR, INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT, MIN_DRIVE_OUTPUT_CURRENT_PER_CTRLR)
+    ;    temp_Regen_Current_Limit = INITIAL_OUTPUT_REGEN_CURRENT_LIMIT
+    ;} else {
+    ;    temp_Calculation = Map_Two_Points(-Battery_Current, 0, 12800, 0, 32767)
+    ;    
+    ;    ; Reduce Current at higher battery current
+    ;    temp_Drive_Current_Limit = INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT
+    ;    temp_Regen_Current_Limit = Map_Two_Points(temp_Calculation, MARGIN_DRIVE_INPUT_CURRENT_LIMIT, MAX_REGEN_INPUT_CURRENT_PER_CTRLR, INITIAL_OUTPUT_REGEN_CURRENT_LIMIT, MIN_REGEN_OUTPUT_CURRENT_PER_CTRLR)
+    ;}
     
-    if (Battery_Current >= 0) {
-        temp_Calculation = Map_Two_Points(Battery_Current, 0, 12800, 0, 32767)
-        
-        ; Reduce Current at higher battery current
-        if (RCV_Drive_Current_Limit = 0) {
-            ; When limit is not determined by master, calculate own limit
-            temp_Drive_Current_Limit = Map_Two_Points(temp_Calculation, MARGIN_DRIVE_CURRENT_LIMIT, MAX_DRIVE_INPUT_CURRENT_PER_CTRLR, INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT, MAX_DRIVE_INPUT_CURRENT_PER_CTRLR)
-        } else {
-            ; Limit is determined by master
-            temp_Drive_Current_Limit = RCV_Drive_Current_Limit
-        }
-        
-        if (RCV_Regen_Current_Limit = 0) {
-            ; When limit is not determined by master, calculate own limit
-            temp_Regen_Current_Limit = INITIAL_OUTPUT_REGEN_CURRENT_LIMIT
-        } else {
-            ; Limit is determined by master
-            temp_Regen_Current_Limit = RCV_Regen_Current_Limit
-        }
-        
+    if (RCV_Drive_Current_Limit <> 0) {
+        ; Limit is determined by master
+        temp_Drive_Current_Limit = RCV_Drive_Current_Limit
     } else {
-        temp_Calculation = Map_Two_Points(-Battery_Current, 0, 12800, 0, 32767)
-        
-        ; Reduce Current at higher battery current
-        
-        if (RCV_Drive_Current_Limit = 0) {
-            ; When limit is not determined by master, calculate own limit
-            temp_Drive_Current_Limit = INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT
-        } else {
-            ; Limit is determined by master
-            temp_Drive_Current_Limit = RCV_Drive_Current_Limit
-        }
-        
-        if (RCV_Regen_Current_Limit = 0) {
-            ; When limit is not determined by master, calculate own limit
-            temp_Regen_Current_Limit = Map_Two_Points(temp_Calculation, MARGIN_DRIVE_CURRENT_LIMIT, MAX_REGEN_INPUT_CURRENT_PER_CTRLR, INITIAL_OUTPUT_REGEN_CURRENT_LIMIT, MAX_REGEN_INPUT_CURRENT_PER_CTRLR)
-        } else {
-            ; Limit is determined by master
-            temp_Regen_Current_Limit = RCV_Regen_Current_Limit
-        }
-        
+        temp_Drive_Current_Limit = INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT
     }
+    
+    if (RCV_Regen_Current_Limit <> 0) {
+        ; Limit is determined by master
+        temp_Regen_Current_Limit = RCV_Regen_Current_Limit
+    } else {
+        temp_Regen_Current_Limit = INITIAL_OUTPUT_REGEN_CURRENT_LIMIT
+    }
+    
+    ;if (Battery_Current >= 0) {
+    ;    temp_Calculation = Map_Two_Points(Battery_Current, 0, 12800, 0, 32767)
+    ;    
+    ;    ; Reduce Current at higher battery current
+    ;    if (RCV_Drive_Current_Limit = 0) {
+    ;        ; When limit is not determined by master, calculate own limit
+    ;        
+    ;        ; Reduce Current at higher battery current
+    ;        temp_Drive_Current_Limit = Map_Two_Points(temp_Calculation, MARGIN_DRIVE_INPUT_CURRENT_LIMIT, MAX_DRIVE_INPUT_CURRENT_PER_CTRLR, INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT, MIN_DRIVE_OUTPUT_CURRENT_PER_CTRLR)
+    ;        
+    ;    } else {
+    ;        
+    ;    }
+    ;    
+    ;    if (RCV_Regen_Current_Limit = 0) {
+    ;        ; When limit is not determined by master, calculate own limit
+    ;        temp_Regen_Current_Limit = INITIAL_OUTPUT_REGEN_CURRENT_LIMIT
+    ;    } else {
+    ;        ; Limit is determined by master
+    ;        temp_Regen_Current_Limit = RCV_Regen_Current_Limit
+    ;    }
+    ;    
+    ;} else {
+    ;    temp_Calculation = Map_Two_Points(-Battery_Current, 0, 12800, 0, 32767)
+    ;    
+    ;    ; Reduce Current at higher battery current
+    ;    
+    ;    if (RCV_Drive_Current_Limit = 0) {
+    ;        ; When limit is not determined by master, calculate own limit
+    ;        temp_Calculation = Map_Two_Points(-Battery_Current, 0, 12800, 0, 32767)
+    ;        
+    ;        ; Reduce Current at higher battery current
+    ;        temp_Drive_Current_Limit = INITIAL_OUTPUT_DRIVE_CURRENT_LIMIT
+    ;        
+    ;    } else {
+    ;        ; Limit is determined by master
+    ;        temp_Drive_Current_Limit = RCV_Drive_Current_Limit
+    ;    }
+    ;    
+    ;    if (RCV_Regen_Current_Limit = 0) {
+    ;        ; When limit is not determined by master, calculate own limit
+    ;        temp_Regen_Current_Limit = Map_Two_Points(temp_Calculation, MARGIN_DRIVE_INPUT_CURRENT_LIMIT, MAX_REGEN_INPUT_CURRENT_PER_CTRLR, INITIAL_OUTPUT_REGEN_CURRENT_LIMIT, MIN_REGEN_OUTPUT_CURRENT_PER_CTRLR)
+    ;    } else {
+    ;        ; Limit is determined by master
+    ;        temp_Regen_Current_Limit = RCV_Regen_Current_Limit
+    ;    }
+    ;    
+    ;}
     
     
     
@@ -567,33 +721,47 @@ DNR_statemachine:
 
     ; STATE MACHINE
     
-    if ((Interlock_RCV = 1) & (Interlock_State = OFF)) {
+    
+    if ((Interlock_RCV = 1)) {
         ; Turn car 'on'
-        set_Interlock()
-    } else if ((Interlock_RCV = 0) & (Interlock_State = ON)) {
-        clear_Interlock()
-        if (System_Action <> 0) {
+        if ((Interlock_State = OFF)) {
+            set_Interlock()
+        }
+        if (Key_Switch_Hard_Reset_Complete <> 0) {
+            Key_Switch_Hard_Reset_Complete = 0
+        }
+        
+    } else if ((Interlock_RCV = 0)) {
+        ; turn car 'off'
+        if ((Interlock_State = ON)) {
+            clear_Interlock()
+        }
+        
+        
+        if ((System_Action <> 0) & (Key_Switch_Hard_Reset_Complete = 0)) {
             ; There is some fault, so reset controller at turning off car
+            Key_Switch_Hard_Reset_Complete = 1
             Reset_Controller()
         }
     }
     
     if (Brake_RCV = 1) {
         VCL_Brake = FULL_BRAKE
-        ;RCV_Throttle_Compensated = 0
+        RCV_Throttle_Compensated = 0
     } else {
         VCL_Brake = 0
     }
     
     
-    if ( (RCV_State_GearChange >= 0x60) & (RCV_State_GearChange <= 0x6D) ) {
+    if ( (RCV_State_GearChange >= 0x60) & (RCV_State_GearChange < 0x6D) ) {
         ;; Changing gear to 1:6
         call setSmeshTo16
         
         exit
         
-    } else if ( (RCV_State_GearChange >= 0x80) & (RCV_State_GearChange <= 0x8D) ) {
+    } else if ( (RCV_State_GearChange >= 0x80) & (RCV_State_GearChange < 0x8D) ) {
         ;; Changing gear to 1:18
+        
         call setSmeshTo118
         
         exit
@@ -624,6 +792,7 @@ DNR_statemachine:
         State_GearChange = 0x01
     }
     
+    
     VCL_Throttle = temp_VCL_Throttle
 
     
@@ -633,19 +802,10 @@ DNR_statemachine:
     
     
     
-calculateTemperatureAndEfficiency:
+calculateTemperature:
     
-    Motor_Temperature_Display = Motor_Temperature/10
-    Controller_Temperature_Display = Controller_Temperature/10
-    
-    
-    temp_Calculation = Capacitor_Voltage / 640
-    Power_In = Battery_Current * temp_Calculation       ; Battery_Current  ; Capacitor_Voltage 0-200V (0-12800)
-    
-    Motor_Rads = Map_Two_Points(Motor_RPM, -12000, 12000, -1257, 1257)
-    Power_Out = Motor_Torque * Motor_Rads               ; Motor_Torque ; Motor_RPM -12000-12000rpm (-12000-12000)
-    
-    RM_Efficiency = get_muldiv(MTD1, Power_Out, 255, Power_In)
+    Motor_Temperature_Display = Map_Two_Points(Motor_Temperature, 0, 2550, 0, 255)
+    Controller_Temperature_Display = Map_Two_Points(Controller_Temperature, 0, 2550, 0, 255)
     
     return
     
@@ -657,7 +817,7 @@ setSmeshTo16:
     
     ;;;;; 1. Reduce Left throttle
     
-    if ( (RCV_State_GearChange = 0x60) | (RCV_State_GearChange = 0x61) ) {
+    if ( (RCV_State_GearChange = 0x61) & (State_GearChange <> 0x62) ) {
         setup_delay(Smesh_DLY, MAX_TIME_GEARCHANGE)
         State_GearChange = 0x62
         
@@ -668,7 +828,7 @@ setSmeshTo16:
     ;;;;; 2. Receive ACK: Procedure has started
     ;;;;; 3. multiply throttle of Right controller with 2
     
-    if (RCV_State_GearChange = 0x63) {
+    if ( (RCV_State_GearChange = 0x63) & (State_GearChange <> 0x64) ) {
         VCL_Throttle = RCV_Throttle_Compensated
         State_GearChange = 0x64
         
@@ -677,16 +837,12 @@ setSmeshTo16:
 
     
     ;;;;; 4. receive ACK from controller: throttle is increased
-    ;;;;; 5. Switch left gear to 1:6
-    
-    if ( (RCV_State_GearChange = 0x64) | (RCV_State_GearChange = 0x65) ) {
-        State_GearChange = 0x65
-    }
+    ;;;;; 5. Switch left gear to 1:18
 	
     
     ;;;;; 6. Reduce throttle right controller
     
-    if (RCV_State_GearChange = 0x66) {
+    if ( (RCV_State_GearChange = 0x66) & (State_GearChange <> 0x67) ) {
         VCL_Throttle = RCV_Throttle_Compensated
         State_GearChange = 0x67
         
@@ -696,49 +852,27 @@ setSmeshTo16:
     
     ;;;;; 7. receive ACK from controller: throttle is reduced
     ;;;;; 8. Increase left throttle
-    
-    if (RCV_State_GearChange = 0x67) {
-        State_GearChange = 0x67
-    }
-    
-    
     ;;;;; 10. receive ACK from controller: procedure has started
-    
-    if (RCV_State_GearChange = 0x68) {
-        State_GearChange = 0x68
-    }
-    
-    
     ;;;;; 11. reduce left throttle to normal
-    
-    if ( (RCV_State_GearChange = 0x6A) | (RCV_State_GearChange = 0x6B) ) {
-        State_GearChange = 0x6B
-    }
 
     
     ;;;;; 12. increase throttle right controller to normal
     
-    if ( (RCV_State_GearChange = 0x6C) | (RCV_State_GearChange = 0x6D) ) {
+    if ( (RCV_State_GearChange = 0x6C) & (State_GearChange <> 0x6D) ) {
         VCL_Throttle = RCV_Throttle_Compensated
-        State_GearChange = 0x6C
-        
-        send_mailbox(MAILBOX_SM_MISO2)
         
         
     ;;;;; 13. Change is successful, thus speed_to_RPM can be changed
         
-        Speed_to_RPM = 601          ; (G/d)*5305 ... 6/530*5305 ... One decimal
+        Speed_to_RPM = 601          ; (G/d)*5305 ... 18/530*5305 ... One decimal
         
         ; Gear state to complete
         State_GearChange = 0x6D
         
         send_mailbox(MAILBOX_SM_MISO2)
         
-        
-        Setup_Delay(DLY16, 8)
-        while (DLY16_output <> 0) {}			; Wait 500ms before start
-        
-        test = 4
+        Setup_Delay(General_DLY, SMESH_FININSHED_DELAY)
+        while (General_DLY_output <> 0) {}
     }
     
     
@@ -751,8 +885,9 @@ setSmeshTo16:
         
         send_mailbox(MAILBOX_SM_MISO2)
         
+        Setup_Delay(General_DLY, SMESH_FININSHED_DELAY)
+        while (General_DLY_output <> 0) {}
     }
-    
     
     
 	return
@@ -762,7 +897,7 @@ setSmeshTo118:
 
     ;;;;; 1. Reduce Left throttle
     
-    if ( (RCV_State_GearChange = 0x81) ) {
+    if ( (RCV_State_GearChange = 0x81) & (State_GearChange <> 0x82) ) {
         setup_delay(Smesh_DLY, MAX_TIME_GEARCHANGE)
         State_GearChange = 0x82
         
@@ -773,7 +908,7 @@ setSmeshTo118:
     ;;;;; 2. Receive ACK: Procedure has started
     ;;;;; 3. multiply throttle of Right controller with 2
     
-    if (RCV_State_GearChange = 0x83) {
+    if ( (RCV_State_GearChange = 0x83) & (State_GearChange <> 0x84) ) {
         VCL_Throttle = RCV_Throttle_Compensated
         State_GearChange = 0x84
         
@@ -787,7 +922,7 @@ setSmeshTo118:
     
     ;;;;; 6. Reduce throttle right controller
     
-    if (RCV_State_GearChange = 0x86) {
+    if ( (RCV_State_GearChange = 0x86) & (State_GearChange <> 0x87) ) {
         VCL_Throttle = RCV_Throttle_Compensated
         State_GearChange = 0x87
         
@@ -797,26 +932,15 @@ setSmeshTo118:
     
     ;;;;; 7. receive ACK from controller: throttle is reduced
     ;;;;; 8. Increase left throttle
-    
-    if (RCV_State_GearChange = 0x87) {
-        State_GearChange = 0x87
-    }
-    
-    
     ;;;;; 10. receive ACK from controller: procedure has started
-    
-    if (RCV_State_GearChange = 0x88) {
-        State_GearChange = 0x88
-    }
-    
-    
     ;;;;; 11. reduce left throttle to normal
 
     
     ;;;;; 12. increase throttle right controller to normal
     
-    if ( (RCV_State_GearChange = 0x8C) ) {
+    if ( (RCV_State_GearChange = 0x8C) & (State_GearChange <> 0x8D) ) {
         VCL_Throttle = RCV_Throttle_Compensated
+        
         
         
     ;;;;; 13. Change is successful, thus speed_to_RPM can be changed
